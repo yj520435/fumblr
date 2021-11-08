@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yjproject.web.dao.UserDao">
+	<insert id="register" parameterType="com.yjproject.web.entity.User">
+		INSERT INTO USERS(IDX, EMAIL, PASSWORD, BLOG, JOINING) VALUES(USERS_SEQ.NEXTVAL, #{email}, #{password}, #{blog}, SYSDATE)
+	</insert>
+	<select id="login" resultType="com.yjproject.web.entity.User">
+		SELECT * FROM USERS WHERE EMAIL=#{email} AND PASSWORD=#{password}
+	</select>
+	<select id="getUserByEmail" resultType="com.yjproject.web.entity.User">
+		SELECT * FROM USERS WHERE EMAIL=#{email} OR BLOG=#{blog}
+	</select>
+	<update id="updateEmail" parameterType="com.yjproject.web.entity.User">
+		UPDATE USERS SET EMAIL=#{email} WHERE IDX=#{idx} AND PASSWORD=#{password}
+	</update>
+	<update id="updatePassword">
+		UPDATE USERS SET PASSWORD=#{newPassword} WHERE IDX=#{idx} AND PASSWORD=#{curPassword}
+	</update>
+	<update id="updateBlog" parameterType="com.yjproject.web.entity.User">
+		UPDATE USERS SET BLOG=#{blog} WHERE IDX=#{idx}
+	</update>
+	<update id="updateProfile">
+		UPDATE USERS SET PROFILE=#{filePath} WHERE IDX=#{idx_}
+	</update>
+	<update id="updateBackground">
+		UPDATE USERS SET BACKGROUND=#{filePath} WHERE IDX=#{idx_}
+	</update>
+	<select id="getUserByIdx" resultType="com.yjproject.web.entity.User">
+		SELECT * FROM USERS WHERE IDX=#{idx} AND PASSWORD=#{password}
+	</select>
+	<delete id="resetBlog">
+		DELETE POST WHERE OWNER=#{idx}
+	</delete>
+	<delete id="deletePosts">
+		DELETE POST WHERE OWNER=#{idx}
+	</delete>
+	<delete id="deleteLikes">
+		DELETE LIKES WHERE UIDX=#{idx}
+	</delete>
+	<delete id="deleteUser">
+		DELETE USERS WHERE IDX=#{idx}
+	</delete>
+</mapper>

@@ -1,0 +1,503 @@
+@charset "EUC-KR";
+
+@import url('https://fonts.googleapis.com/css2?family=Cherry+Swash:wght@700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@600&display=swap');
+
+html, body {
+	margin:0;
+	font-size: 13px;
+}
+
+.center {
+	margin-right: auto;
+	margin-left: auto;
+}
+
+body {
+	height: 100%;
+	background-color: #003366;
+	background-image: url("/image/index.jpg");
+	background-repeat: no-repeat;
+	background-position: center;
+	background-size: cover;
+	background-attachment: fixed;
+	text-align: center;
+}
+
+::-webkit-scrollbar {
+	display: none;
+}
+
+.title {
+	font-size: 64px;
+	font-family: 'Cherry Swash', cursive;
+	color: white;
+	text-shadow: -1px 0 white, 0 1px white, 1px 0 white, 0 -1px white;
+	letter-spacing: 1px;
+}
+
+.login-container {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+}
+
+.input-pw-div, .input-check-div {
+	display: grid;
+	grid-template-columns: 273px 27px;
+	width: 300px;
+	height: 46px;
+	background-color: white;
+	margin-bottom: 10px;
+	border-radius: 3px;
+}
+
+.input-pw-div {
+	margin-top: 10px;
+}
+
+.input-pw, .input-check {
+	border: none;
+	outline: none;
+	font-size: 15px;
+	padding-left: 10px;
+	border-radius: 3px;
+}
+
+.input-pw-div img, .input-check-div img {
+	display: none;
+	position: relative;
+	width: 15px;
+	height: 15px;
+	top: 15px;
+	filter: invert(85%) sepia(0%) saturate(0%) hue-rotate(192deg) brightness(95%) contrast(83%)
+}
+
+.input-email, .input-blog {
+	width: 288px;
+	height: 44px;
+	padding-left: 10px;
+	border-radius: 3px;
+	border: none;
+	font-size: 15px;
+	outline: none;
+	font-family: 'Nunito', sans-serif;
+	display: block;
+	background-color: white;
+}
+
+.hidden-div {
+	display: none;
+}
+
+.note {
+	color: white;
+	font-size: 13px;
+	margin: 15px 0;
+}
+
+.btn-login, .btn-register {
+	display: inline-block;
+	width: 300px;
+	height: 44px;
+	border-radius: 3px;
+	border: none;
+	color: white;
+	background-color: #4cc1ed;
+	font-size: 15px;
+	cursor: pointer;
+}
+
+.btn-register {
+	display: none;
+}
+
+.div-find-acc, .div-register {
+	color: white;
+	font-size: 14px;
+}
+
+.div-find-acc {
+	margin-top: 15px;
+}
+
+.div-register span {
+	cursor: pointer;
+	font-weight: bold;
+}
+
+.msg {
+	display: none;
+	position: absolute;
+	top: -70px;
+	left: 50%;
+	transform: translate(-50%, 0);
+	border-radius: 3px;
+	width: 300px;
+	height: 46px;
+	background-color: rgba(0, 0, 0, 0.4);
+	color: white;
+	line-height: 45px;
+	font-size: 14px;
+	text-align: center;
+}
+
+
+
+.user-container {
+  position: absolute;
+  width:450px;
+  height: 128px;
+  top: 60px;
+  left: 50%;
+  transform: translate(-50%, 0);
+}
+
+.icon {
+  width: 128px;
+  height: 128px;
+  border-radius: 50%;
+  position: absolute;
+  z-index: 5;
+  bottom: 0;
+  left: 50%;
+  display: table;
+  text-align: center;
+  transform: translate(-50%, 0);
+}
+
+.icon img {
+	width: 128px;
+	height: 128px;
+	border-radius: 50%;
+	z-index: 5;
+}
+
+.icon .fa {
+  color: #fff;
+  font-size: 2em;
+  display: table-cell;
+  vertical-align: middle;
+  transition: 0.4s;
+}
+
+/* .icon.open .fa {
+  transform: rotate(135deg);
+} */
+
+.btn-app {
+  width: 2.5em;
+  height: 2.5em;
+  border-radius: 50%;
+  position: absolute;
+  background-color: #ffffff;
+  color: #000;
+  text-align: center;
+  opacity: 0.7;
+}
+
+.btn-app .fa {
+  line-height: 2.5em;
+}
+
+.my-menu {
+  position: absolute;
+  bottom: 0;
+  z-index: 1;
+}
+
+.my-menu .btn-app {
+  bottom: 3em;
+  left: 15em;
+  z-index: 1;
+  display: none;
+}
+
+.btn-app:nth-of-type(1) {
+  left: 21.7em;
+  bottom: 0.5em;
+}
+
+.btn-app:nth-of-type(2) {
+  left: 22.5em;
+  bottom: 3.0em;
+}
+
+.btn-app:nth-of-type(3) {
+  left: 21.7em;
+  bottom: 5.5em;
+}
+
+.fa-user::before {
+	font-size: 1.3em;
+}
+
+.fa-envelope-o::before {
+	font-size: 1.2em;
+}
+
+.fa-sign-out::before {
+	font-size: 1.5em;
+}
+
+.main {
+	width: 450px;
+	padding: 20px;
+	margin-top: 210px;
+	text-align: left;
+	background-color: white;
+	border-radius: 3px;
+	height: 600px;
+	overflow: auto;
+}
+
+.main>span {
+	font-size: 17px;
+	color: gray;
+}
+
+.setting {
+	width: 450px;
+	border-top: 2px solid #dddddd;
+	margin-top: 20px;
+	border-spacing: 0;
+	background-color: white;
+	border-radius: 3px;
+	margin-bottom: 50px;
+	
+}
+
+.setting tr {
+	height: 30px;	
+}
+
+.setting td {
+	padding: 15px 0;
+	border-bottom: 1px solid #dddddd;
+	
+}
+
+.setting td:nth-child(1) {
+	width: 90px;
+	padding-left: 10px;
+}
+
+.setting td:nth-child(2) {
+	width: 300px;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+.setting td:nth-child(3) {
+	width: 40px;
+	text-align: right;
+	padding-right: 10px;
+}
+
+.div-ch-background span, .div-ch-profile span {
+	display: inline-block;
+	border: 1px solid #dddddd;
+	border-radius: 3px;
+	height: 25px;
+	margin-right: 5px;
+	padding: 0 10px;
+	width: 230px;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+.fa-search {
+	background-color: #dddddd;
+	width: 25px;
+	height: 20px;
+	text-align: center;
+	border-radius: 3px;
+	border: 1px solid #dddddd;
+	line-height: 25px;
+	padding-top: 5px;
+}
+
+.fa-search::before {
+	color: white;
+}
+
+.div-ch-profile, .div-ch-background {
+	display: none;
+	width: 282px;
+	line-height: 25px;
+}
+
+.btn-area {
+	width: 450px;
+}
+
+.btn-area td {
+	width: 225px;
+}
+
+.btn-area td:nth-child(2) {
+	text-align: right;
+}
+
+.btn-area button {
+	border: 1px solid #cccccc; 
+	border-radius: 2px;
+	background-color: white;
+	color: gray;
+	height: 25px;
+}
+
+.setting input {
+	background-color: white;
+	border: 1px solid #dddddd;
+	outline: none;
+	height: 25px;
+	width: 270px;
+	padding-left: 10px;
+	border-radius: 3px;
+}
+
+.user-email, .user-blog, .user-profile, .user-background {
+	padding-left: 10px;
+}
+
+.user-password {
+	border: none !important;
+	height: 15px !important;
+}
+
+.check-password, .new-password {
+	margin: 10px 0;
+}
+
+.div-ch-email, .div-ch-password {
+	display: none;
+}
+
+.btn-cancle {
+	border: none;
+	color: white;
+	background-color: #cccccc;
+	width: 50px;
+	height: 25px;
+	border-radius: 3px;
+}
+
+.btn-save {
+	border: none;
+	color: white;
+	background-color: #4cc1ed;
+	width: 50px;
+	height: 25px;
+	border-radius: 3px;
+}
+
+.fa-pencil, .fa-times, .fa-check {
+	line-height: 20px;
+	opacity: 0.3;
+}
+
+.fa-pencil::before {
+	font-size: 15px;
+}
+
+.ch-blog {
+	display: none;
+}
+
+@keyframes shake {
+	0% { transform: translate(1px, 1px) rotate(0deg); }
+	10% { transform: translate(-1px, -1px) rotate(1deg); }
+	20% { transform: translate(-2px, 1px) rotate(-1deg); }
+	30% { transform: translate(1px, 2px) rotate(0deg); }
+	40% { transform: translate(-1px, 1px) rotate(1deg); }
+	50% { transform: translate(1px, -1px) rotate(-2deg); }
+	60% { transform: translate(2px, 1px) rotate(1deg); }
+	70% { transform: translate(-1px, 2px) rotate(2deg); }
+	80% { transform: translate(2px, -1px) rotate(1deg); }
+	90% { transform: translate(-1px, 2px) rotate(0deg); }
+	100% { transform: translate(2px, 1px) rotate(-1deg); }
+}
+
+.warning {
+	font-size: 13px;
+	line-height: 20px;
+	border: none;
+	border-radius: 3px;
+	background-color: #ff6666;
+	margin-top: 10px;
+	width: 450px;
+	padding: 15px;
+	color: white;
+}
+
+.warning input {
+	border: none;
+	outline: none;
+	height: 23px;
+	border-radius: 3px;
+}
+
+
+.modal {
+	position: fixed;
+	left:0;
+	top:0px;
+	width: 100%;
+	height: 100vh;
+	display: none;
+	background-color: rgba(0, 0, 0, 0.9);
+}
+
+.modal-body {
+	position: inherit;
+	top: 50%;
+	left: 50%;
+	width: 600px;
+	text-align: center;
+	border-radius: 3px;
+}
+
+.modal-body div {
+	color: white;
+}
+
+.modal-body div:nth-child(1) {
+	font-size: 15px;
+	margin-bottom: 20px;
+}
+
+.check-to-action {
+	background-color: white;
+	border: 1px solid white;
+	width: 245px;
+	height: 40px;
+	border-radius: 3px;
+	font-size: 15px;
+	padding-left: 5px;
+	box-sizing: border-box;
+	outline: none;
+}
+
+.btn-reset, .btn-delete {
+	width: 245px;
+	height: 40px;
+	border: none;
+	border-radius: 3px;
+	margin: 0px;
+	margin-top: 10px;
+	background-color: #ff6666;
+	color: white;
+	font-size: 15px;
+	cursor: pointer;
+	font-weight: bold;
+	box-sizing: border-box;
+}
+
+.btn-cancle-reset, .btn-cancle-delete {
+	font-size: 13px;
+	margin-top: 20px;
+	text-decoration: underline;
+	cursor: pointer;
+}
