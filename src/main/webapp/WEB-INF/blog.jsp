@@ -5,6 +5,7 @@
 <html>
 <head>
 <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Fumblur</title>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/color-thief/2.3.2/color-thief.min.js"></script>
@@ -20,17 +21,19 @@
 	<div class="body">
 		<!-- 프로필 아이콘 및 개인메뉴 -->
 		<div class="container">
-			<div class="icon"></div>
-			<c:if test="${user.idx != owner.idx}">
-				<div class="fa fa-home" onclick="myblog()"></div>
-			</c:if>
-			<c:if test="${user.idx == owner.idx}">
-				<div class="my-menu">
-					<div class="btn-app"><div class="fa fa-sign-out" onclick="logout()"></div></div>
-					<div class="btn-app"><div class="fa fa-envelope-o"></div></div>
-					<div class="btn-app"><div class="fa fa- fa-user"></div></div>
-				</div>
-			</c:if>
+			<div class="icon">
+				<c:if test="${user.idx != owner.idx}">
+					<div class="btn-app btn-0"><div class="fa fa-home" onclick="myblog()"></div></div>
+					<!-- <div class="fa fa-home" onclick="myblog()"></div> -->
+				</c:if>
+				<c:if test="${user.idx == owner.idx}">
+					<div class="my-menu">
+						<div class="btn-app btn-1"><div class="fa fa-sign-out" onclick="logout()"></div></div>
+						<div class="btn-app btn-2"><div class="fa fa-envelope-o"></div></div>
+						<div class="btn-app btn-3"><div class="fa fa- fa-user"></div></div>
+					</div>
+				</c:if>
+			</div>
 			<%-- <c:if test="${user.idx != owner.idx}">
 				<div class="my-home">
 					<div class="btn-app" onclick="myblog()"><div class="fa fa-home"></div></div>
@@ -66,10 +69,10 @@
 				<div></div>
 				<div></div>
 			</div> -->
-			<span><a href="/explore" class="fa fa-paw"></a></span>
+			<span><a href="/explore" class="fa fa-plane"></a></span>
 		</div>
 		<!-- 포스트 -->
-		<div class="main"></div>
+		<div class="main center"></div>
 		<div class="loading" style="display:none;"></div>
 		<!-- 포스트 모달창 -->
 		<div class="modal">

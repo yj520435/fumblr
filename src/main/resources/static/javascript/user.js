@@ -1,152 +1,26 @@
-$('.input-email').focus();
-
-$('.div-register span').click(function(){
-	$('.input-email').val('');
-	$('.input-pw').val('');
-	$('.hidden-div').slideToggle('slow');
-	$('.btn-login').css('display', 'none');
-	$('.btn-register').css('display', 'inline-block');
-	
-	$('.input-pw').focus(function() {
-		var email = $('.input-email').val();
-		$.ajax({
-			url: 'getUser',
-			type: 'get', 
-			data: {
-				'email' : email
-			},
-			success: function(data) {
-				if(data==1) {
-					alarm('이미 존재하는 이메일입니다.');
-					$('.input-email').css('background-color', '#ffdede');
-					$('.input-email').focus();
-				} else {
-					$('.input-email').css('background-color', '#ffffff');
-				}
-			}
-		});
-	});
-	
-	$('.input-pw').keyup(function(){
-		$('.input-pw-div img').css('display', 'block');
-		var pw = $('.input-pw').val();
-		console.log(pw);
-		if(pw.length>9) {
-			$('.input-pw-div img').css('filter', 'invert(64%) sepia(52%) saturate(578%) hue-rotate(159deg) brightness(99%) contrast(88%)');
-		} else {
-			$('.input-pw-div img').css('filter', 'invert(85%) sepia(0%) saturate(0%) hue-rotate(192deg) brightness(95%) contrast(83%)');
-		}
-	});
-	
-	/*$('.input-check').keyup(function(){
-		$('.input-check-div img').css('display', 'block');
-		var pw = $('.input-pw').val();
-		var pwChk = $('.input-check').val();
-		if(pw==pwChk) {
-			$('.input-check-div img').css('filter', 'invert(64%) sepia(52%) saturate(578%) hue-rotate(159deg) brightness(99%) contrast(88%)');
-		} else {
-			$('.input-check-div img').css('filter', 'invert(85%) sepia(0%) saturate(0%) hue-rotate(192deg) brightness(95%) contrast(83%)');
-		}
-	});*/
-	
-	$('.btn-register').click(function(){
-		var blog = $('.input-blog').val();
-		$.ajax({
-			url: 'getUser',
-			type: 'get', 
-			data: {
-				'blog' : blog
-			},
-			success: function(data) {
-				if(data==1) {
-					alarm('이미 사용중인 이름입니다.');
-					$('.input-blog').css('background-color', '#ffdede');
-					$('.input-blog').focus();
-				} else {
-					$('.input-blog').css('background-color', '#ffffff');
-					register();
-				}
-			}
-		});
-	});
+/* 포스트 탐색 페이지 이동 */
+$('.div-go-explore').click(function(){
+	$(location).attr('href', '/explore');
 });
 
-function register() {
-	var email = $('.input-email').val();
-	var password = $('.input-pw').val();
-	var pwChk = $('.input-check').val();
-	var blog = $('.input-blog').val();
-	
-	//입력값 유효성 검사
-	
-	if(email=='') {
-		alarm('이메일을 입력해주세요.');
-		$('.input-email').focus();
-		return false;
-	}
-	
-	var emailRule = /^([0-9a-zA-Z_\.-]+)@([0-9a-zA-Z_-]+)(\.[0-9a-zA-Z_-]+){1,2}$/;
-	if(!emailRule.test(email)) {
-		alarm('올바른 이메일 형식으로 입력해주세요.');
-		$('.input-email').focus();
-		return false;
-	}
-	
-	if(password=='') {
-		alarm('비밀번호를 입력해주세요.');
-		$('.input-pw').focus();
-		return false;
-	}
-	
-	if(password.length<10) {
-		alarm('비밀번호는 10자 이상으로 설정해주세요.');
-		$('.input-pw').focus();
-		return false;
-	}
-	
-	if(pwChk != password) {
-		alarm('비밀번호 재확인이 필요해요.');
-		return false;
-	}
-	
-	if(blog=='') {
-		alarm('블로그 이름을 입력해주세요.');
-		$('.input-blog').focus();
-		return false;
-	}
-	
-	var blogRule = /^[a-z]+$/;
-	if(!blogRule.test(blog)) {
-		alarm('블로그 이름은 소문자로만 설정할 수 있어요.');
-		$('.input-email').focus();
-		return false;
-	}
-	
-	$.ajax({
-		url: '/register',
-		type: 'post',
-		data: {
-			'email' : email,
-			'password' : password,
-			'blog' : blog
-		},
-		success: function(data) {
-			if (data==1) {
-				alert('가입이 완료되었어요!');
-				$(location).attr('href', '/');
-			}
-		}
+
+/* 로그인 버튼 클릭 */
+$('.btn-login').click(function(){
+	$('.div-login').slideDown('slow', function(){
+		$('#login-email').focus();
 	});
-}
+	$('.btn-register').css('display', 'none');
+	$('.div-go-explore').css('display', 'none');
+	$('.div-find-acc').css('display', 'none');
+	$('.home').css('display', 'block');
+	
+	$('.btn-login').attr('onclick', 'login()');
+});
 
-function alarm(message) {
-	$('.msg').text(message);
-	$('.msg').fadeIn(500).delay(1500).fadeOut(500);
-}
-
+/* 로그인 진행 */
 function login() {
-	var email = $('.input-email').val();
-	var password = $('.input-pw').val();
+	var email = $('#login-email').val();
+	var password = $('#login-password').val();
 	
 	$.ajax({
 		url: '/login',
@@ -161,6 +35,197 @@ function login() {
 				$('.msg').fadeIn(1000).delay(2000).fadeOut(1000);
 			} else {
 				$(location).attr('href', '/blog/' + data.blog);
+			}
+		}
+	});
+}
+
+/* 가입 버튼 클릭 */
+$('.btn-register').click(function(){
+	$('.div-register').slideDown('slow', function() {
+		$('#register-email').focus();
+	});
+	$('.btn-login').css('display', 'none');
+	$('.btn-register').css({
+		'background-color' : '#c096ff',
+		'color' : 'white',
+		'border' : 'none'
+	});
+	$('.div-go-explore').css('display', 'none');
+	$('.div-find-acc').css('display', 'none');
+	$('.home').css('display', 'block');
+	
+	$('.btn-register').attr('onclick', 'register()');
+	
+	//이메일 중복여부 검사
+	$('#register-password').focus(function() {
+		var email = $('#register-email');
+		$.ajax({
+			url: 'getUser',
+			type: 'get', 
+			data: {
+				'email' : email.val()
+			},
+			success: function(data) {
+				if(data!=null && data!='') {
+					alarm('이미 존재하는 이메일입니다.');
+					email.css('background-color', '#ffdede');
+					email.focus();
+				} else {
+					email.css('background-color', '#ffffff');
+				}
+			}
+		});
+	});
+	
+	//비밀번호 유효성 검사 (10자리 이상 설정)
+	$('#register-password').keyup(function(){
+		$('.input-div img').css('display', 'block');
+		var password = $('#register-password').val();
+		if(password.length>9) {
+			$('.input-div img').css('filter', 'invert(64%) sepia(52%) saturate(578%) hue-rotate(159deg) brightness(99%) contrast(88%)');
+		} else {
+			$('.input-div img').css('filter', 'invert(85%) sepia(0%) saturate(0%) hue-rotate(192deg) brightness(95%) contrast(83%)');
+		}
+	});
+});
+
+/* 가입 진행 */
+function register() {
+	var email = $('#register-email').val();
+	var password = $('#register-password').val();
+	var passwordCheck = $('#register-password-check').val();
+	var blog = $('#register-blog').val();
+	
+	//입력값 유효성 검사
+	
+	if(email=='') {
+		alarm('이메일을 입력해주세요.');
+		$('#register-email').focus();
+		return false;
+	}
+	
+	var emailRule = /^([0-9a-zA-Z_\.-]+)@([0-9a-zA-Z_-]+)(\.[0-9a-zA-Z_-]+){1,2}$/;
+	if(!emailRule.test(email)) {
+		alarm('올바른 이메일 형식으로 입력해주세요.');
+		$('#register-email').focus();
+		return false;
+	}
+	
+	if(password=='') {
+		alarm('비밀번호를 입력해주세요.');
+		$('#register-password').focus();
+		return false;
+	}
+	
+	if(password.length<10) {
+		alarm('비밀번호는 10자 이상으로 설정해주세요.');
+		$('#register-password').focus();
+		return false;
+	}
+	
+	if(passwordCheck != password) {
+		alarm('비밀번호 재확인이 필요해요.');
+		return false;
+	}
+	
+	if(blog=='') {
+		alarm('블로그 이름을 입력해주세요.');
+		$('#register-blog').focus();
+		return false;
+	}
+	
+	var blogRule = /^[a-z]+$/;
+	if(!blogRule.test(blog)) {
+		alarm('블로그 이름은 소문자로만 설정할 수 있어요.');
+		$('#register-blog').focus();
+		return false;
+	}
+	
+	//블로그이름 중복 검사
+	$.ajax({
+		url: '/register',
+		type: 'post',
+		data: {
+			'email' : email,
+			'password' : password,
+			'blog' : blog
+		},
+		success: function(data) {
+			if (data==0) {
+				alarm('이미 사용중인 이름입니다.');
+				$('#register-blog').css('background-color', '#ffdede');
+				$('#register-blog').focus();
+				return false;
+			} else if (data==1) {
+				alert('가입이 완료되었어요!');
+				$(location).attr('href', '/');
+			}
+		}
+	});
+	
+	$('#register-blog').keydown(function(){
+		$('#register-blog').css('background-color', '#ffffff');
+	});
+}
+
+/* 팝업 메시지 */
+function alarm(message) {
+	$('.msg').text(message);
+	$('.msg').fadeIn(500).delay(1500).fadeOut(500);
+}
+
+/* 비밀번호 찾기 버튼 클릭 */
+$('.div-find-acc').click(function(){
+	modalOn();
+	$('.modal-body').html('<div>이메일 아이디를 알려주세요.<br>' +
+						  '해당 이메일로 초기화된 비밀번호를 보내드립니다.<br>' +  
+						  '</div>' +
+						  '<input type="email" class="input input-email" placeholder="이메일"><br>' +
+						  '<button class="btn-find" onclick="findPassword()">발송</button>' +
+						  '<div class="btn-cancle-find" onclick="modalOff()">취소하기</div>');
+});
+
+/* 비밀번호 찾기 진행 */
+function findPassword(email) {
+	var email = $('.input-email');
+	
+	var emailRule = /^([0-9a-zA-Z_\.-]+)@([0-9a-zA-Z_-]+)(\.[0-9a-zA-Z_-]+){1,2}$/;
+	if(!emailRule.test(email.val())) {
+		email.css('animation', 'none');
+		email.val('');
+		email.focus();
+		email.css('animation', 'shake 0.5s 1');
+		return false;
+	}
+	
+	$.ajax({
+		url: '/findPassword',
+		type: 'post',
+		data: {
+			'email' : email.val()
+		},
+		beforeSend: function() {
+			$('.modal-body').html('<img class="sending-email-img" src="/image/sending-email.gif">');
+			/*$('.input-email').css('display', 'none');
+			$('.btn-find').css('display', 'none');
+			$('.btn-cancle-find').css('display', 'none');
+			$('.div-before-send').html('');*/
+		},
+		success: function(data) {
+			if(data==1) {
+				$('.modal-body').html('<img class="done-img" src="/image/purple-check.png">' +
+									  '<div style="margin:15px 0;">이메일 발송이 완료되었어요.<br>' +
+									  '이메일을 확인해주세요.</div>' +
+									  '<button class="btn-modal-off" onclick="modalOff()">창닫기</button>"');
+			} else if(data==0) {
+				$('.modal-body').html('<div><b>[ ERROR ]</b><br><br>' +
+									  '일시적 오류로 메일을 발송하지 못했습니다.<br>' +
+									  '잠시 후 다시 시도해주세요.' +
+									  '<button class="btn-modal-off" onclick="modalOff()">창닫기</button>"');
+			} else if(data==-1) {
+				$('.modal-body').html('<div><b>[ ERROR ]</b><br><br>계정이 존재하지 않습니다.</div>' +
+									  '<button class="btn-modal-off" onclick="modalOff()">창닫기</button>"');
 			}
 		}
 	});

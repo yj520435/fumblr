@@ -28,8 +28,13 @@ public class UserController {
 	@PostMapping("/register")
 	@ResponseBody
 	public int register(String email, String password, String blog) {
-		User user = new User(0, email, password, blog, "", "", null);
-		return service.register(user);
+		int result = 0;
+		if(service.getUser("", blog)==null) {
+			User user = new User(0, email, password, blog, "", "", null);
+			result = service.register(user);
+		}
+		
+		return result;
 	}
 	
 	@PostMapping("/login")
@@ -95,5 +100,19 @@ public class UserController {
 	@ResponseBody
 	public int delAccount(int idx, String password, HttpSession session) {
 		return service.delAccount(idx, password, session);
+	}
+	
+	@PostMapping("/findPassword")
+	@ResponseBody
+	public int sendEmail(String email) {
+		int result = 0;
+		User user = service.getUser(email, "");
+		if (user != null) {
+			result = service.findPassword(user);
+		} else {
+			result = -1;
+		}
+		
+		return result;
 	}
 }

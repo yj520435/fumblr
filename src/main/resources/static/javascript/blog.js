@@ -8,7 +8,7 @@ var liked = [];
 
 var profile = $('#profile').val();
 var pf = profile.substr(profile.indexOf('\\upload')).replaceAll('\\', '/'); //'/upload/profile/file.jpg'
-$('.icon').html('<img src="' + pf + '">');
+$('.icon').append('<img src="' + pf + '">');
 
 /* 배경화면 설정 */
 
@@ -25,6 +25,7 @@ if(owner != user) {
 }
 
 getList(page);    //초기 1페이지 로드
+postSize();
 sidebox();        //사이드박스 위치 조정
 modalPosition();  //모달창 위치 조정
 sideboxContents();
@@ -34,6 +35,7 @@ console.log('좋아요 배열 : ' + liked);
 $(window).resize(function(){
 	sidebox();
 	modalPosition();
+	postSize();
 });
 
 /* 유저 메뉴 */
@@ -656,14 +658,19 @@ function sidebox() {
 	var divX = div.offset().left;
 	var divY = div.offset().top;
 	
-	console.log(divX + ' 또 ' + divY);
-	
-	var posLeft = divX + 490;
+	var posLeft = divX + 510;
 	var posTop = '209px';
 	
 	$('.sidebox').css('top', posTop);
 	$('.sidebox').css('left', posLeft);
-	$('.sidebox').css('display', 'block');
+	
+	var width=$(window).width();
+	
+	if(width>1000) {
+		$('.sidebox').css('display', 'block');
+	} else {
+		$('.sidebox').css('display', 'none');
+	}
 }
 
 function sideboxContents() {
@@ -816,6 +823,7 @@ function getList(page) {
 		endPage = (postCount/10)+1;
 	endPage = parseInt(endPage);
 	
+	//포스트 리스트 불러오기
 	$.ajax({
 		url: '/getList',
 		type: 'get',
@@ -855,9 +863,9 @@ function getList(page) {
 					str += '<p class="post-title">' + data[i].title + '</p>';
 					
 					if(data[i].title != ' ') {
-						str += '<div><img src="' + file + '" width="490px"></div>';
+						str += '<div class="post-photo"><img src="' + file + '"></div>';
 					} else {
-						str += '<div><img src="' + file + '" style="margin-top:-15px" width="490px"></div>';
+						str += '<div class="post-photo"><img src="' + file + '" style="margin-top:-15px"></div>';
 					}
 					
 					if(data[i].contents != null) {
@@ -876,7 +884,7 @@ function getList(page) {
 					str += '<div style="height:15px"></div><div class="link-information">';
 					if(data[i].thumbnail != null) {
 						if(data[i].thumbnail.includes('youtube.com')) {
-							str += '<div class="link-thumbnail"><iframe width="490" height="275" src="' + data[i].thumbnail + '" frameborder="0" allowfullscreen></iframe></div>';
+							str += '<div class="link-thumbnail"><iframe src="' + data[i].thumbnail + '" frameborder="0" allowfullscreen></iframe></div>';
 						} else {
 							str += '<div class="link-thumbnail"><img src="'+ data[i].thumbnail + '"></div>';
 						}
@@ -971,6 +979,16 @@ $(window).scroll(function(){
 		}
 	}
 });
+
+function postSize() {
+	//포스트 크기 조정
+	/*var width = $(window).width();
+	if(width>=520) {
+		$('.post').css('width', '490px');
+	} else if(width<520) {
+		$('.post').css('width', '450px');
+	}*/
+}
 
 /*$(window).scroll(function(){
 		if ($(window).scrollTop() == $(document).height() - $(window).height()) {

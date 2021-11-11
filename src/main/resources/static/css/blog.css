@@ -16,7 +16,7 @@ html, body {
 }
 
 body {
-	background-color: #ccccff;
+	background-color: #c8b7ee; /* #ccccff; */
 	/* background-image: url("/image/wallpaper11.jpg"); */
 	height: 100%;
 	background-repeat: no-repeat;
@@ -71,7 +71,7 @@ body {
   height: 128px;
   border-radius: 50%;
   position: absolute;
-  z-index: 5;
+  z-index: 3;
   bottom: 0;
   left: 50%;
   display: table;
@@ -84,91 +84,98 @@ body {
 	width: 128px;
 	height: 128px;
 	border-radius: 50%;
-	z-index: 5;
+	z-index: 3;
 }
 
 .icon .fa {
-  font-size: 2em;
   display: table-cell;
   vertical-align: middle;
   transition: 0.4s;
 }
 
 .btn-app {
-  width: 2.5em;
-  height: 2.5em;
+  width: 27px;
+  height: 27px;
   border-radius: 50%;
   position: absolute;
   background-color: rgba(64, 64, 64, 0.3);
   color: #ffffff;
   text-align: center;
+  cursor: pointer;
 }
 
 .btn-app .fa {
-  line-height: 2.5em;
+  line-height: 27px;
 }
 
 .my-menu {
-  position: absolute;
+  position: relative;
   bottom: 0;
   z-index: 1;
 }
 
-.my-menu .btn-app {
+/* .my-menu .btn-app {
   bottom: 3em;
   left: 15em;
   z-index: 1;
   display: none;
-}
+} */
 
-.my-home .btn-app {
+/* .my-home .btn-app {
   bottom: 3em;
   left: 15em;
   z-index: 1;
+} */
+
+.btn-0 {
+	left: 125px;
+	bottom: 10px;
 }
 
-.btn-app:nth-of-type(1) {
-  left: 22.6em;
-  bottom: 4.8em;
+.btn-1 {
+  left: 125px;
+  bottom: -40px;
   cursor: pointer;
 }
 
-.btn-app:nth-of-type(2) {
+.btn-2 {
+  left: 109px;
+  bottom: -13px;
+}
+
+.btn-3 {
+  left: 80px;
+  bottom: 0px;
+}
+
+/* .my-home .btn-app {
   left: 21.9em;
   bottom: 7.6em;
-  cursor: pointer;
-}
-
-.btn-app:nth-of-type(3) {
-  left: 19.6em;
-  bottom: 9.4em;
-  cursor: pointer;
-}
-
-.my-home .btn-app {
-  left: 21.9em;
-  bottom: 7.6em;
-}
+} */
 
 .fa-user::before {
-	font-size: 1.3em;
+	font-size: 15px;
+	margin-left: 8px;
 }
 
 .fa-envelope-o::before {
-	font-size: 1.2em;
+	font-size: 13px;
+	margin-left: 7px;
 }
 
 .fa-sign-out::before {
-	font-size: 1.5em;
+	font-size: 15px;
+	margin-left: 9px;
 }
 
 .fa-home::before {
-	font-size: 1.5em;
+	font-size: 15px;
+	margin-left: 6px;
 }
 
-.fa-home {
-	position: absolute;
-	left: 280px;
+/* .fa-home {
+	position: relative;
+	left: 140px;
 	top: 95px;
 	cursor: pointer;
 	padding: 5px;
@@ -176,7 +183,7 @@ body {
 	color: white;
 	border-radius: 50%;
 }
-
+ */
 
 /* 
 .fa-commenting-o::before {
@@ -195,11 +202,11 @@ body {
 
  .menu {
  	position: relative;
-	width: 490px;
-	height: 100px;
+	/* width: 490px;
+	height: 100px; */
 	background-color: white;
-	margin : 0;
 	border-radius: 3px;
+	margin: 0;
 	top: 210px;
 	left: 50%;
   	transform: translate(-50%, 0);
@@ -242,11 +249,103 @@ body {
 }
 
 .post {
-	width: 490px;
+	/* width: 490px; */
 	background-color: white;
 	border-radius: 3px;
 	margin-bottom: 20px;
 	box-sizing: border-box;
+}
+
+@media (min-width: 520px) {
+	.post, .post-photo, .post-photo img, .container {
+		width: 490px;
+	}
+	
+	.menu {
+		width: 490px;
+		height: 100px;
+	}
+	
+	.link-thumbnail iframe {
+		width: 490px;
+		height: 275px;
+	}
+	
+	.link-thumbnail img {
+		width: 490px;
+		height: auto;
+	}
+	
+	.modal-body {
+		width: 490px;
+	}
+}
+
+@media (max-width: 520px) {
+	.post, .post-photo, .post-photo img, .container {
+		width: 450px;
+	}
+	
+	.menu {
+		width: 450px;
+		height: 90px;
+	}
+	
+	.link-thumbnail iframe {
+		width: 450px;
+		height: 252px;
+	}
+	
+	.link-thumbnail img {
+		width: 450px;
+		height: auto;
+	}
+	
+	.modal-body {
+		width: 450px;
+	}
+}
+
+@media (max-width: 499px) {
+	.post, .post-photo, .post-photo img, .container {
+		width: 380px;
+	}
+	
+	.post {
+		margin-bottom: 10px;
+	}
+	
+	.menu {
+		width: 380px;
+		height: 70px;
+		margin: 0;
+	}
+	
+	.menu img {
+		width: 43px;
+		height: 43px;
+	}
+	
+	.main {
+		width: 400px;
+		margin-top: 220px;
+	}
+	
+	.link-thumbnail iframe {
+		width: 380px;
+		height: 213px;
+	}
+	
+	.link-thumbnail img {
+		width: 380px;
+		height: auto;
+	}
+	
+	.modal-body {
+		width: 380px;
+	}
+	
+	
 }
 
 .post-title {
@@ -263,14 +362,6 @@ body {
 	margin-bottom: 0;
 	font-size: 14px;
 	height: auto;
-}
-
-.post-photo {
-	width: 490px;
-}
-
-.post-photo img {
-	width: 490px;
 }
 
 .post-contents {
@@ -293,6 +384,7 @@ body {
 	padding-bottom: 0;
 	transition: color 0.5s;
 	color: #cccccc;
+	cursor: pointer;
 }
 
 .fa-heart::before {
@@ -301,6 +393,7 @@ body {
 	padding-bottom: 0;
 	transition: color 1s;
 	color: red;
+	cursor: pointer;
 }
 
 .fa-pencil::before {
@@ -332,7 +425,6 @@ body {
 	position: inherit;
 	top: 50%;
 	left: 50%;
-	width: 490px;
 	text-align: center;
 	border-radius: 3px;
 	max-height: 700px;
@@ -368,7 +460,7 @@ body {
 
 #btn-posting {
 	width: 60px;
-	background-color: #4cc1ed;
+	background-color: #c096ff;
 }
 
 /* 포스트 (텍스트) */
@@ -550,10 +642,10 @@ code {
 	text-align: center;
 }
 
-.m-link-thumbnail img, .link-thumbnail img {
+/* .m-link-thumbnail img, .link-thumbnail img {
 	width: auto;
 	height: 275px;
-}
+} */
 
 .m-link-title, .link-title {
 	margin: 10px 15px;
@@ -749,7 +841,7 @@ hr {
 
 .side td:nth-child(2) {
 	display: inline-block;
-	line-height: 35px;
+	line-height: 40px;
 	color: white;
 	font-weight: bold;
 	width: 147px;
@@ -767,7 +859,7 @@ hr {
 	border-radius: 3px;
 }
 
-.fa-paw::before {
+.fa-plane::before {
 	font-size: 1.3em;
 	opacity: 0.5;
 }

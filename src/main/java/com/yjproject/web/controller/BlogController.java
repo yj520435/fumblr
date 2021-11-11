@@ -72,9 +72,9 @@ public class BlogController {
 	
 	@GetMapping("/blog/{blog}")
 	public String myBlog(Model model,
-						 HttpSession session,
-						 @PathVariable("blog") String blog,
-						 @RequestParam(required=false, defaultValue="") String keyword) {
+			HttpSession session,
+			@PathVariable("blog") String blog,
+			@RequestParam(required=false, defaultValue="") String keyword) {
 		User owner = (User) uService.getUser("", blog);
 		int postCount = service.postCount(owner.getIdx(), keyword);
 		model.addAttribute("owner", owner);

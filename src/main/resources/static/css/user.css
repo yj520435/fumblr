@@ -16,7 +16,7 @@ html, body {
 body {
 	height: 100%;
 	background-color: #003366;
-	background-image: url("/image/index.jpg");
+	background-image: url("/image/home.jpg");
 	background-repeat: no-repeat;
 	background-position: center;
 	background-size: cover;
@@ -38,43 +38,27 @@ body {
 
 .login-container {
 	position: absolute;
-	top: 50%;
+	top: 45%;
 	left: 50%;
 	transform: translate(-50%, -50%);
 }
 
-.input-pw-div, .input-check-div {
-	display: grid;
-	grid-template-columns: 273px 27px;
-	width: 300px;
-	height: 46px;
-	background-color: white;
-	margin-bottom: 10px;
-	border-radius: 3px;
+@media (max-width: 600px) {
+	.login-container {
+		width: 350px;
+	}
 }
 
-.input-pw-div {
-	margin-top: 10px;
-}
-
-.input-pw, .input-check {
-	border: none;
-	outline: none;
-	font-size: 15px;
-	padding-left: 10px;
-	border-radius: 3px;
-}
-
-.input-pw-div img, .input-check-div img {
+.home {
 	display: none;
-	position: relative;
-	width: 15px;
-	height: 15px;
-	top: 15px;
-	filter: invert(85%) sepia(0%) saturate(0%) hue-rotate(192deg) brightness(95%) contrast(83%)
+	color: #ffffff;
+	text-decoration: underline;
+	margin-top: 25px;
+	cursor: pointer;
 }
 
-.input-email, .input-blog {
+
+.input {
 	width: 288px;
 	height: 44px;
 	padding-left: 10px;
@@ -83,48 +67,99 @@ body {
 	font-size: 15px;
 	outline: none;
 	font-family: 'Nunito', sans-serif;
-	display: block;
 	background-color: white;
+	margin-bottom: 5px;
 }
 
-.hidden-div {
+#register-blog {
+	margin-bottom: 0;
+}
+
+.input-div {
+	display: grid;
+	grid-template-columns: 273px 27px;
+	width: 300px;
+	height: 46px;
+	background-color: white;
+	border-radius: 3px;
+	margin-bottom: 5px;
+}
+
+.input-div input {
+	border: none;
+	outline: none;
+	width: 263px;
+	font-size: 15px;
+	font-family: 'Nunito', sans-serif;
+	padding-left: 10px;
+	border-radius: 3px;
+}
+
+.input-div img {
 	display: none;
+	position: relative;
+	width: 15px;
+	height: 15px;
+	top: 15px;
+	filter: invert(85%) sepia(0%) saturate(0%) hue-rotate(192deg) brightness(95%) contrast(83%)
 }
 
 .note {
 	color: white;
-	font-size: 13px;
-	margin: 15px 0;
+	font-size: 20px;
+	margin: 10px 0 10px 0;
+	font-weight: bold;
 }
 
-.btn-login, .btn-register {
-	display: inline-block;
+.btn-login, .btn-register, .btn-find {
+	display: block;
 	width: 300px;
-	height: 44px;
-	border-radius: 3px;
+	height: 46px;
 	border: none;
-	color: white;
-	background-color: #4cc1ed;
+	border-radius: 3px;
 	font-size: 15px;
 	cursor: pointer;
+	margin: 5px 0;
+	text-align: center;
+	margin-left: auto;
+	margin-right: auto;
 }
 
-.btn-register {
+.btn-login, .btn-find {
+	background-color: #c096ff;
+	color: white;
+}
+
+.btn-modal-off {
+	width: 200px;
+	height: 30px;
+	border: none;
+	border-radius: 3px;
+	font-size: 13px;
+	cursor: pointer;
+	text-align: center;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+
+.btn-register, .btn-modal-off {
+	background-color: white;
+	color: #c096ff;
+	border: 1px solid #c096ff;
+}
+
+.div-login, .div-register {
+	width: 300px;
 	display: none;
 }
 
-.div-find-acc, .div-register {
-	color: white;
-	font-size: 14px;
-}
 
 .div-find-acc {
-	margin-top: 15px;
-}
-
-.div-register span {
+	color: white;
+	margin-top: 25px;
+	text-decoration: underline;
 	cursor: pointer;
-	font-weight: bold;
 }
 
 .msg {
@@ -495,9 +530,42 @@ body {
 	box-sizing: border-box;
 }
 
-.btn-cancle-reset, .btn-cancle-delete {
+.btn-cancle-reset, .btn-cancle-delete, .btn-cancle-find {
 	font-size: 13px;
 	margin-top: 20px;
 	text-decoration: underline;
 	cursor: pointer;
+}
+
+.div-go-explore {
+	color: white;
+	margin-bottom: 10px;
+	cursor: pointer;
+}
+
+.div-go-explore span {
+	padding-left: 5px;
+}
+
+.div-go-explore a {
+	color: white;
+	text-decoration: none;
+	font-weight: bold;
+}
+
+.fa-plane:before {
+	color: white;
+	font-size: 1.3em;
+}
+
+.sending-email-img {
+	width: 200px;
+	height: 200px;
+	border-radius: 50%;
+}
+
+.done-img {
+	width: 200px;
+	height: 200px;
+	border-radius: 50%;
 }

@@ -2,7 +2,15 @@ package com.yjproject.web.service;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Properties;
 
+import javax.mail.Authenticator;
+import javax.mail.Message;
+import javax.mail.PasswordAuthentication;
+import javax.mail.Session;
+import javax.mail.Transport;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
@@ -35,6 +43,8 @@ public class UserServiceImp implements UserService {
 	public User getUser(String email, String blog) {
 		return dao.getUserByEmail(email, blog);
 	}
+	
+	
 
 	@Override
 	public int updateUser(User user, String newPassword) {
@@ -113,5 +123,72 @@ public class UserServiceImp implements UserService {
 		
 		return result;
 	}
+
+	@Override
+	public int findPassword(User user) {
+		int result = 0;
+		String password = randomPassword(10);
+		
+		int updatePassword = dao.updatePassword(user.getIdx(), user.getPassword(), password);
+		boolean sendEmail = sendEmail(user.getEmail(), password);
+		
+		if(updatePassword == 1 && sendEmail) {
+			result = 1;
+		}
+		
+		return result;
+	}
 	
+	public boolean sendEmail(String email, String password) {
+		String senderId = "29.code.block";
+		String senderPassword = "asdf1236!";
+		
+		String msg = "펌블러 임시 비밀번호는 [<b>" + password + "</b>]입니다. <br>" +
+					 "로그인 후 비밀번호를 변경해주세요.";
+		
+		Properties prop = new Properties();
+		prop.put("mail.smtp.host", "smtp.gmail.com");
+		prop.put("mail.smtp.port", 465);
+		prop.put("mail.smtp.auth", "true");
+		prop.put("mail.smtp.ssl.enable", "true");
+		prop.put("mail.smtp.ssl.trust", "smtp.gmail.com");
+		
+		Session session = Session.getInstance(prop, new Authenticator() {
+			protected PasswordAuthentication getPasswordAuthentication() {
+				return new PasswordAuthentication(senderId, senderPassword);
+			}
+		});
+		
+		try {
+			MimeMessage message = new MimeMessage(session);
+			message.setFrom(new InternetAddress(senderId));
+			message.addRecipient(Message.RecipientType.TO, new InternetAddress("yj520435@gmail.com"));
+			message.setSubject("[Fumblur] 비밀번호 변경 알림");
+			message.setContent(msg, "text/html; charset=utf-8");
+			
+			Transport.send(message);
+			
+			return true;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
+	}
+	
+	public String randomPassword(int size) {
+		if(size>0) {
+			char[] password = new char[size];
+			for (int i=0; i<password.length; i++) {
+				int div = (int)Math.floor(Math.random()*2);
+				if(div == 0) {
+					password[i] = (char)(Math.random()*10 + '0');
+				} else {
+					password[i] = (char)(Math.random()*26 + 'a');
+				}
+			}
+			return new String(password);
+		}
+		
+		return "ERROR : generating is failed.";
+	}
 }

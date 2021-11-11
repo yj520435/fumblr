@@ -46,8 +46,7 @@ function getDivision() {
 		else if (width<942) div = 2;
 		else if (width<1250) div = 3;
 		else if (width<1560) div = 4;
-		else if (width<1870) div = 5;
-		else div = 6;
+		else div = 5;
 		
 		var divCount = div;
 		var repeat = '';
@@ -114,9 +113,15 @@ function getDivision() {
 				
 				//이미지 사이즈 조정
 				var imgSize = '';
-				if(width>630) imgSize = '300px';
-				else if(width<630 && width>550) imgSize = '490px';
-				else if (width < 550) imgSize = '380px';
+				if(width>=630) {
+					imgSize = '300px';
+				} else if(width<630 && width>=520) {
+					imgSize = '490px';
+				} else if(width<520 && width>=500) {
+					imgSize = '450px';
+				} else if (width<500) {
+					imgSize = '380px';
+				}
 				
 				str += '<div class="post-title">' + title + '</div>';
 				
@@ -141,13 +146,16 @@ function getDivision() {
 				//썸네일 사이즈 조정
 				var thumbnailWidth = '';
 				var thumbnailHeight = '';
-				if(width>630) {
+				if(width>=630) {
 					thumbnailWidth = '300px';
 					thumbnailHeight = '168px';
-				} else if(width<630 && width>550) {
+				} else if(width<630 && width>=520) {
 					thumbnailWidth = '490px';
 					thumbnailHeight = '275px';
-				} else if (width < 530) {
+				} else if (width < 520 && width >= 500) {
+					thumbnailWidth = '450px';
+					thumbnailHeight = '252px';
+				} else if (width < 500) {
 					thumbnailWidth = '380px';
 					thumbnailHeight = '213px';
 				}
@@ -235,7 +243,11 @@ function getDivision() {
 				$('.link-title').css('margin-bottom', '0');
 			}
 			
-			if (width < 530) {
+			if (width < 520) {
+				$('.post').css({'width':'450px', 'margin-bottom':'10px'});
+			}
+			
+			if (width < 500) {
 				$('.e-title').css({'font-size':'50px', 'height':'80px'});
 				$('.post').css({'width':'380px', 'margin-bottom':'10px'});
 			}

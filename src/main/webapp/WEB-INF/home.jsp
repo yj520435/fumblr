@@ -3,9 +3,11 @@
 <html>
 <head>
 <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Insert title here</title>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <link rel="stylesheet" type="text/css" href="/css/user.css">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
 <body>
 	<!-- <h1 th:text="${message}"></h1> -->
@@ -13,25 +15,35 @@
 	${sessionScope.user.email}
 		<div class="msg"></div>
 		<div class="title">Fumblr</div>
-		<input class="input-email center" name="email" type="email" placeholder="이메일">
-		<div class="input-pw-div center">
-			<input class="input-pw" name="password" type="password" placeholder="비밀번호">
-			<img src="image/check.png">
+		<div class="note">
+			기록하고 공유하고 마음을 더해요.<br>
+			마이크로 블로그, 펌블러.<br>
 		</div>
-		<div class="hidden-div">
-			<div class="input-check-div center">
-				<input class="input-check" type="password" placeholder="비밀번호 확인">
+		<div class="div-go-explore fa fa-plane"><span>먼저 탐색해보세요!</span></div>
+		<div class="div-login center">
+			<input class="input center" id="login-email" name="email" type="email" placeholder="이메일">
+			<div class="input-div center">
+				<input id="login-password" name="password" type="password" placeholder="비밀번호">
 				<img src="image/check.png">
 			</div>
-			<input class="input-blog center" type="text" placeholder="블로그 이름">
 		</div>
-		<div class="note">
-			Rolemm Ipsum
+		<div class="div-register center">
+			<input class="input center" id="register-email" name="email" type="email" placeholder="이메일">
+			<div class="input-div center">
+				<input id="register-password" name="password" type="password" placeholder="비밀번호">
+				<img src="image/check.png">
+			</div>
+			<input class="input" type="password" id="register-password-check" placeholder="비밀번호 확인">
+			<input class="input center" id="register-blog" type="text" placeholder="블로그 이름">
 		</div>
-		<button class="btn-login" onclick="login()">로그인</button>
-		<button class="btn-register">가입</button>
-		<div class="div-find-acc">비밀번호가 기억나지 않는다면 여기를,</div>
-		<div class="div-register">Fumblr가 처음이라면 <span>가입</span>해보세요.</div>
+		<button class="btn-login">로그인</button>
+		<button class="btn-register">가입하기</button>
+		<div class="div-find-acc">비밀번호가 기억나지 않으세요?</div>
+		<div class="home" onclick="location.href='/'">처음으로 돌아가기</div>
+	</div>
+	<div class="modal">
+		<div class="modal-body">
+		</div>
 	</div>
 <script type="text/javascript" src="/javascript/user.js"></script>
 </body>

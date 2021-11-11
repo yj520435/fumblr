@@ -20,5 +20,6 @@ public interface UserService {
 	User getUser(int idx, String password);
 	int resetBlog(int idx, String password);
 	int delAccount(int idx, String password, HttpSession session);
+	int findPassword(User user);
 
 }
