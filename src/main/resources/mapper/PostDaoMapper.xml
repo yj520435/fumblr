@@ -56,7 +56,7 @@
 		SELECT FILES FROM POST WHERE IDX=#{idx}
 	</select>
 	<select id="getOtherBlog" resultType="com.yjproject.web.entity.User">
-		<![CDATA[SELECT* FROM (SELECT * FROM USERS WHERE IDX IN (SELECT OWNER FROM POST GROUP BY OWNER) AND IDX NOT IN (#{myIdx}, #{ownerIdx}) ORDER BY DBMS_RANDOM.VALUE) WHERE ROWNUM <= 4]]>
+		<![CDATA[SELECT* FROM (SELECT * FROM USERS WHERE IDX IN (SELECT OWNER FROM POST GROUP BY OWNER) AND IDX NOT IN (#{myIdx}, #{ownerIdx}) ORDER BY DBMS_RANDOM.VALUE) WHERE ROWNUM <= 7]]>
 	</select>
 	<insert id="like">
 		INSERT INTO LIKES VALUES (LIKE_SEQ.NEXTVAL, #{postIdx}, #{userIdx})
@@ -69,6 +69,22 @@
 	</select>
 	<select id="getRandomList" resultType="com.yjproject.web.entity.Post">
 		<![CDATA[SELECT * FROM (SELECT P.*, U.BLOG, U.PROFILE FROM POST P INNER JOIN USERS U ON P.OWNER = U.IDX ORDER BY DBMS_RANDOM.VALUE) WHERE ROWNUM<=30]]>
+	</select>
+	<select id="likeCount" resultType="Integer">
+		SELECT COUNT(*) COUNT FROM LIKES WHERE UIDX=#{user}
+	</select>
+	<select id="getLikeList" resultType="com.yjproject.web.entity.Post">
+		SELECT * FROM (
+			SELECT ROWNUM NUM, L.* FROM (
+				SELECT P.*, U.BLOG, U.PROFILE
+				FROM (SELECT * FROM LIKES WHERE UIDX=#{user}) L
+				INNER JOIN POST P
+				ON L.PIDX = P.IDX
+				INNER JOIN USERS U
+				ON P.OWNER = U.IDX
+				ORDER BY P.REGDATE DESC
+			) L
+		) WHERE NUM BETWEEN #{start} AND #{end}
 	</select>
 	<!-- INSERT INTO UPLOAD VALUES (UPLOAD_SEQ.NEXTVAL, #{idx}, #{fileName}, #{filePath}, #{fileSize}) -->
 	

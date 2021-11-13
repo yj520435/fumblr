@@ -2,7 +2,18 @@ var page = 1;
 var keyword = '';
 var postCount = 0;
 var flag = 0;
-var liked = [];
+var likeflag = 0;
+
+var liked = [];			//좋아요 게시물 배열
+var sideboxItems = [];	//사이드박스 랜덤 블로그 배열
+
+var owner = $('#owner').val();  //현재 방문한 블로그 소유자의 번호
+var user = $('#user').val();    //현재 로그인한 유저의 번호
+var blog = $('#blog').val();    //현재 로그인한 유저의 블로그 네임
+
+if(owner != user) {
+	$('.main').css('margin-top', '210px');
+}
 
 /* 프로필 설정 */
 
@@ -16,47 +27,54 @@ var background = $('#background').val();
 var bg = background.substr(background.indexOf('\\upload')).replaceAll('\\', '/'); //'/upload/background/20211026_wallpaper10.jpg'
 $('body').css('background-image', 'url("' + bg + '")');
 
-var owner = $('#owner').val();  //현재 방문한 블로그 소유자의 번호
-var user = $('#user').val();    //현재 로그인한 유저의 번호
-var blog = $('#blog').val();    //현재 로그인한 유저의 블로그 네임
+/* 최초 페이지 로드 */
 
-if(owner != user) {
-	$('.main').css('margin-top', '210px');
-}
-
-getList(page);    //초기 1페이지 로드
-postSize();
-sidebox();        //사이드박스 위치 조정
-modalPosition();  //모달창 위치 조정
-sideboxContents();
-getLike(user, owner);
-console.log('좋아요 배열 : ' + liked);
+getList(page);    	  //초기 1페이지 로드
+sideboxContents();    //사이드박스 랜덤 블로그 불러오기
+sidebox();        	  //사이드박스 위치 조정
+modalPosition();  	  //모달창 위치 조정
+getLike(user, owner); //좋아요 게시물 불러오기
 
 $(window).resize(function(){
 	sidebox();
 	modalPosition();
-	postSize();
+});
+
+/* 새로고침 시 스크롤 맨 위로 */
+
+$(function(){
+	$('html, body').animate({scrollTop:0}, 'slow');
 });
 
 /* 유저 메뉴 */
 
 if(user == owner) {
 	$('.icon').click(function(){
-		if($('.btn-app').css('display')=='none') {
-			$('.btn-app:nth-child(3)').show(500);
-			$('.btn-app:nth-child(2)').show(700);
-			$('.btn-app:nth-child(1)').show(1000);
+		if($('.btn-1').css('display')=='none') {
+			$('.btn-1').show(500);
+			$('.btn-2').show(700);
+			$('.btn-3').show(900);
+			if($(window).width() < 880) {
+				$('.btn-4').show(1100);
+			}
 		} else {
-			$('.btn-app:nth-child(1)').hide(500);
-			$('.btn-app:nth-child(2)').hide(700);
-			$('.btn-app:nth-child(3)').hide(1000);
+			if($(window).width() < 880) {
+				$('.btn-4').hide(500);
+				$('.btn-3').hide(700);
+				$('.btn-2').hide(900);
+				$('.btn-1').hide(1100);
+			} else {
+				$('.btn-3').hide(500);
+				$('.btn-2').hide(700);
+				$('.btn-1').hide(900);
+			}
 		}
 	});
-	}
+}
 
 /* 마이페이지 이동 */
 
-$('.btn-app:nth-child(3)').click(function(){
+$('.btn-2').click(function(){
 	$(location).attr('href', '/user/'+blog);
 })
 
@@ -64,25 +82,15 @@ function myblog() {
 	$(location).attr('href', '/blog/'+blog);
 }
 
-/* 새로고침 시 스크롤 맨 위로 */
-$(function(){
-	$('html, body').animate({scrollTop:0}, 'slow');
-});
+/* 새글쓰기 */
 
-//포스트 리스트 출력
-
-
-//스크롤이 이동에 따라 포스트 리스트 출력
-
-
-//새글쓰기 (텍스트)
 function newText(idx) {
 	
 	$('.modal-body').load("/newText", function() {
 		modalOn();
 	});
 
-	/*포스트 수정 */
+	//포스트 수정
 	if(idx!=undefined) {
 		$.ajax ({
 			url: '/getPost',
@@ -125,8 +133,6 @@ function setText(idx) {
 	});
 }
 
-
-//새글쓰기 (포토)
 function newPhoto(idx) {
 	$('.modal-body').load("/newPhoto", function() {
 		modalOn();
@@ -215,7 +221,6 @@ function newPhoto(idx) {
 }
 
 function setPhoto(idx) {
-	
 	if(idx==undefined) {
 		idx = 0;
 	}
@@ -457,9 +462,6 @@ function newLink(idx) {
 }
 
 function setLink(idx) {
-	/*var oContents = $('.m-link-thumbnail').html();
-	var contents = $.trim(oContents).replace(/\t/g, '');*/
-	
 	var thumbnail = "";
 	var title = $('.m-link-title a').text();
 	var description = $('.m-link-description').text();
@@ -495,7 +497,6 @@ function setLink(idx) {
 		}
 	});
 }
-
 
 function newBook(idx) {
 	$('.modal-body').load("/newBook", function() {
@@ -644,8 +645,8 @@ function setBook(idx) {
 	});
 }
 
+//도서 포스트 작성 시 자동으로 입력창 너비 조절
 function autoWidth(input, space) {
-	//input = .query-title;
 	var query = '.' + input.substr(input.indexOf('-')+1) + '-dom';  //.title-dom
 	$(input).keyup(function() {
 		$(query).html($(input).val());
@@ -653,108 +654,120 @@ function autoWidth(input, space) {
 	});
 }
 
-function sidebox() {
-	var div = $('.container');
-	var divX = div.offset().left;
-	var divY = div.offset().top;
+function newVideo(idx) {
+	$('.modal-body').load("/newVideo", function() {
+		modalOn();
+		
+		$('.m-video-upload').click(function(){
+			$('#input-file').click();
+		});
+		
+		$('#input-file').change((e)=>{
+			$('.modal-body').css('background-color', 'white');
+			
+			var files = e.target.files;
+			var fileArr = Array.prototype.slice.call(files);
+			var index = 0;
+			
+			fileArr.forEach(function(f){
+				var reader = new FileReader();
+				reader.onload = function(e) {
+					var html = `<video controls="controls" src=${e.target.result} autoplay="autoplay"/>`;
+					$('.m-video-preview').append(html);
+					$('.m-video-preview').css('display', 'block');
+					$('.m-video-upload').css('display', 'none');
+					$('.m-video-title, .m-video-contents').css('display', 'block');
+					$('#input-file').attr('disabled', true);
+					index++;
+				}
+				reader.readAsDataURL(f);
+			});
+		});	
+		
+		//초기화
+		$('.m-video-area').mouseover(function(){
+			$('.reset').css({
+				'top' : '35px',
+				'display' : 'block'
+			});
+		});
+		
+		$('.m-video-area').mouseout(function(){
+			$('.reset').css('display', 'none');
+		});
+		
+		$('.reset').click(function(){
+			$('.m-video-preview').html('');
+			$('.m-video-preview').css('display', 'none');
+			$('.m-video-upload').css('display', 'block');
+			$('.m-video-upload img').css('top', '120px');
+			$('#input-file').val('');
+			$('#input-file').attr('disabled', false);
+		});
+		
+		//포스트 수정
+		if (idx != undefined) {
+			$.ajax({
+				url: '/getPost',
+				type: 'get',
+				data: {
+					'postIdx' : idx
+				},
+				success: function(data) {
+					var file = data.files.substr(data.files.indexOf('upload')-1);
+					$('.m-photo-upload').css('display', 'none');
+					$('.m-photo-title, .m-photo-contents').css('display', 'block');
+					$('.m-photo-title').html(data.title);
+					$('.m-photo-preview').html('<img src="' + file + '" width="490px;">');
+					$('.m-photo-contents').html(data.contents);
+					$('#input-file').attr('disabled', true);
+					
+					var btn = $('#btn-posting');
+					btn.css('width', '50px');
+					btn.html('수정');
+					btn.attr('onclick', 'setPhoto(' + idx + ')');
+				}
+			});
+		}
+	});
+}
+
+function setVideo(idx) {
 	
-	var posLeft = divX + 510;
-	var posTop = '209px';
-	
-	$('.sidebox').css('top', posTop);
-	$('.sidebox').css('left', posLeft);
-	
-	var width=$(window).width();
-	
-	if(width>1000) {
-		$('.sidebox').css('display', 'block');
-	} else {
-		$('.sidebox').css('display', 'none');
+	if(idx==undefined) {
+		idx = 0;
 	}
-}
-
-function sideboxContents() {
-	$.ajax({
-		url: '/sideboxContents',
-		type: 'get',
-		data: {
-			'myIdx' : user,
-			'ownerIdx' : owner
-		},
-		success: function(data) {
-			for(var i=0; i<4; i++) {
-				var profile = data[i].profile;
-				var pf = profile.substring(profile.indexOf('\\upload')).replaceAll('\\', '/');
-				$('.side-'+(i+1)+' td:nth-child(1)').html('<a href="' + data[i].blog + '"><img src="' + pf + '" width="40" height="40"></a>');
-				$('.side-'+(i+1)+' td:nth-child(2)').html('<a href="' + data[i].blog + '">' + data[i].blog + '</a>');
-				/*$('.sidebox div:nth-child(' + (i+1) + ')').html('<a href="' + data[i].blog + '"><img src="' + pf + '" width="86" height="86"></a>');*/
-			}
-		}
-	});
-}
-
-
-/* 모달창 */
-function modalOn() {
-	$('.modal').css('display','block');
-	$('body').css('overflow', 'hidden');
-}
-
-function modalOff() {
-	$('.modal').css('display', 'none');
-	$('body').css('overflow', '');
-}
-
-function modalPosition() {
-	$('.modal-body').css('-webkit-transform', 'translate(-50%, -50%)');
-	$('.modal-body').css('-moz-transform', 'translate(-50%, -50%)');
-	$('.modal-body').css('-ms-transform', 'translate(-50%, -50%)');
-	$('.modal-body').css('-o-transform', 'translate(-50%, -50%)');
-	$('.modal-body').css('transform', 'translate(-50%, -50%)');
-}
-
-/*function setPost() {
-	var title = $('#title').val();
-	var contents = $('#contents').val();
 	
+	var title = $('.m-video-title').val();
+	var contents = $('.m-video-contents').val();
+	
+	var formData = new FormData();
+	var file = $('#input-file')[0].files[0];
+	
+	console.log(file);
+	
+	formData.append('idx', idx);
+	formData.append('owner', user);
+	formData.append('category', 'VIDEO');
+	formData.append('title', title);
+	formData.append('contents', contents);
+	formData.append('file', file);
 	
 	$.ajax({
-		url: '/setPost',
+		url: '/setForm',
 		type: 'post',
-		data: {
-			'writer' : 1,
-			'title' :  title,
-			'contents' : contents
-		},
-		success: function(data){
-			if (data==1) {
-				$(location).attr('href', '/blog');
-			}
-		}
-	});
-}*/
-
-function editPost(idx) {
-	console.log(1);
-	var title = $('#title').val();
-	var contents = $('#contents').val();
-	contents = contents.replace(/(?:\r\n|]r|\n)/g, '<br>');
-	
-	$.ajax({
-		url: '/editPost',
-		type: 'post',
-		data: {
-			'postIdx' : idx,
-			'title' : title,
-			'contents' : contents
-		},
-		success: function(data) {
+		data: formData,
+		contentType: false,
+		processData: false,
+		success : function(data) {
 			if(data==1) {
-				$(location).attr('href', '/blog/');
+				$(location).attr('href', '/blog/' + blog);
 			}
 		}
 	});
 }
+
+/* 포스트 삭제 확인 */
 
 function confirm(idx) {
 	modalOn();
@@ -784,6 +797,8 @@ function confirm(idx) {
 	});		
 }
 
+/* 포스트 삭제 진행 */
+
 function delPost(idx) {
 	$.ajax({
 		url : '/delPost',
@@ -799,8 +814,166 @@ function delPost(idx) {
 	});
 }
 
+/* 포스트 좋아요 */
+
+function like(idx) {
+	if (user != '') {
+		$.ajax({
+			url: '/like',
+			type: 'get',
+			data: {
+				'postIdx' : idx,
+				'userIdx' : user
+			},
+			success: function() {
+				$('.heart-' + idx).attr('class', 'fa fa-heart heart-'+idx);
+				$('.heart-' + idx).removeClass('fa-heart-o');
+				$('.heart-' + idx).removeAttr('onclick');
+				$('.heart-' + idx).attr('onclick', 'noLike(' + idx + ')');
+			}
+		});
+	} else {
+		alert('로그인이 필요합니다.');
+		return false;
+	}
+}
+
+/* 포스트 좋아요 취소 */
+
+function noLike(idx) {
+	$.ajax({
+		url: '/noLike',
+		type: 'get',
+		data: {
+			'postIdx' : idx,
+			'userIdx' : user
+		},
+		success: function() {
+			$('.heart-' + idx).attr('class', 'fa fa-heart-o heart-'+idx);
+			$('.heart-' + idx).removeClass('fa-heart');
+			$('.heart-' + idx).removeAttr('onclick');
+			$('.heart-' + idx).attr('onclick', 'like(' + idx + ')');
+		}
+	});
+}
+
+/* 특정 블로그 방문 시 좋아요 누른 포스트 불러오기 */
+
+function getLike(user, owner) {
+	$.ajax({
+		url: '/getLike',
+		type: 'get',
+		data: {
+			'user' : user,
+			'owner' : owner
+		},
+		async: false,
+		success: function(data) {
+			liked = data.slice();
+		}
+	});
+}
+
+/* 사이드 박스 레이아웃 및 위치 조정 */
+
+function sidebox() {
+	
+	var div = $('.container');
+	var divX = div.offset().left;
+	var divY = div.offset().top;
+	
+	var width=$(window).width();
+
+	var posLeft = divX + 510;
+	var posTop = '209px';
+		
+	$('.sidebox').css('top', posTop);
+	$('.sidebox').css('left', posLeft);
+	
+	var str = '';
+	str += '<p>이런 블로그도 있어요</p><hr><table>';
+	for (var i=0; i<4; i++) {
+		var profile = sideboxItems[i].profile;
+		var pf = profile.substring(profile.indexOf('\\upload')).replaceAll('\\', '/');
+		str += '<tr>' + 
+			   '<td><a href="' + sideboxItems[i].blog + '"><img src="' + pf + '" width="40px" height="40px"></a></td>' +
+			   '<td><a href="' + sideboxItems[i].blog + '">' + sideboxItems[i].blog + '</a></td>' +
+			   '</tr>';
+	}
+	str += '</table><span><a href="/explore" class="fa fa-plane"></a></span>'
+	$('.sidebox').html(str);
+	
+	if(width > 880) {
+		$('.sidebox').css('display', 'block');
+	} else {
+		$('.sidebox').css('display', 'none');
+	}
+}
+
+/* 사이드박스 컨텐츠(랜덤 블로그 리스트) 불러오기 */
+
+function sideboxContents() {
+	$.ajax({
+		url: '/sideboxContents',
+		type: 'get',
+		data: {
+			'myIdx' : user,
+			'ownerIdx' : owner
+		},
+		async: false,
+		success: function(data) {
+			sideboxItems = data;
+		}
+	});
+}
+
+/* 모달창 */
+
+function modalOn() {
+	$('.modal').css('display','block');
+	$('body').css('overflow', 'hidden');
+}
+
+function modalOff() {
+	$('.modal').css('display', 'none');
+	$('body').css('overflow', '');
+}
+
+function modalPosition() {
+	$('.modal-body').css('-webkit-transform', 'translate(-50%, -50%)');
+	$('.modal-body').css('-moz-transform', 'translate(-50%, -50%)');
+	$('.modal-body').css('-ms-transform', 'translate(-50%, -50%)');
+	$('.modal-body').css('-o-transform', 'translate(-50%, -50%)');
+	$('.modal-body').css('transform', 'translate(-50%, -50%)');
+}
 
 
+/*function editPost(idx) {
+	console.log(1);
+	var title = $('#title').val();
+	var contents = $('#contents').val();
+	contents = contents.replace(/(?:\r\n|]r|\n)/g, '<br>');
+	
+	$.ajax({
+		url: '/editPost',
+		type: 'post',
+		data: {
+			'postIdx' : idx,
+			'title' : title,
+			'contents' : contents
+		},
+		success: function(data) {
+			if(data==1) {
+				$(location).attr('href', '/blog/');
+			}
+		}
+	});
+}*/
+
+
+
+
+/* 포스트 리스트 출력 */
 
 function getList(page) {
 
@@ -809,8 +982,8 @@ function getList(page) {
 	var endPage = 1;
 	var editMethod = '';
 	
+	//작성한 포스트가 존재하지 않는 경우
 	if(postCount==0) {
-		//작성한 포스트가 존재하지 않는 경우
 		var str = '<div class="empty-post center">앗! 포스트가 없어요.</div>';
 		$('.main').append(str);
 		return;
@@ -841,97 +1014,7 @@ function getList(page) {
 			
 			for(var i=0; i<data.length; i++) {
 
-				if(data[i].title == null) {
-					data[i].title = '';
-				}
-				
-				var str;
-				var category;
-				
-				str = '<div class="post center">';
-				
-				//포스트(텍스트)
-				if(data[i].category=='TEXT') {
-					str += '<p class="post-title">' + data[i].title + '</p>' +
-						   '<div class="post-contents">' + data[i].contents + '</div>';
-				}
-				
-				//포스트(사진)
-				if(data[i].category=='PHOTO') {
-					var file = data[i].files;
-					file = file.substr(file.indexOf('upload')-1);
-					str += '<p class="post-title">' + data[i].title + '</p>';
-					
-					if(data[i].title != ' ') {
-						str += '<div class="post-photo"><img src="' + file + '"></div>';
-					} else {
-						str += '<div class="post-photo"><img src="' + file + '" style="margin-top:-15px"></div>';
-					}
-					
-					if(data[i].contents != null) {
-						str += '<div class="post-contents" style="margin-top: 15px;">' + data[i].contents + '</div>';
-					}
-				}
-				
-				//포스트(코드)
-				if(data[i].category=='CODE') {
-					str += '<p class="post-title">' + data[i].title + '</p>'+
-						   '<pre class="code-'+ data[i].idx +'"><code>' + data[i].contents + '</code></pre>';
-				}
-				
-				//포스트(링크)
-				if(data[i].category=='LINK') {
-					str += '<div style="height:15px"></div><div class="link-information">';
-					if(data[i].thumbnail != null) {
-						if(data[i].thumbnail.includes('youtube.com')) {
-							str += '<div class="link-thumbnail"><iframe src="' + data[i].thumbnail + '" frameborder="0" allowfullscreen></iframe></div>';
-						} else {
-							str += '<div class="link-thumbnail"><img src="'+ data[i].thumbnail + '"></div>';
-						}
-					}
-
-					str += '<div class="link-title">' + data[i].title + '</div>';
-					
-					if(data[i].description != null) {
-						str += '<div class="link-description">' + data[i].description + '</div>';
-					}
-					
-					str += '</div>' + 
-						   '<div class="post-contents">' + data[i].contents + '</div>';
-				}
-				
-				//포스트(도서)
-				if(data[i].category=='BOOK') {
-					var arr = data[i].description.split('&sp;');
-					var author = arr[0];
-					var publisher = arr[1];
-					var description = arr[2];
-					var url = arr[3];
-					
-					str += '<div style="height:15px;"></div>' +
-						   '<table class="book-table">' +
-						   '<tr>' +
-						   '<td class="book-thumbnail"><img class="book-image" src="' + data[i].thumbnail + '"></td>' +
-						   '<td class="book-information" width="340px">' +
-						   '<p class="book-title">' + data[i].title + '</p>' +
-						   '<p class="book-author"><span style="color: gray;">저자 | </span>' + author + '</p>' +
-						   '<p class="book-publisher"><span style="color: gray;">출판 | </span>' + publisher + '</p>' +
-						   '<p class="book-description">' + description + '<a href="' + url + '" target="_blank"> 더보기</a></p>' +
-						   '</td>' + 
-						   '</tr>' +
-						   '</table>' +
-						   '<div class="post-contents center">' + data[i].contents + '</div>';
-					
-					$('.book-area').css('display', 'block');
-				}
-				
-				/*
-				if(data[i].category=='CODE') {
-					str += '<p class="post-description">' + data[i].title + '</p>';
-				} else {
-					str += '<p class="post-title">' + data[i].title + '</p>';
-				}
-				*/
+				var str = generateList(data[i]);
 				
 				editMethod = 'new' + data[i].category.charAt(0) + data[i].category.substr(1).toLowerCase();
 		
@@ -970,93 +1053,224 @@ function getList(page) {
 	});
 }
 
+/* 스크롤이 바닥에 닿으면 다음 페이지 로드 */
+
 $(window).scroll(function(){
 	if(flag==0) {
 		if ($(window).scrollTop() == $(document).height() - $(window).height())  {
 			flag = 1;
 			page++;
-			getList(page);
+			if(likeflag == 1) getLikeList(page);
+			else getList(page);
 		}
 	}
 });
 
-function postSize() {
-	//포스트 크기 조정
-	/*var width = $(window).width();
-	if(width>=520) {
-		$('.post').css('width', '490px');
-	} else if(width<520) {
-		$('.post').css('width', '450px');
-	}*/
-}
+/* 좋아요 누른 포스트 리스트 모아보기 */
 
-/*$(window).scroll(function(){
-		if ($(window).scrollTop() == $(document).height() - $(window).height()) {
-			console.log('로드페이지 ' + page);
-			getList(page);
-			return;
-		}
-	});*/
+$('.btn-app .fa-heart').click(function(){
+	$('.main').empty();
+	page = 1;
+	flag = 0;
+	likeflag = 1;
+	getLikeList(page);
 	
-function logout() {
-	$(location).attr('href', '/logout');
-}
+	setTimeout(function() {
+		$('.btn-1').html('<div class="fa fa-undo" onclick="myblog()"></div>');
+	}, 1500);
+});
 
-function like(idx) {
-	$.ajax({
-		url: '/like',
-		type: 'get',
-		data: {
-			'postIdx' : idx,
-			'userIdx' : user
-		},
-		success: function() {
-			$('.heart-' + idx).attr('class', 'fa fa-heart heart-'+idx);
-			$('.heart-' + idx).removeClass('fa-heart-o');
-			$('.heart-' + idx).removeAttr('onclick');
-			$('.heart-' + idx).attr('onclick', 'noLike(' + idx + ')');
+
+/* 포스트 리스트를 화면에 뿌려주는 로직 */
+
+function generateList(data) {
+	if(data.title == null) {
+		data.title = '';
+	}
+	
+	var str;
+	
+	str = '<div class="post center">';
+	
+	if(likeflag == 1) {
+		var blog = data.blog;
+		var profile = data.profile;
+		profile = profile.substr(profile.indexOf('\\upload'));
+				
+		str += '<div class="post-owner">' +
+				'<div class="owner-profile"><a href="/blog/' + blog + '"><img src="' + profile + '"></a></div>' +
+				'<div class="owner-blog"><a href="/blog/' + blog + '">' + blog + '</a></div>' +
+				'</div>';
+	}
+	
+	//포스트(텍스트)
+	if(data.category=='TEXT') {
+		str += '<p class="post-title">' + data.title + '</p>' +
+			   '<div class="post-contents">' + data.contents + '</div>';
+	}
+	
+	//포스트(사진)
+	if(data.category=='PHOTO') {
+		var file = data.files;
+		file = file.substr(file.indexOf('upload')-1);
+		str += '<p class="post-title">' + data.title + '</p>';
+		
+		if(data.title != ' ') {
+			str += '<div class="post-photo"><img src="' + file + '"></div>';
+		} else {
+			if(likeflag==0) {
+				str += '<div class="post-photo"><img src="' + file + '" style="margin-top:-15px"></div>';
+			} else {
+				str += '<div class="post-photo"><img src="' + file + '" style="margin-top:-30px"></div>';
+			}
 		}
-	});
-}
-
-function noLike(idx) {
-	$.ajax({
-		url: '/noLike',
-		type: 'get',
-		data: {
-			'postIdx' : idx,
-			'userIdx' : user
-		},
-		success: function() {
-			$('.heart-' + idx).attr('class', 'fa fa-heart-o heart-'+idx);
-			$('.heart-' + idx).removeClass('fa-heart');
-			$('.heart-' + idx).removeAttr('onclick');
-			$('.heart-' + idx).attr('onclick', 'like(' + idx + ')');
+		
+		if(data.contents != null) {
+			str += '<div class="post-contents" style="margin-top: 15px;">' + data.contents + '</div>';
 		}
-	});
+	}
+	
+	//포스트(코드)
+	if(data.category=='CODE') {
+		str += '<p class="post-title">' + data.title + '</p>'+
+			   '<pre class="code-'+ data.idx +'"><code>' + data.contents + '</code></pre>';
+	}
+	
+	//포스트(링크)
+	if(data.category=='LINK') {
+		
+		if(likeflag==0) {
+			str += '<div style="height:15px"></div>';
+		}
+		
+		str += '<div class="link-information">';
+		if(data.thumbnail != null) {
+			if(data.thumbnail.includes('youtube.com')) {
+				str += '<div class="link-thumbnail"><iframe src="' + data.thumbnail + '" frameborder="0" allowfullscreen></iframe></div>';
+			} else {
+				str += '<div class="link-thumbnail"><img src="'+ data.thumbnail + '"></div>';
+			}
+		}
+
+		str += '<div class="link-title">' + data.title + '</div>';
+		
+		if(data.description != null) {
+			str += '<div class="link-description">' + data.description + '</div>';
+		}
+		
+		str += '</div>' + 
+			   '<div class="post-contents">' + data.contents + '</div>';
+	}
+	
+	//포스트(도서)
+	if(data.category=='BOOK') {
+		var arr = data.description.split('&sp;');
+		var author = arr[0];
+		var publisher = arr[1];
+		var description = arr[2];
+		var url = arr[3];
+		
+		if(likeflag==0) {
+			str += '<div style="height:15px"></div>';
+		}
+		
+		str += '<table class="book-table">' +
+			   '<tr>' +
+			   '<td class="book-thumbnail"><img class="book-image" src="' + data.thumbnail + '"></td>' +
+			   '<td class="book-information" width="340px">' +
+			   '<p class="book-title">' + data.title + '</p>' +
+			   '<p class="book-author"><span style="color: gray;">저자 | </span>' + author + '</p>' +
+			   '<p class="book-publisher"><span style="color: gray;">출판 | </span>' + publisher + '</p>' +
+			   '<p class="book-description">' + description + '<a href="' + url + '" target="_blank"> 더보기</a></p>' +
+			   '</td>' + 
+			   '</tr>' +
+			   '</table>' +
+			   '<div class="post-contents center">' + data.contents + '</div>';
+		
+		$('.book-area').css('display', 'block');
+	}
+	
+	//포스트(동영상)
+	if(data.category=='VIDEO') {
+		var file = data.files;
+		file = file.substr(file.indexOf('upload')-1);
+		str += '<p class="post-title">' + data.title + '</p>';
+		
+		if(data.title != ' ') {
+			str += '<div class="post-video"><video controls="controls" src="' + file + '"/></div>';
+		} else {
+			str += '<div class="post-video"><video controls="controls" src="' + file + '" style="margin-top:-15px"/></div>';
+		}
+		
+		if(data.contents != null) {
+			str += '<div class="post-contents" style="margin-top: 15px;">' + data.contents + '</div>';
+		}
+	}
+	
+	return str;
 }
 
-/* 좋아요 누른 글*/
+/* 좋아요 누른 포스트 리스트 출력 */
 
-function getLike(user, owner) {
+function getLikeList(page) {
+	
+	var likeCount = $('#likeCount').val();
+	var endPage = 1;
+	
+	if(likeCount==0) {
+		//좋아요 누른 포스트가 존재하지 않는 경우
+		var str = '<div class="empty-post center">아직 좋아하는 포스트가 없어요.</div>';
+		$('.main').append(str);
+		return;
+	}
+	
+	//좋아요 누른 포스트가 존재하는 경우
+	if(likeCount%10 == 0)
+		endPage = likeCount/10;
+	else
+		endPage = (likeCount/10)+1;
+	endPage = parseInt(endPage);
+	
 	$.ajax({
-		url: '/getLike',
+		url: '/getLikeList',
 		type: 'get',
 		data: {
 			'user' : user,
-			'owner' : owner
+			'page' : page
 		},
-		async: false,
+		beforeSend: function() {
+			$('.loading').css('display', 'block');
+			$('.loading').html('<img src="/image/ajax-loader.gif" id="ajax-loader">');
+		},
 		success: function(data) {
-			liked = data.slice();
+			for(var i=0; i<data.length; i++) {
+
+				var str = generateList(data[i]);
+		
+				str += '<div class="post-menu">' + 
+						'<span class="fa fa-heart heart-' + data[i].idx +'" onclick="noLike(' + data[i].idx + ')"></span>' +
+						'</div>'
+				
+				$('.main').append(str);
+			}
+			
+			hljs.initHighlightingOnLoad();
+			
+			if(page<endPage) {
+				flag = 0;
+			} else {
+				flag = 1;
+			}
+	
+			if(page>=endPage) {
+				$('.loading').html('');
+			}
 		}
 	});
 }
 
+/* 로그아웃 */
 
-
-console.log('현재 주소' + $(location).attr('href'));
-
-if($(location).attr('href') == 'http://localhost:8080/explore') {
-	alert(1);
+function logout() {
+	$(location).attr('href', '/logout');
 }

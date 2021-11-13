@@ -29,7 +29,7 @@ public interface PostService {
 	 * String description);
 	 */
 	
-	int setPhoto(HttpServletRequest request, Post post, MultipartFile file) throws IOException;
+	int setForm(HttpServletRequest request, Post post, MultipartFile file) throws IOException;
 	//int setCode(Post post);
 	//int setLink(Post post);
 	//int setBook(Post post);
@@ -40,4 +40,6 @@ public interface PostService {
 	int noLike(int postIdx, int userIdx);
 	int[] getLike(int user, int owner);
 	List<Posts> getRandomList();
+	int likeCount(int user);
+	List<Post> getLikeList(int user, int page);
 }

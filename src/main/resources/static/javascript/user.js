@@ -179,7 +179,7 @@ function alarm(message) {
 $('.div-find-acc').click(function(){
 	modalOn();
 	$('.modal-body').html('<div>이메일 아이디를 알려주세요.<br>' +
-						  '해당 이메일로 초기화된 비밀번호를 보내드립니다.<br>' +  
+						  '해당 이메일로 초기화된 비밀번호를 보내드립니다.<br><br>' +  
 						  '</div>' +
 						  '<input type="email" class="input input-email" placeholder="이메일"><br>' +
 						  '<button class="btn-find" onclick="findPassword()">발송</button>' +
@@ -469,7 +469,7 @@ function changePic(pic, flag) {
 		$('.user-'+pic).css('display', 'none');
 		$('.div-ch-'+pic).css({
 			'display' : 'grid',
-			'grid-template-columns' : '257px 25px'
+			'grid-template-columns' : '10fr 1fr'
 		});
 		$('.btn-ch-'+pic).css('display', 'none');
 		$('.btn-ch-'+pic+'-cancle').css('display', 'inline-block');
@@ -487,7 +487,8 @@ function btnReset() {
 	modalOn();
 	$('.modal-body').html('<div>지금까지 작성한 모든 포스트가 삭제됩니다.<br>' +
 						  '(사용자 계정과 좋아요 기록은 삭제되지 않아요.)<br><br>' + 
-						  '계속하시려면 현재 비밀번호를 입력하고 초기화 버튼을 눌러주세요.' + 
+						  /*'계속하시려면 현재 비밀번호를 입력하고<br>' +
+						  '아래초기화 버튼을 눌러주세요.' + */
 						  '</div>' +
 						  '<input type="password" class="check-to-action" placeholder="현재 비밀번호"><br>' +
 						  '<button class="btn-reset" onclick="resetBlog('+idx+')">초기화</button>' +
@@ -522,8 +523,8 @@ function resetBlog(idx) {
 function btnDelete() {
 	modalOn();
 	$('.modal-body').html('<div>계정 전체를 삭제하시겠어요?<br>' +
-						  '이제까지 올린 모든 포스트와 좋아요 기록도 함께 삭제돼요.<br><br>' + 
-						  '계속하시려면 현재 비밀번호를 입력하고 계정 삭제 버튼을 눌러주세요.' + 
+						  '모든 포스트와 좋아요 기록이 함께 삭제돼요.<br><br>' + 
+						  /*'계속하시려면 현재 비밀번호를 입력하고 계정 삭제 버튼을 눌러주세요.' + */
 						  '</div>' +
 						  '<input type="password" class="check-to-action" placeholder="현재 비밀번호"><br>' +
 						  '<button class="btn-delete" onclick="delAccount('+idx+')">계정 삭제</button>' +

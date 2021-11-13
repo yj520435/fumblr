@@ -23,14 +23,15 @@
 		<div class="container">
 			<div class="icon">
 				<c:if test="${user.idx != owner.idx}">
-					<div class="btn-app btn-0"><div class="fa fa-home" onclick="myblog()"></div></div>
+					<div class="btn-app btn-0" onclick="myblog()"><div class="fa fa-home"></div></div>
 					<!-- <div class="fa fa-home" onclick="myblog()"></div> -->
 				</c:if>
 				<c:if test="${user.idx == owner.idx}">
 					<div class="my-menu">
-						<div class="btn-app btn-1"><div class="fa fa-sign-out" onclick="logout()"></div></div>
-						<div class="btn-app btn-2"><div class="fa fa-envelope-o"></div></div>
-						<div class="btn-app btn-3"><div class="fa fa- fa-user"></div></div>
+						<div class="btn-app btn-4" onclick="location.href='/explore'"><div class="fa fa-plane"></div></div>
+						<div class="btn-app btn-3" onclick="logout()"><div class="fa fa-sign-out"></div></div>
+						<div class="btn-app btn-2"><div class="fa fa-user"></div></div>
+						<div class="btn-app btn-1"><div class="fa fa-heart"></div></div>
 					</div>
 				</c:if>
 			</div>
@@ -49,28 +50,12 @@
 					<td><img src="/image/i-code.png" onclick="newCode()"></td>
 					<td><img src="/image/i-link.png" onclick="newLink()"></td>
 					<td><img src="/image/i-book.png" onclick="newBook()"></td>
-					<td><img src="/image/i-checkbox.png" onclick="newText()"></td>
+					<td><img src="/image/i-video.png" onclick="newVideo()"></td>
 				</tr>
 			</table>
 		</c:if>
 		<!-- 블로그 추천 사이드박스 -->
-		<div class="sidebox">
-			<p>이런 블로그도 있어요</p>
-			<hr>
-			<table>
-				<tr class="side side-1"><td></td><td></td></tr>
-				<tr class="side side-2"><td></td><td></td></tr>
-				<tr class="side side-3"><td></td><td></td></tr>
-				<tr class="side side-4"><td></td><td></td></tr>
-			</table>
-			<!-- <div class="other-post">
-				<div></div>
-				<div></div>
-				<div></div>
-				<div></div>
-			</div> -->
-			<span><a href="/explore" class="fa fa-plane"></a></span>
-		</div>
+		<div class="sidebox"></div>
 		<!-- 포스트 -->
 		<div class="main center"></div>
 		<div class="loading" style="display:none;"></div>
@@ -87,6 +72,7 @@
 		<!-- 현재 로그인한 유저의 블로그 정보 -->
 		<input type="hidden" value="${user.idx}" id="user"/>
 		<input type="hidden" value="${user.blog}" id="blog"/>
+		<input type="hidden" value="${likeCount}" id="likeCount"/>
 	</div>
 <script type="text/javascript" src="/javascript/autosize.js"></script>
 <script type="text/javascript" src="/javascript/blog.js"></script>

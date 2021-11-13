@@ -85,12 +85,12 @@ public class PostServiceImp implements PostService {
 	 */
 
 	@Override
-	public int setPhoto(HttpServletRequest request, Post post, MultipartFile file) throws IOException {
+	public int setForm(HttpServletRequest request, Post post, MultipartFile file) throws IOException {
 		
 		int result;
 		
 		if(file!=null) {
-			String realPath = "C:\\Users\\kyj\\Desktop\\upload\\";
+			String realPath = "C:\\Users\\kyj\\Desktop\\upload\\post\\";
 			String fileName = generateFileName(file);
 			//long fileSize = file.getSize();
 			
@@ -258,5 +258,18 @@ public class PostServiceImp implements PostService {
 	@Override
 	public List<Posts> getRandomList() {
 		return dao.getRandomList();
+	}
+
+	@Override
+	public int likeCount(int user) {
+		return dao.likeCount(user);
+	}
+
+	@Override
+	public List<Post> getLikeList(int user, int page) {
+		int start = 1 + (page-1)*10;
+		int end = page * 10;
+		List<Post> list = dao.getLikeList(user, start, end);
+		return list;
 	}
 }

@@ -37,4 +37,6 @@ public interface PostDao {
 	int noLike(int postIdx, int userIdx);
 	int[] getLike(int user, int owner);
 	List<Posts> getRandomList();
+	int likeCount(int user);
+	List<Post> getLikeList(int user, int start, int end);
 }

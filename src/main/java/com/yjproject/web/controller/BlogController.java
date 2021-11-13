@@ -42,12 +42,12 @@ import com.yjproject.web.entity.User;
 import com.yjproject.web.service.PostService;
 import com.yjproject.web.service.UserService;
 
-@MultipartConfig (
+/*@MultipartConfig (
 	location="/tmp",
 	fileSizeThreshold = 1024*1024,
 	maxFileSize = 1024*1024*50,
 	maxRequestSize = 1024*1024*50*5
-)
+)*/
 @Controller
 public class BlogController {
 
@@ -71,18 +71,26 @@ public class BlogController {
 	}
 	
 	@GetMapping("/blog/{blog}")
-	public String myBlog(Model model,
+	public String myBlog(
+			Model model,
 			HttpSession session,
 			@PathVariable("blog") String blog,
 			@RequestParam(required=false, defaultValue="") String keyword) {
-		User owner = (User) uService.getUser("", blog);
+		User user = (User) session.getAttribute("user"); //현재 로그인한 사용자
+		User owner = (User) uService.getUser("", blog);  //방문한 블로그 소유자
 		int postCount = service.postCount(owner.getIdx(), keyword);
+		
+		int likeCount = 0;
+		
+		//사용자와 소유자가 동일한 경우(본인) 좋아요한 게시물 수 불러오기
+		if (user != null) {
+			if (user.getIdx() == owner.getIdx()) {
+				likeCount = service.likeCount(user.getIdx());
+			}
+		}
+		
+		model.addAttribute("likeCount", likeCount);
 		model.addAttribute("owner", owner);
-		/*
-		model.addAttribute("owner", owner.getIdx());
-		model.addAttribute("profile", owner.getProfile());
-		model.addAttribute("background", owner.getBackground());
-		*/
 		model.addAttribute("postCount", postCount);
 		return "blog";
 	}
@@ -152,6 +160,11 @@ public class BlogController {
 		return "book";
 	}
 	
+	@GetMapping("/newVideo")
+	public String newVideo() throws Exception {
+		return "video";
+	}
+	
 	/* 포스팅 */
 	
 	@PostMapping("/setPost")
@@ -169,18 +182,19 @@ public class BlogController {
 		return result;
 	}
 	
-	@PostMapping("/setPhoto")
+	@PostMapping("/setForm")
 	@ResponseBody
-	public int setPhoto(HttpServletRequest request,
-						@RequestParam(required=false, defaultValue="0") String idx,
-						String owner,
+	public int setForm(HttpServletRequest request,
+						@RequestParam(required=false, defaultValue="0") int idx,
+						int owner,
+						String category, 
 						@RequestParam(required=false, defaultValue=" ") String title,
 						@RequestParam(required=false, defaultValue="") String contents,
 						@RequestParam(required=false) MultipartFile file) throws IOException {
-		int idx_ = Integer.parseInt(idx);
-		int owner_ = Integer.parseInt(owner);
-		Post post = new Post(idx_, owner_, "PHOTO", title, contents, "", "", "", null);
-		int result = service.setPhoto(request, post, file);
+		//int idx_ = Integer.parseInt(idx);
+		//int owner_ = Integer.parseInt(owner);
+		Post post = new Post(idx, owner, category, title, contents, "", "", "", null);
+		int result = service.setForm(request, post, file);
 		return result;
 	}
 	
@@ -196,7 +210,7 @@ public class BlogController {
 	
 	@GetMapping("/sideboxContents")
 	@ResponseBody
-	public User[] sideboxContents(int myIdx, int ownerIdx) {
+	public User[] sideboxContents(@RequestParam(required=false, defaultValue="0") int myIdx, int ownerIdx) {
 		User[] user = service.getOtherBlog(myIdx, ownerIdx);
 		return user;
 	}
@@ -220,7 +234,9 @@ public class BlogController {
 	}
 	
 	@GetMapping("/explore")
-	public String explore() {
+	public String explore(Model model, HttpSession session) {
+		User user = (User) session.getAttribute("user");
+		model.addAttribute("user", user);
 		return "explore";
 	}
 	
@@ -231,52 +247,26 @@ public class BlogController {
 		return list;
 	}
 	
-	/*
-	public Map<String, Object> setPhoto(MultipartFile[] files) throws IOException {
-		Map<String, Object> resultMap = new HashMap<String, Object>();
-		System.out.println(files); /*
-		boolean fileUpload = service.setPhoto(files);
-		if (fileUpload) {
-			resultMap.put("result", "success");
-		} else {
-			resultMap.put("result", "fail");
+	@GetMapping("/getLikeList")
+	@ResponseBody
+	public List<Post> getLikeList(Model model, int user,
+			@RequestParam(required=false, defaultValue="1") int page) {
+		int likeCount = service.likeCount(user);
+		List<Post> list = null;
+		if (likeCount != 0) {
+			list = service.getLikeList(user, page);
 		}
 		
-		return resultMap; 
-	}*/
-	
-	/*
-	@RequestMapping(value = "/setPhoto", method = RequestMethod.POST)
-	public @ResponseBody void setPhoto(MultipartHttpServletRequest request) {
+		//리스트 호출 시 로딩
+		if (page != 1) {
+			try {
+				TimeUnit.SECONDS.sleep(2);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
 		
-		System.out.println(request);
-		List<MultipartFile> fileList = new ArrayList<MultipartFile>();
+		return list;
+	}	
 
-		// input file 에 아무것도 없을 경우 (파일을 업로드 하지 않았을 때 처리)
-		if(request.getFiles("file").get(0).getSize() != 0){
-			fileList = request.getFiles("file");
-		}
-		
-		String path = request.getServletContext().getRealPath("/image");
-		File fileDir = new File(path);
-		if (!fileDir.exists()) { fileDir.mkdirs(); }
-		long time = System.currentTimeMillis();
-		for (MultipartFile mf : fileList) {
-		String originFileName = mf.getOriginalFilename(); // 원본 파일 명
-		String saveFileName = String.format("%d_%s", time, originFileName);
-
-		try {
-		// 파일생성
-			mf.transferTo(new File(path, saveFileName));
-		} catch (Exception e) {
-		e.printStackTrace(); 
-		}
-		}
-	}
-	*/
-	
-	/*
-	 * @PostMapping("/setPhoto") public void setPhoto() {MultipartFile[] file) {
-	 * String fileName = Arrays.stream }
-	 */
 }

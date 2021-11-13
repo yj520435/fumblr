@@ -14,7 +14,12 @@
 </head>
 <body>
 	<div class="e-header">
-		<button onclick="location.href='/'">로그인</button>
+		<c:if test="${!empty user}">
+			<button onclick="location.href='/blog/${user.blog}'">내 블로그</button>
+		</c:if>
+		<c:if test="${empty user}">
+			<button onclick="location.href='/'">로그인</button>
+		</c:if>
 	</div>
 	<hr>
 	<div class="e-title">explore fumblr</div>
@@ -99,8 +104,8 @@ function getDivision() {
 			var str='';
 			
 			str += '<div class="post-owner">' +
-				   '<div class="owner-profile"><img src="' +profile + '"></div>' +
-				   '<div class="owner-blog">' + blog + '</div>' +
+				   '<div class="owner-profile"><a href="blog/' + blog + '"><img src="' +profile + '"></a></div>' +
+				   '<div class="owner-blog"><a href="blog/' + blog + '">' + blog + '</a></div>' +
 				   '</div>';
 			
 			if(category=='TEXT') {
@@ -128,11 +133,11 @@ function getDivision() {
 				if(title != ' ') {
 					str += '<div><img src="' + file + '" width="' + imgSize + '"></div>';
 				} else {
-					str += '<div><img src="' + file + '" style="margin-top: -15px" width="' + imgSize + '"></div>';
+					str += '<div><img src="' + file + '" style="margin-top: -30px" width="' + imgSize + '"></div>';
 				}
 				
 				if(contents != null) {
-					str += '<div class="post-contents" style="">' + contents + '</div>';
+					str += '<div class="post-contents" style="margin-top: 15px;">' + contents + '</div>';
 				}
 			}
 			
@@ -149,7 +154,7 @@ function getDivision() {
 				if(width>=630) {
 					thumbnailWidth = '300px';
 					thumbnailHeight = '168px';
-				} else if(width<630 && width>=520) {
+				} /* else if(width<630 && width>=520) {
 					thumbnailWidth = '490px';
 					thumbnailHeight = '275px';
 				} else if (width < 520 && width >= 500) {
@@ -158,15 +163,15 @@ function getDivision() {
 				} else if (width < 500) {
 					thumbnailWidth = '380px';
 					thumbnailHeight = '213px';
-				}
+				} */
 				
 				str += '<div></div><div class="link-information">';
 
 				if(thumbnail != null) {
 					if(thumbnail.includes('youtube.com')) {
-						str += '<div class="link-thumbnail"><iframe width="' + thumbnailWidth + '" height="' + thumbnailHeight + '" src="' + thumbnail + '" frameborder="0"></iframe></div>';
+						str += '<div class="link-thumbnail"><iframe style="width:' + thumbnailWidth + ' !important; height:' + thumbnailHeight + ' !important;" src="' + thumbnail + '" frameborder="0"></iframe></div>';
 					} else {
-						str += '<div class="link-thumbnail"><img src="' + thumbnail + '" style="width:' + thumbnailWidth + '; height:auto;"></div>';
+						str += '<div class="link-thumbnail"><img src="' + thumbnail + '" style="width:' + thumbnailWidth + ' !important; height:auto;"></div>';
 					}
 				}
 				
@@ -233,11 +238,26 @@ function getDivision() {
 				}
 			}
 			
+			if(category=='VIDEO') {
+				file = file.substr(file.indexOf('upload')-1);
+				str += '<p class="post-title">' + title + '</p>';
+				
+				if(title != ' ') {
+					str += '<div class="post-video"><video controls="controls" src="' + file + '"/></div>';
+				} else {
+					str += '<div class="post-video"><video controls="controls" src="' + file + '" style="margin-top:-15px"/></div>';
+				}
+				
+				if(contents != null) {
+					str += '<div class="post-contents" style="margin-top: 15px;">' + contents + '</div>';
+				}
+			}
+			
 			str += '<div class="e-post-like">반응 100개</div>';
 			
 			$('.post-'+(i+1)).html(str);
 			
-			//CSS 조정
+			//포스트 크기 조정
 			if (width>630) {
 				$('.post').css({'width':'300px', 'margin-bottom':'15px'});
 				$('.link-title').css('margin-bottom', '0');
@@ -251,24 +271,6 @@ function getDivision() {
 				$('.e-title').css({'font-size':'50px', 'height':'80px'});
 				$('.post').css({'width':'380px', 'margin-bottom':'10px'});
 			}
-			
-			/* //포스트 크기
-			if(width>630) {
-				$('.e-post').css({
-					'width' : '300px',
-				});
-				$('.post-contents').css({
-					'width' : '300px',
-					'margin-top' : '0'
-				});
-				$('.post-title').css('padding', '10px');
-				$('.post-contents').css('padding', '0 10px');
-			} else {
-				$('.post-owner').css('margin', '0 15px');
-				$('.post-owner').css('padding-top', '15px')
-				$('.post-title').css('padding', '15px');
-				$('.post-contents').css('padding', '0 15px');
-			} */
 			
 			$(".post-like").css('line-height', '24px');
 			

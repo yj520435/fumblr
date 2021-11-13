@@ -62,10 +62,24 @@ public class UserController {
 	}
 	
 	@GetMapping("/user/{blog}")
-	public String privatePage(Model model, @PathVariable("blog") String blog) {
+	public String privatePage(Model model, HttpSession session, @PathVariable("blog") String blog) {
+		String page = "";
+		
 		User user = (User)service.getUser("", blog);
-		model.addAttribute("user", user);
-		return "user";
+		User access = (User) session.getAttribute("user");
+		
+		if (access == null) {
+			page = "error";
+		} else {
+			if(user.getIdx() == access.getIdx()) {
+				model.addAttribute("user", user);
+				page = "user";
+			} else {
+				page = "error";
+			}
+		}
+		
+		return page;
 	}
 	
 	@PostMapping("/updateUser")
