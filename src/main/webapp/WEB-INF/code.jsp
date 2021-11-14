@@ -12,7 +12,7 @@
 		</div>
 		<div class="btn-area">
 			<div style="text-align: left;"><button class="btn" id="btn-cancle" onclick="modalOff()">닫기</button></div>
-			<div style="text-align: right;"><button class="btn" id="btn-posting" onclick="setCode()">포스팅</button></div>
+			<div style="text-align: right;"><button class="btn" id="btn-posting" onclick="setCode()" disabled="disabled">포스팅</button></div>
 		</div>
 		
 	</div>

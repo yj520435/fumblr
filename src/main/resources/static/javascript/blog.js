@@ -88,27 +88,34 @@ function newText(idx) {
 	
 	$('.modal-body').load("/newText", function() {
 		modalOn();
-	});
-
-	//포스트 수정
-	if(idx!=undefined) {
-		$.ajax ({
-			url: '/getPost',
-			type: 'get',
-			data: {
-				'postIdx' : idx
-			},
-			success: function(data) {
-				$('.m-text-title').val(data.title);
-				$('.m-text-contents').val(data.contents.replace(/(<br>|<br\/>|<br \/>)/g, '\r\n'));
-				
-				var btn = $('#btn-posting');
-				btn.css('width', '50px');
-				btn.html('수정');
-				btn.attr('onclick', 'setText(' + idx + ')');
+		
+		$('.m-text-title, .m-text-contents').keyup(function(){
+			if($('.m-text-title').val()!='' && $('.m-text-contents').val()!='') {
+				$('#btn-posting').css({'background-color' : '#c096ff', 'cursor' : 'pointer'});
+				$('#btn-posting').removeAttr('disabled');
 			}
 		});
-	}
+		
+		//포스트 수정
+		if(idx!=undefined) {
+			$.ajax ({
+				url: '/getPost',
+				type: 'get',
+				data: {
+					'postIdx' : idx
+				},
+				success: function(data) {
+					$('.m-text-title').val(data.title);
+					$('.m-text-contents').val(data.contents.replace(/(<br>|<br\/>|<br \/>)/g, '\r\n'));
+					
+					var btn = $('#btn-posting');
+					btn.css({'width' : '50px', 'background-color' : '#c096ff'});
+					btn.html('수정');
+					btn.attr('onclick', 'setText(' + idx + ')');
+				}
+			});
+		}
+	});
 }
 
 function setText(idx) {
@@ -141,9 +148,7 @@ function newPhoto(idx) {
 			$('#input-file').click();
 		});
 		
-		var sel_files = [];
 		$('#input-file').change((e)=>{
-			//var sel_files = [];
 			$('.modal-body').css('background-color', 'white');
 			
 			var files = e.target.files;
@@ -155,17 +160,18 @@ function newPhoto(idx) {
 					alert('이미지 확장자만 업로드 가능합니다.');
 					return;
 				}
-				sel_files.push(f);
 				var reader = new FileReader();
 				reader.onload = function(e) {
 					var html = `<a id=img${index}>` +
-							   `<img src=${e.target.result} data-file=${f.name} style="width: 490px;"/>`+
+							   `<img src=${e.target.result} data-file=${f.name}/>`+
 							   `</a>`;
 					$('.m-photo-preview').append(html);
 					$('.m-photo-preview').css('display', 'block');
 					$('.m-photo-upload').css('display', 'none');
 					$('.m-photo-title, .m-photo-contents').css('display', 'block');
 					$('#input-file').attr('disabled', true);
+					$('#btn-posting').css({'background-color' : '#c096ff', 'cursor' : 'pointer'});
+					$('#btn-posting').removeAttr('disabled');
 					index++;
 				}
 				reader.readAsDataURL(f);
@@ -211,7 +217,7 @@ function newPhoto(idx) {
 					$('#input-file').attr('disabled', true);
 					
 					var btn = $('#btn-posting');
-					btn.css('width', '50px');
+					btn.css({'width' : '50px', 'background-color' : '#c096ff'});
 					btn.html('수정');
 					btn.attr('onclick', 'setPhoto(' + idx + ')');
 				}
@@ -233,12 +239,13 @@ function setPhoto(idx) {
 	
 	formData.append('idx', idx);
 	formData.append('owner', user);
+	formData.append('category', 'PHOTO');
 	formData.append('title', title);
 	formData.append('contents', contents);
 	formData.append('file', file);
 	
 	$.ajax({
-		url: '/setPhoto',
+		url: '/setForm',
 		type: 'post',
 		data: formData,
 		contentType: false,
@@ -256,6 +263,7 @@ function newCode(idx) {
 	$('.modal-body').load("/newCode", function() {
 		modalOn();
 		
+		//Tab키 처리
 		$('.m-code-contents').keydown(function(key){
 			if(key.keyCode===9) {
 				key.preventDefault();
@@ -275,7 +283,14 @@ function newCode(idx) {
 				
 				this.focus();
 				this.setSelectionRange(sPos+4, ePos+4);
-				
+			}
+		});
+		
+		//입력여부
+		$('.m-code-title, .m-code-contents').keyup(function() {
+			if($('.m-code-title').val()!='' && $('.m-code-contents').val()!='') {
+				$('#btn-posting').css({'background-color' : '#c096ff', 'cursor' : 'pointer'});
+				$('#btn-posting').removeAttr('disabled');
 			}
 		});
 		
@@ -305,7 +320,7 @@ function newCode(idx) {
 					$('.m-code-contents').focus();
 					
 					var btn = $('#btn-posting');
-					btn.css('width', '50px');
+					btn.css({'width' : '50px', 'background-color' : '#c096ff'});
 					btn.html('수정');
 					btn.attr('onclick', 'setCode(' + idx + ')');
 				}
@@ -366,11 +381,11 @@ function newLink(idx) {
 							thumbnail.css('height', '0');
 							title.css('margin-top', '0');
 						} else {
-							thumbnail.css('height', '275px');
+							thumbnail.css('height', 'auto');
 							title.css('margin-top', '15px');
 							
 							if(data.video != null && data.video != '') {
-								thumbnail.html('<iframe width="490" height="275" src="'+ data.video +'" frameborder="0" allowfullscreen></iframe>');
+								thumbnail.html('<iframe src="'+ data.video +'" frameborder="0" allowfullscreen></iframe>');
 							}
 							
 							if(data.image != null && data.image != '') {
@@ -540,8 +555,14 @@ function newBook(idx) {
 						$('.m-book-title').html(book.title);
 						$('.m-book-author').html('<span style="color: gray;">저자 | </span>' + book.authors);
 						$('.m-book-publisher').html('<span style="color: gray;">출판 | </span>' + book.publisher);
-						if(book.contents.length > 117) {
-							book.contents = book.contents.substr(0, 117) + '... <a href="' + book.url + '" target="_blank">더보기<a>';
+						
+						/*var strLength = 119=;
+						if($(window).width() < 499) {
+							strLength = 70;
+						}*/
+						
+						if(book.contents.length > 100) {
+							book.contents = book.contents.substr(0, 100) + '... <a href="' + book.url + '" target="_blank">더보기<a>';
 						}
 						$('.m-book-description').html(book.contents);
 						
@@ -784,7 +805,7 @@ function confirm(idx) {
 	$('#btn-delete').css({
 		'width' : '35px',
 		'height': '35px',
-		'background-color' : '#4cc1ed'
+		'background-color' : '#c096ff'
 	});
 	
 	
@@ -825,11 +846,22 @@ function like(idx) {
 				'postIdx' : idx,
 				'userIdx' : user
 			},
-			success: function() {
+			success: function(data) {
 				$('.heart-' + idx).attr('class', 'fa fa-heart heart-'+idx);
 				$('.heart-' + idx).removeClass('fa-heart-o');
 				$('.heart-' + idx).removeAttr('onclick');
 				$('.heart-' + idx).attr('onclick', 'noLike(' + idx + ')');
+				
+				var orgLike = $('#like-' + idx).html();
+				if (orgLike != '') {
+					orgLike = parseInt(orgLike.substring(3, orgLike.indexOf('개')));
+				}
+				
+				if(orgLike == '') {
+					$('#like-' + idx).html('반응 1개');
+				} else {
+					$('#like-' + idx).html('반응 ' + (orgLike+1) + '개');
+				}
 			}
 		});
 	} else {
@@ -848,11 +880,20 @@ function noLike(idx) {
 			'postIdx' : idx,
 			'userIdx' : user
 		},
-		success: function() {
+		success: function(data) {
 			$('.heart-' + idx).attr('class', 'fa fa-heart-o heart-'+idx);
 			$('.heart-' + idx).removeClass('fa-heart');
 			$('.heart-' + idx).removeAttr('onclick');
 			$('.heart-' + idx).attr('onclick', 'like(' + idx + ')');
+			
+			var orgLike = $('#like-' + idx).html();
+			orgLike = parseInt(orgLike.substring(3, orgLike.indexOf('개')));
+			
+			if(orgLike == 1) {
+				$('#like-' + idx).html('');
+			} else {
+				$('#like-' + idx).html('반응 ' + (orgLike-1) + '개');
+			}
 		}
 	});
 }
@@ -891,7 +932,7 @@ function sidebox() {
 	$('.sidebox').css('left', posLeft);
 	
 	var str = '';
-	str += '<p>이런 블로그도 있어요</p><hr><table>';
+	str += '<div>explore other blog!</div><table>';
 	for (var i=0; i<4; i++) {
 		var profile = sideboxItems[i].profile;
 		var pf = profile.substring(profile.indexOf('\\upload')).replaceAll('\\', '/');
@@ -1017,8 +1058,14 @@ function getList(page) {
 				var str = generateList(data[i]);
 				
 				editMethod = 'new' + data[i].category.charAt(0) + data[i].category.substr(1).toLowerCase();
-		
-				str += '<div class="post-menu">';
+				
+				var likes = data[i].count;
+				if(likes != null) {
+					str += '<div class="post-menu"><div id="like-' + data[i].idx +'">반응 ' + likes + '개</div><div>';
+				} else {
+					str += '<div class="post-menu"><div id="like-' + data[i].idx + '"></div><div>';
+				}
+				
 				
 				if(user!=owner) {
 					if(liked.includes(data[i].idx)) {
@@ -1033,7 +1080,7 @@ function getList(page) {
 						   '<span class="fa fa-trash" onclick="confirm('+ data[i].idx +')"></span>';
 				}
 				
-				str += '</div>'
+				str += '</div></div>';
 				
 				$('.main').append(str);
 			}
@@ -1090,7 +1137,7 @@ function generateList(data) {
 	
 	var str;
 	
-	str = '<div class="post center">';
+	str = '<div class="post center" id="' + data.idx + '">';
 	
 	if(likeflag == 1) {
 		var blog = data.blog;
@@ -1158,8 +1205,11 @@ function generateList(data) {
 			str += '<div class="link-description">' + data.description + '</div>';
 		}
 		
-		str += '</div>' + 
-			   '<div class="post-contents">' + data.contents + '</div>';
+		str += '</div>';
+		
+		if(data.contents != null) {
+			str += '<div class="post-contents">' + data.contents + '</div>';
+		}  
 	}
 	
 	//포스트(도서)
@@ -1247,8 +1297,8 @@ function getLikeList(page) {
 
 				var str = generateList(data[i]);
 		
-				str += '<div class="post-menu">' + 
-						'<span class="fa fa-heart heart-' + data[i].idx +'" onclick="noLike(' + data[i].idx + ')"></span>' +
+				str += '<div class="post-menu"><div id="like-' + data[i].idx + '">반응 ' + data[i].count + '개</div>' + 
+						'<div class="fa fa-heart heart-' + data[i].idx +'" onclick="noLike(' + data[i].idx + ')"></div>' +
 						'</div>'
 				
 				$('.main').append(str);

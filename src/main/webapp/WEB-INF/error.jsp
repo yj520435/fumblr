@@ -48,8 +48,8 @@
 <body>
 	<div class="main">
 		<div>404</div>
-		<div>잘못된 접근이거나 요청하신<br>
-		페이지를 찾을 수 없습니다.</div>
+		<div>잘못된 접근이거나<br>
+		찾을 수 없는 페이지입니다.</div>
 		<button onclick="location.href='/'">홈으로</button>
 	</div>
 </body>

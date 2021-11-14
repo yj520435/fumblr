@@ -253,7 +253,13 @@ function getDivision() {
 				}
 			}
 			
-			str += '<div class="e-post-like">반응 100개</div>';
+			console.log(list[i].count);
+			
+			if(list[i].count != null) {
+				str += '<div class="e-post-like">반응 ' + list[i].count + '개</div>';
+			} else {
+				str += '<div class="e-post-like" style="padding: 10px;"></div>'
+			}
 			
 			$('.post-'+(i+1)).html(str);
 			

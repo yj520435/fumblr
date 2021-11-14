@@ -13,6 +13,8 @@ public class Post {
 	String files;
 	Date regdate;
 	
+	String count;
+	
 	String blog;
 	String profile;
 	
@@ -105,6 +107,14 @@ public class Post {
 		this.files = files;
 	}
 
+	public String getCount() {
+		return count;
+	}
+
+	public void setCount(String count) {
+		this.count = count;
+	}
+
 	public String getBlog() {
 		return blog;
 	}
@@ -120,4 +130,6 @@ public class Post {
 	public void setProfile(String profile) {
 		this.profile = profile;
 	}
+	
+	
 }
