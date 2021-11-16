@@ -34,6 +34,7 @@
 						<div class="div-ch-email">
 							<input type="text" class="new-email" value="${user.email}">
 							<input type="password" class="check-password" placeholder="비밀번호 확인">
+							<div></div>
 							<button class="btn-cancle">취소</button> <button class="btn-save">저장</button>
 						</div>
 					</td>
@@ -46,6 +47,7 @@
 						<div class="div-ch-password">
 							<input type="password" class="cur-password" placeholder="현재 비밀번호">
 							<input type="password" class="new-password" placeholder="새 비밀번호">
+							<div></div>
 							<button class="btn-cancle">취소</button> <button class="btn-save">저장</button>
 						</div>
 					</td>
@@ -61,6 +63,7 @@
 						<span class="btn-ch-blog-cancle fa fa-times" style="display:none; padding-right: 2px;"></span>
 						<span class="btn-ch-blog-save fa fa-check" style="display:none;"></span>
 						<span class="btn-ch-blog fa fa-pencil"></span>
+						<div class="balloon">버튼을 눌러 채팅을 시작해 보세요!</div>
 					</td>
 				</tr>
 			</table>

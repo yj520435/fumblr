@@ -93,6 +93,9 @@ function newText(idx) {
 			if($('.m-text-title').val()!='' && $('.m-text-contents').val()!='') {
 				$('#btn-posting').css({'background-color' : '#c096ff', 'cursor' : 'pointer'});
 				$('#btn-posting').removeAttr('disabled');
+			} else {
+				$('#btn-posting').css({'background-color' : '#cccccc', 'cursor' : 'default'});
+				$('#btn-posting').attr('disabled', 'disabled');
 			}
 		});
 		
@@ -170,8 +173,16 @@ function newPhoto(idx) {
 					$('.m-photo-upload').css('display', 'none');
 					$('.m-photo-title, .m-photo-contents').css('display', 'block');
 					$('#input-file').attr('disabled', true);
+					
+					//포스팅 버튼 활성화
 					$('#btn-posting').css({'background-color' : '#c096ff', 'cursor' : 'pointer'});
 					$('#btn-posting').removeAttr('disabled');
+					
+					//포스트 초기화 버튼
+					if($(window).width()<500) {
+						$('.reset').css({'top':'39px', 'display':'block'});
+					}
+					
 					index++;
 				}
 				reader.readAsDataURL(f);
@@ -179,16 +190,18 @@ function newPhoto(idx) {
 		});	
 		
 		//초기화
-		$('.m-photo-area').mouseover(function(){
+		if($(window).width() > 499) {
+			$('.m-photo-area').mouseover(function(){
 			$('.reset').css({
-				'top' : '39px',
-				'display' : 'block'
+					'top' : '39px',
+					'display' : 'block'
+				});
 			});
-		});
-		
-		$('.m-photo-area').mouseout(function(){
-			$('.reset').css('display', 'none');
-		});
+			
+			$('.m-photo-area').mouseout(function(){
+				$('.reset').css('display', 'none');
+			});
+		}
 		
 		$('.reset').click(function(){
 			$('.m-photo-preview').html('');
@@ -197,6 +210,15 @@ function newPhoto(idx) {
 			$('.m-photo-upload img').css('top', '120px');
 			$('#input-file').val('');
 			$('#input-file').attr('disabled', false);
+			
+			//포스팅 버튼 비활성화
+			$('#btn-posting').css({'background-color' : '#cccccc', 'cursor' : 'default'});
+			$('#btn-posting').attr('disabled', 'disabled');
+			
+			if($(window).width() < 500) {
+				$('.reset').css('display','none');
+			}
+			
 		});
 		
 		//포스트 수정
@@ -215,6 +237,10 @@ function newPhoto(idx) {
 					$('.m-photo-preview').html('<img src="' + file + '" width="490px;">');
 					$('.m-photo-contents').html(data.contents);
 					$('#input-file').attr('disabled', true);
+					
+					if($(window).width()<500) {
+						$('.reset').css({'top':'39px', 'display':'block'});
+					}
 					
 					var btn = $('#btn-posting');
 					btn.css({'width' : '50px', 'background-color' : '#c096ff'});
@@ -291,6 +317,9 @@ function newCode(idx) {
 			if($('.m-code-title').val()!='' && $('.m-code-contents').val()!='') {
 				$('#btn-posting').css({'background-color' : '#c096ff', 'cursor' : 'pointer'});
 				$('#btn-posting').removeAttr('disabled');
+			} else {
+				$('#btn-posting').css({'background-color' : '#cccccc', 'cursor' : 'default'});
+				$('#btn-posting').attr('disabled', 'disabled');
 			}
 		});
 		
@@ -393,13 +422,22 @@ function newLink(idx) {
 							}
 						}
 						
-						title.html('<a href="'+ link + '">' + data.title + '</a>');
+						title.html('<a href="'+ link + '" target="blank_">' + data.title + '</a>');
 						description.text(data.description);
 						
 						$('.m-link-url').val('');
 						$('.m-link-url').css('display', 'none');
 						$('.m-link-contents').css('display', 'block');
 						$('.m-link-contents').focus();
+						
+						//포스팅 버튼 활성화
+						$('#btn-posting').css({'background-color' : '#c096ff', 'cursor' : 'pointer'});
+						$('#btn-posting').removeAttr('disabled');
+						
+						//포스트 초기화 버튼
+						if($(window).width()<500) {
+							$('.reset').css({'top':'22px', 'display':'block'});
+						}
 					}
 				});
 				key.preventDefault();
@@ -407,20 +445,31 @@ function newLink(idx) {
 		});
 		
 		//초기화
-		$('.m-link-area').mouseover(function(){
-			$('.reset').css({
-				'top' : '22px',
-				'display' : 'block'
+		if($(window).width() > 499) {
+			$('.m-link-area').mouseover(function(){
+				$('.reset').css({
+					'top' : '22px',
+					'display' : 'block'
+				});
 			});
-		});
-		
-		$('.m-link-area').mouseout(function(){
-			$('.reset').css('display', 'none');
-		});
+			
+			$('.m-link-area').mouseout(function(){
+				$('.reset').css('display', 'none');
+			});
+		}
 		
 		$('.reset').click(function(){
 			$('.m-link-area').css('display', 'none');
 			$('.m-link-url-div').css('display', 'block');
+			$('.m-link-url').css('display', 'block');
+			
+			//포스팅 버튼 비활성화
+			$('#btn-posting').css({'background-color' : '#cccccc', 'cursor' : 'default'});
+			$('#btn-posting').attr('disabled', 'disabled');
+			
+			if($(window).width() < 500) {
+				$('.reset').css('display', 'none');
+			}
 		});
 		
 		//포스트 수정
@@ -436,8 +485,6 @@ function newLink(idx) {
 					var contents = data.contents;
 					var thumbnail = data.thumbnail;
 					var description = data.description;
-					
-					console.log(thumbnail);
 					
 					if(title == null) title = "";
 					if(contents == null) contents = "";
@@ -464,6 +511,10 @@ function newLink(idx) {
 					$('.m-link-url-div').css('display', 'none');
 					$('.m-link-contents').css('display', 'block');
 					$('.m-link-contents').focus();
+					
+					if($(window).width()<500) {
+						$('.reset').css({'top':'22px', 'display':'block'});
+					}
 					
 					var btn = $('#btn-posting');
 					btn.css('width', '50px');
@@ -573,24 +624,47 @@ function newBook(idx) {
 						$('.m-book-contents').css('display', 'block');
 						$('.m-book-contents').focus();
 						
+						//포스팅 버튼 활성화
+						$('#btn-posting').css({'background-color' : '#c096ff', 'cursor' : 'pointer'});
+						$('#btn-posting').removeAttr('disabled');
+						
+						//포스트 초기화 버튼
+						if($(window).width()<500) {
+							$('.reset').css({'top':'7px', 'display':'block'});
+						}
+						
 						key.preventDefault();
 					}
 				});
 			}
 		});
 		
-		//초기화
-		$('.m-book-area').mouseover(function(){
-			$('.reset').css('display', 'block');
-		});
+		if($(window).width() > 499) {
+			//초기화
+			$('.m-book-area').mouseover(function(){
+				$('.reset').css({
+					'top' : '7px',
+					'display' : 'block'
+				});
+			});
+			
+			$('.m-book-area').mouseout(function(){
+				$('.reset').css('display', 'none');
+			});
+		}
 		
-		$('.m-book-area').mouseout(function(){
-			$('.reset').css('display', 'none');
-		});
 		
 		$('.reset').click(function(){
 			$('.m-book-area').css('display', 'none');
 			$('.m-book-query').css('display', 'block');
+			
+			//포스팅 버튼 비활성화
+			$('#btn-posting').css({'background-color' : '#cccccc', 'cursor' : 'default'});
+			$('#btn-posting').attr('disabled', 'disabled');
+			
+			if($(window).width() < 500) {
+				$('.reset').css('display', 'none');
+			}
 		});
 		
 		//포스트 수정
@@ -619,6 +693,10 @@ function newBook(idx) {
 					
 					$('.m-book-contents').val(data.contents);
 					$('.m-book-contents').focus();
+					
+					if($(window).width()<500) {
+						$('.reset').css({'top':'7px', 'display':'block'});
+					}
 					
 					var btn = $('#btn-posting');
 					btn.css('width', '50px');
@@ -699,6 +777,16 @@ function newVideo(idx) {
 					$('.m-video-upload').css('display', 'none');
 					$('.m-video-title, .m-video-contents').css('display', 'block');
 					$('#input-file').attr('disabled', true);
+					
+					//포스팅 버튼 활성화
+					$('#btn-posting').css({'background-color' : '#c096ff', 'cursor' : 'pointer'});
+					$('#btn-posting').removeAttr('disabled');
+					
+					//포스트 초기화 버튼
+					if($(window).width()<500) {
+						$('.reset').css({'top':'35px', 'display':'block'});
+					}
+					
 					index++;
 				}
 				reader.readAsDataURL(f);
@@ -706,16 +794,19 @@ function newVideo(idx) {
 		});	
 		
 		//초기화
-		$('.m-video-area').mouseover(function(){
-			$('.reset').css({
-				'top' : '35px',
-				'display' : 'block'
+		if($(window).width() > 499) {
+			$('.m-video-area').mouseover(function(){
+				$('.reset').css({
+					'top' : '35px',
+					'display' : 'block'
+				});
 			});
-		});
+			
+			$('.m-video-area').mouseout(function(){
+				$('.reset').css('display', 'none');
+			});
+		}
 		
-		$('.m-video-area').mouseout(function(){
-			$('.reset').css('display', 'none');
-		});
 		
 		$('.reset').click(function(){
 			$('.m-video-preview').html('');
@@ -724,6 +815,14 @@ function newVideo(idx) {
 			$('.m-video-upload img').css('top', '120px');
 			$('#input-file').val('');
 			$('#input-file').attr('disabled', false);
+			
+			//포스팅 버튼 비활성화
+			$('#btn-posting').css({'background-color' : '#cccccc', 'cursor' : 'default'});
+			$('#btn-posting').attr('disabled', 'disabled');
+			
+			if($(window).width()<500) {
+				$('.reset').css({'display':'none'});
+			}
 		});
 		
 		//포스트 수정
@@ -736,12 +835,16 @@ function newVideo(idx) {
 				},
 				success: function(data) {
 					var file = data.files.substr(data.files.indexOf('upload')-1);
-					$('.m-photo-upload').css('display', 'none');
-					$('.m-photo-title, .m-photo-contents').css('display', 'block');
-					$('.m-photo-title').html(data.title);
-					$('.m-photo-preview').html('<img src="' + file + '" width="490px;">');
-					$('.m-photo-contents').html(data.contents);
+					$('.m-video-upload').css('display', 'none');
+					$('.m-video-title, .m-video-contents').css('display', 'block');
+					$('.m-video-title').html(data.title);
+					$('.m-video-preview').html('<video controls="controls" src="' + file + '">');
+					$('.m-video-contents').html(data.contents);
 					$('#input-file').attr('disabled', true);
+					
+					if($(window).width()<500) {
+						$('.reset').css({'top':'35px', 'display':'block'});
+					}
 					
 					var btn = $('#btn-posting');
 					btn.css('width', '50px');
@@ -933,13 +1036,18 @@ function sidebox() {
 	
 	var str = '';
 	str += '<div>explore other blog!</div><table>';
-	for (var i=0; i<4; i++) {
-		var profile = sideboxItems[i].profile;
-		var pf = profile.substring(profile.indexOf('\\upload')).replaceAll('\\', '/');
-		str += '<tr>' + 
+	for (var i=0; i<2; i++) {
+		str += '<tr>';
+		for (var j=0; j<3; j++) {
+			var profile = sideboxItems[(3*i)+j].profile;
+			var pf = profile.substring(profile.indexOf('\\upload')).replaceAll('\\', '/');
+			str += '<td><a href="' + sideboxItems[(3*i)+j].blog + '"><img src="' + pf + '" width="55px" height="55px" title="' + sideboxItems[(3*i)+j].blog + '"></a></td>';
+		}
+		str += '</tr>';
+		/*str += '<tr>' + 
 			   '<td><a href="' + sideboxItems[i].blog + '"><img src="' + pf + '" width="40px" height="40px"></a></td>' +
 			   '<td><a href="' + sideboxItems[i].blog + '">' + sideboxItems[i].blog + '</a></td>' +
-			   '</tr>';
+			   '</tr>';*/
 	}
 	str += '</table><span><a href="/explore" class="fa fa-plane"></a></span>'
 	$('.sidebox').html(str);

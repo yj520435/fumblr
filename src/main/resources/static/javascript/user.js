@@ -142,6 +142,12 @@ function register() {
 		return false;
 	}
 	
+	if(blog.lenght>20) {
+		alarm('블로그 이름은 20자 이하로 설정해주세요.');
+		$('#register-blog').focus();
+		return false;
+	}
+	
 	//블로그이름 중복 검사
 	$.ajax({
 		url: '/register',
@@ -254,7 +260,11 @@ if (background != undefined) {
 
 $('.btn-ch-email').click(function(){
 	changeAcc('email', 'open');
+	$('.new-email').css('animation', 'none');
+	$('.new-email').val($('.user-email').text());
+	$('.div-ch-email div').hide();
 	$('.check-password').css('animation', 'none');
+	$('.check-password').val('');
 });
 
 $('.div-ch-email .btn-cancle').click(function() {
@@ -263,33 +273,88 @@ $('.div-ch-email .btn-cancle').click(function() {
 
 $('.div-ch-email .btn-save').click(function(){
 	var email = $('.new-email').val();
-	var password = $('.check-password');
+	var password = $('.check-password').val();
+	
+	//이메일 입력 여부 검사
+	if(email == '') {
+		shake($('.new-email'));
+		return false;
+	}
+	
+	//이메일 변경 여부 검사
+	if($('.user-email').text() == email) {
+		return false;
+	}
+	
+	//이메일 형식 검사
+	var emailRule = /^([0-9a-zA-Z_\.-]+)@([0-9a-zA-Z_-]+)(\.[0-9a-zA-Z_-]+){1,2}$/;
+	if(!emailRule.test(email)) {
+		$('.div-ch-email div').html('올바른 이메일 형식으로 입력해주세요.');
+		$('.div-ch-email div').show();
+		shake($('.new-email'));
+		return false;
+	}
+	
+	//이메일 중복 여부 검사
+	$.ajax({
+		url: '/getUser',
+		type: 'get', 
+		data: {
+			'email' : email
+		},
+		success: function(data) {
+			if(data!=null && data!='') {
+				$('.div-ch-email div').html('이미 존재하는 이메일입니다.');
+				$('.div-ch-email div').show();
+				shake($('.new-email'));
+				return false;
+			} else {
+				$('.div-ch-email div').html('');
+				changeEmail(idx, email, password);
+			}
+		}
+	});
+	
+});
+
+function changeEmail(idx, email, password) {
+	
+	//비밀번호 입력 여부 검사
+	if(password == '') {
+		shake($('.check-password'));
+		$('.div-ch-email div').html('현재 비밀번호를 입력해주세요.');
+		$('.div-ch-email div').show();
+		return false;
+	}
+	
 	$.ajax({
 		url: '/updateUser',
 		type: 'post',
 		data: {
 			'idx' : idx,
 			'email' : email,
-			'curPassword' : password.val()
+			'curPassword' : password
 		},
 		success: function(data) {
 			if(data==1) {
 				location.reload();
 			} else {
-				password.css('animation', 'none');
-				password.val('');
-				password.focus();
-				password.css('animation', 'shake 0.5s 1');
+				shake($('.check-password'));
+				$('.div-ch-email div').html('비밀번호가 일치하지 않습니다.');
+				$('.div-ch-email div').show();
 			}
 		}
 	});
-});
+}
 
 /* 비밀번호 변경 */
 
 $('.btn-ch-password').click(function(){
 	changeAcc('password', 'open');
 	$('.cur-password').css('animation', 'none');
+	$('.cur-password').val('');
+	$('.new-password').val('');
+	$('.div-ch-password div').hide();
 });
 
 $('.div-ch-password .btn-cancle').click(function() {
@@ -297,29 +362,58 @@ $('.div-ch-password .btn-cancle').click(function() {
 });
 
 $('.div-ch-password .btn-save').click(function(){
-	var curPassword = $('.cur-password');
-	var newPassword = $('.new-password');
+	var curPassword = $('.cur-password').val();
+	var newPassword = $('.new-password').val();
+	
+	//현재 비밀번호 입력 여부 검사
+	if(curPassword == '') {
+		shake($('.cur-password'));
+		return false;
+	}
+	
+	//새 비밀번호 입력 여부 검사
+	if(newPassword == '') {
+		shake($('.new-password'));
+		return false;
+	}
+	
+	//새 비밀번호 조건 검사
+	if(newPassword.length<10) {
+		$('.div-ch-password div').html('10자 이상으로 설정해주세요.');
+		$('.div-ch-password div').show();
+		shake($('.new-password'));
+		return false;
+	}
+	
 	$.ajax({
 		url: '/updateUser',
 		type: 'post',
 		data: {
 			'idx' : idx,
-			'curPassword' : curPassword.val(),
-			'newPassword' : newPassword.val()
+			'curPassword' : curPassword,
+			'newPassword' : newPassword
 		},
 		success: function(data) {
 			if(data==1) {
 				location.reload();
 			} else {
-				curPassword.css('animation', 'none');
-				curPassword.val('');
-				curPassword.focus();
-				curPassword.css('animation', 'shake 0.5s 1');
+				//현재 비밀번호가 올바르지 않은 경우
+				$('.div-ch-password div').html('비밀번호가 일치하지 않습니다.');
+				$('.div-ch-password div').show();
+				shake($('.cur-password'));
 			}
 		}
 	});
 });
 
+//흔들림 애니메이션 효과
+function shake(div) {
+	div.css('animation', 'none');
+	div.focus();
+	div.css('animation', 'shake 0.5s 1');
+}
+
+//입력칸 토글
 function changeAcc(account, flag) {
 	if(flag=='open') {
 		$('.user-'+account).css('display', 'none');
@@ -340,10 +434,55 @@ $('.btn-ch-blog').click(function(){
 	$('.btn-ch-blog').css('display', 'none');
 	$('.btn-ch-blog-cancle').css('display', 'inline-block');
 	$('.btn-ch-blog-save').css('display', 'inline-block');
+	balloonPosition();
 });
 
 $('.btn-ch-blog-save').click(function() {
-	var blog = $('.ch-blog').val();
+	
+	var curBlog = $('.user-blog').text();
+	var newBlog = $('.ch-blog').val();
+	
+	//입력 여부
+	if(newBlog == '') {
+		shake($('.ch-blog'));
+		return false;
+	}
+	
+	//변경 여부
+	if(curBlog == newBlog) {
+		return false;
+	}
+	
+	//글자 수
+	if(newBlog.length>20) {
+		$('.balloon').html('20자 이내로 설정해주세요.');
+		$('.balloon').show();
+		shake($('.ch-blog'));
+		return false;
+	}
+	
+	//중복 여부
+	$.ajax({
+		url: '/getUser',
+		type: 'get', 
+		data: {
+			'blog' : newBlog
+		},
+		success: function(data) {
+			if(data!=null && data!='') {
+				$('.balloon').html('이미 사용중인 이름입니다.');
+				$('.balloon').show();
+				shake($('.ch-blog'));
+				return false;
+			} else {
+				$('.balloon').hide();
+				changeBlog(idx, newBlog);
+			}
+		}
+	});
+});
+
+function changeBlog(idx, blog) {
 	$.ajax({
 		url: '/updateUser',
 		type: 'post',
@@ -357,7 +496,8 @@ $('.btn-ch-blog-save').click(function() {
 			}
 		}
 	});
-});
+}
+
 
 $('.btn-ch-blog-cancle').click(function(){
 	$('.ch-blog').css('display', 'none');
@@ -576,3 +716,21 @@ function modalPosition() {
 	$('.modal-body').css('-o-transform', 'translate(-50%, -50%)');
 	$('.modal-body').css('transform', 'translate(-50%, -50%)');
 }
+
+
+function balloonPosition() {
+	var div = $('.ch-blog');
+	var divX = div.offset().left;
+	var divY = div.offset().top;
+	
+	var width = $(window).width();
+	
+	console.log(divX + ' ' + divY);
+	
+	$('.balloon').css('top', divY+40);
+	$('.balloon').css('left', divX);
+}
+
+$(window).resize(function(){
+	balloonPosition();
+});

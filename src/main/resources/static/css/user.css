@@ -403,6 +403,12 @@ body {
 	display: none;
 }
 
+.div-ch-email div, .div-ch-password div {
+	padding-left: 5px;
+	margin-bottom: 10px;
+	color: #c8b7ee;
+}
+
 .btn-cancle {
 	border: none;
 	color: white;
@@ -415,15 +421,21 @@ body {
 .btn-save {
 	border: none;
 	color: white;
-	background-color: #4cc1ed;
+	background-color: #c096ff;
 	width: 50px;
 	height: 25px;
 	border-radius: 3px;
 }
 
-.fa-pencil, .fa-times, .fa-check {
+.fa-pencil, .fa-times {
 	line-height: 20px;
 	opacity: 0.3;
+	cursor: pointer;
+}
+
+.fa-check {
+	line-height: 20px;
+	filter: invert(68%) sepia(61%) saturate(1896%) hue-rotate(209deg) brightness(97%) contrast(108%);
 	cursor: pointer;
 }
 
@@ -670,4 +682,25 @@ button {
 	.div-ch-background span, .div-ch-profile span {
 		width: 130px;
 	}
+}
+
+.balloon {
+    position: absolute;
+    background: #c8b7ee;
+    color: #fff;
+    padding: 3px 7px;
+    border-radius: 20rem;
+    font-size: 13px;
+    display: none;
+}
+
+.balloon:after{
+    bottom: 100%;
+    border: solid transparent;
+    content: " ";
+    position: absolute;
+    border-color: rgba(56, 77, 157, 0);
+    border-bottom-color: #c8b7ee;
+    border-width: 5px;
+    margin-left: -140px;
 }
