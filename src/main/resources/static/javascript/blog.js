@@ -1,8 +1,11 @@
 var page = 1;
-var keyword = '';
 var postCount = 0;
 var flag = 0;
 var likeflag = 0;
+
+var param = location.search;
+var paramObject = new URLSearchParams(param);
+var keyword = paramObject.get('keyword');
 
 var liked = [];			//좋아요 게시물 배열
 var sideboxItems = [];	//사이드박스 랜덤 블로그 배열
@@ -31,9 +34,9 @@ $('body').css('background-image', 'url("' + bg + '")');
 
 getList(page);    	  //초기 1페이지 로드
 sideboxContents();    //사이드박스 랜덤 블로그 불러오기
-sidebox();        	  //사이드박스 위치 조정
 modalPosition();  	  //모달창 위치 조정
 getLike(user, owner); //좋아요 게시물 불러오기
+sidebox();  //사이드박스 위치 조정
 
 $(window).resize(function(){
 	sidebox();
@@ -78,8 +81,8 @@ $('.btn-2').click(function(){
 	$(location).attr('href', '/user/'+blog);
 })
 
-function myblog() {
-	$(location).attr('href', '/blog/'+blog);
+function home() {
+	$(location).attr('href', '/');
 }
 
 /* 새글쓰기 */
@@ -159,7 +162,7 @@ function newPhoto(idx) {
 			var index = 0;
 			
 			fileArr.forEach(function(f){
-				if(!f.type.match("image/.*")) {
+				if(!f.type.match("image.*")) {
 					alert('이미지 확장자만 업로드 가능합니다.');
 					return;
 				}
@@ -233,8 +236,9 @@ function newPhoto(idx) {
 					var file = data.files.substr(data.files.indexOf('upload')-1);
 					$('.m-photo-upload').css('display', 'none');
 					$('.m-photo-title, .m-photo-contents').css('display', 'block');
-					$('.m-photo-title').html(data.title);
-					$('.m-photo-preview').html('<img src="' + file + '" width="490px;">');
+					if(data.title == ' ') $('.m-photo-title').val('');
+					else $('.m-photo-title').html(data.title);
+					$('.m-photo-preview').html('<img src="' + file + '">');
 					$('.m-photo-contents').html(data.contents);
 					$('#input-file').attr('disabled', true);
 					
@@ -243,9 +247,10 @@ function newPhoto(idx) {
 					}
 					
 					var btn = $('#btn-posting');
-					btn.css({'width' : '50px', 'background-color' : '#c096ff'});
+					btn.css({'width' : '50px', 'background-color' : '#c096ff', 'cursor':'pointer'});
 					btn.html('수정');
 					btn.attr('onclick', 'setPhoto(' + idx + ')');
+					btn.removeAttr('disabled');
 				}
 			});
 		}
@@ -349,9 +354,10 @@ function newCode(idx) {
 					$('.m-code-contents').focus();
 					
 					var btn = $('#btn-posting');
-					btn.css({'width' : '50px', 'background-color' : '#c096ff'});
+					btn.css({'width' : '50px', 'background-color' : '#c096ff', 'cursor':'pointer'});
 					btn.html('수정');
 					btn.attr('onclick', 'setCode(' + idx + ')');
+					btn.removeAttr('disabled');
 				}
 			});
 		}
@@ -517,9 +523,10 @@ function newLink(idx) {
 					}
 					
 					var btn = $('#btn-posting');
-					btn.css('width', '50px');
+					btn.css({'width':'50px', 'background-color':'#c096ff', 'cursor':'pointer'});
 					btn.html('수정');
 					btn.attr('onclick', 'setLink(' + idx + ')');
+					btn.removeAttr('disabled');
 				}
 			});
 		}
@@ -699,9 +706,10 @@ function newBook(idx) {
 					}
 					
 					var btn = $('#btn-posting');
-					btn.css('width', '50px');
+					btn.css({'width':'50px', 'background-color':'#c096ff', 'cursor':'pointer'});
 					btn.html('수정');
 					btn.attr('onclick', 'setBook(' + idx + ')');
+					btn.removeAttr('disabled');
 				}
 			});
 		}
@@ -769,6 +777,10 @@ function newVideo(idx) {
 			var index = 0;
 			
 			fileArr.forEach(function(f){
+				if(!f.type.match("video.*")) {
+					alert('동영상 확장자만 업로드 가능합니다.');
+					return;
+				}
 				var reader = new FileReader();
 				reader.onload = function(e) {
 					var html = `<video controls="controls" src=${e.target.result} autoplay="autoplay"/>`;
@@ -837,7 +849,8 @@ function newVideo(idx) {
 					var file = data.files.substr(data.files.indexOf('upload')-1);
 					$('.m-video-upload').css('display', 'none');
 					$('.m-video-title, .m-video-contents').css('display', 'block');
-					$('.m-video-title').html(data.title);
+					if(data.title == ' ') $('.m-video-title').val('');
+					else $('.m-video-title').html(data.title);
 					$('.m-video-preview').html('<video controls="controls" src="' + file + '">');
 					$('.m-video-contents').html(data.contents);
 					$('#input-file').attr('disabled', true);
@@ -847,9 +860,10 @@ function newVideo(idx) {
 					}
 					
 					var btn = $('#btn-posting');
-					btn.css('width', '50px');
+					btn.css({'width':'50px', 'background-color':'#c096ff', 'cursor':'pointer'});
 					btn.html('수정');
-					btn.attr('onclick', 'setPhoto(' + idx + ')');
+					btn.attr('onclick', 'setVideo(' + idx + ')');
+					btn.removeAttr('disabled');
 				}
 			});
 		}
@@ -1022,39 +1036,44 @@ function getLike(user, owner) {
 
 function sidebox() {
 	
-	var div = $('.container');
-	var divX = div.offset().left;
-	var divY = div.offset().top;
-	
-	var width=$(window).width();
-
-	var posLeft = divX + 510;
-	var posTop = '209px';
+	if(sideboxItems.length>5) {
+		var div = $('.container');
+		var divX = div.offset().left;
+		var divY = div.offset().top;
 		
-	$('.sidebox').css('top', posTop);
-	$('.sidebox').css('left', posLeft);
+		var width=$(window).width();
 	
-	var str = '';
-	str += '<div>explore other blog!</div><table>';
-	for (var i=0; i<2; i++) {
-		str += '<tr>';
-		for (var j=0; j<3; j++) {
-			var profile = sideboxItems[(3*i)+j].profile;
-			var pf = profile.substring(profile.indexOf('\\upload')).replaceAll('\\', '/');
-			str += '<td><a href="' + sideboxItems[(3*i)+j].blog + '"><img src="' + pf + '" width="55px" height="55px" title="' + sideboxItems[(3*i)+j].blog + '"></a></td>';
+		var posLeft = divX + 510;
+		var posTop = '209px';
+			
+		$('.sidebox').css('top', posTop);
+		$('.sidebox').css('left', posLeft);
+		
+		var str = '';
+		str += '<div>explore other blog!</div><table>';
+		for (var i=0; i<2; i++) {
+			str += '<tr>';
+			for (var j=0; j<3; j++) {
+				var profile = sideboxItems[(3*i)+j].profile;
+				var pf = profile.substring(profile.indexOf('\\upload')).replaceAll('\\', '/');
+				str += '<td><a href="' + sideboxItems[(3*i)+j].blog + '"><img src="' + pf + '" width="55px" height="55px" title="' + sideboxItems[(3*i)+j].blog + '"></a></td>';
+			}
+			str += '</tr>';
+			/*str += '<tr>' + 
+				   '<td><a href="' + sideboxItems[i].blog + '"><img src="' + pf + '" width="40px" height="40px"></a></td>' +
+				   '<td><a href="' + sideboxItems[i].blog + '">' + sideboxItems[i].blog + '</a></td>' +
+				   '</tr>';*/
 		}
-		str += '</tr>';
-		/*str += '<tr>' + 
-			   '<td><a href="' + sideboxItems[i].blog + '"><img src="' + pf + '" width="40px" height="40px"></a></td>' +
-			   '<td><a href="' + sideboxItems[i].blog + '">' + sideboxItems[i].blog + '</a></td>' +
-			   '</tr>';*/
+		str += '</table><span><a href="/explore" class="fa fa-plane"></a></span>'
+		$('.sidebox').html(str);
+		
+		if(width > 880) {
+			$('.sidebox').css('display', 'block');
+		} else {
+			$('.sidebox').css('display', 'none');
+		}
 	}
-	str += '</table><span><a href="/explore" class="fa fa-plane"></a></span>'
-	$('.sidebox').html(str);
-	
-	if(width > 880) {
-		$('.sidebox').css('display', 'block');
-	} else {
+	else {
 		$('.sidebox').css('display', 'none');
 	}
 }
@@ -1169,9 +1188,9 @@ function getList(page) {
 				
 				var likes = data[i].count;
 				if(likes != null) {
-					str += '<div class="post-menu"><div id="like-' + data[i].idx +'">반응 ' + likes + '개</div><div>';
+					str += '<div class="post-menu" title="' + dateFormat(data[i].regdate) + '"><div id="like-' + data[i].idx +'">반응 ' + likes + '개</div><div>';
 				} else {
-					str += '<div class="post-menu"><div id="like-' + data[i].idx + '"></div><div>';
+					str += '<div class="post-menu" title="' + dateFormat(data[i].regdate) + '"><div id="like-' + data[i].idx + '"></div><div>';
 				}
 				
 				
@@ -1225,13 +1244,15 @@ $(window).scroll(function(){
 
 $('.btn-app .fa-heart').click(function(){
 	$('.main').empty();
+	$('body').css('overflow', 'hidden');
+	$('.loading').css('display', 'none');
 	page = 1;
 	flag = 0;
 	likeflag = 1;
 	getLikeList(page);
 	
 	setTimeout(function() {
-		$('.btn-1').html('<div class="fa fa-undo" onclick="myblog()"></div>');
+		$('.btn-1').html('<div class="fa fa-undo" onclick="home()"></div>');
 	}, 1500);
 });
 
@@ -1342,8 +1363,11 @@ function generateList(data) {
 			   '<p class="book-description">' + description + '<a href="' + url + '" target="_blank"> 더보기</a></p>' +
 			   '</td>' + 
 			   '</tr>' +
-			   '</table>' +
-			   '<div class="post-contents center">' + data.contents + '</div>';
+			   '</table>';
+		
+		if(data.contents != null) {
+			str += '<div class="post-contents center" style="margin-top:15px;">' + data.contents + '</div>';
+		}
 		
 		$('.book-area').css('display', 'block');
 	}
@@ -1431,4 +1455,20 @@ function getLikeList(page) {
 
 function logout() {
 	$(location).attr('href', '/logout');
+}
+
+function dateFormat(param){
+	var date = new Date(param);
+	
+	var year = date.getFullYear();
+	var month = ('0' + (date.getMonth() + 1)).slice(-2);
+	var day = ('0' + date.getDate()).slice(-2);
+	
+	var hours = ('0' + date.getHours()).slice(-2);
+	var minutes = ('0' + date.getMinutes()).slice(-2);
+	var seconds = ('0' + date.getSeconds()).slice(-2);
+	
+	var dateString = year + '-' + month + '-' + day + ' ' + hours + ':' + minutes + ':' + seconds;
+	
+	return dateString;
 }

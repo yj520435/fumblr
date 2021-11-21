@@ -5,9 +5,10 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Insert title here</title>
+<title>Error</title>
 <style>
 	@import url('https://fonts.googleapis.com/css2?family=M+PLUS+1:wght@600&display=swap');
+	
 	body {
 		text-align: center;
 		background-color: #c8b7ee;

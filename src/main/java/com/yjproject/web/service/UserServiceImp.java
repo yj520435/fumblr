@@ -44,7 +44,10 @@ public class UserServiceImp implements UserService {
 		return dao.getUserByEmail(email, blog);
 	}
 	
-	
+	@Override
+	public User getUser(int idx, String password) {
+		return dao.getUserByIdx(idx, password);
+	}
 
 	@Override
 	public int updateUser(User user, String newPassword) {
@@ -70,13 +73,13 @@ public class UserServiceImp implements UserService {
 	}
 
 	@Override
-	public int updatePic(int idx_, String blog, String pic,
-					MultipartFile file) throws IllegalStateException, IOException {
+	public int updatePic(int idx, String blog, String pic, MultipartFile file) throws IllegalStateException, IOException {
 		int result = 0;
 		String filePath = "";
 		
 		if(file!=null) {
-			String realPath = "C:\\Users\\kyj\\Desktop\\upload\\" + pic + "\\";
+			String realPath = "C:\\Users\\kyj\\Desktop\\upload\\" + pic + "\\"; //window
+			//String realPath = "/home/ubuntu/project/upload/" + pic + "/";  	//linux
 			String fileName = blog + "-" + file.getOriginalFilename();
 			filePath = realPath + fileName;
 			
@@ -85,17 +88,12 @@ public class UserServiceImp implements UserService {
 		}
 		
 		if(pic.equals("profile")) {
-			result = dao.updateProfile(idx_, filePath);
+			result = dao.updateProfile(idx, filePath);
 		} else if(pic.equals("background")) {
-			result = dao.updateBackground(idx_, filePath);
+			result = dao.updateBackground(idx, filePath);
 		}
 		
 		return result;
-	}
-	
-	@Override
-	public User getUser(int idx, String password) {
-		return dao.getUserByIdx(idx, password);
 	}
 
 	@Override
@@ -114,9 +112,9 @@ public class UserServiceImp implements UserService {
 	public int delAccount(int idx, String password, HttpSession session) {
 		int result = 0;
 		if(getUser(idx, password) != null) {
-			result += dao.deletePosts(idx);
-			result += dao.deleteLikes(idx);
-			result += dao.deleteUser(idx);
+			//result += dao.deletePosts(idx);
+			//result += dao.deleteLikes(idx);
+			result = dao.deleteUser(idx);
 			
 			session.invalidate();
 		}

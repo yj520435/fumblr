@@ -192,21 +192,6 @@ function getDivision() {
 				str += '</div>' + 
 				   	   '<div class="post-contents">' + contents + '</div>';
 				
-				/* if(width<630) {
-					str += '<div class="link-description">' + description + '</div></div>';
-					$('.link-div').css({
-						'background-color': '#f7f7f7',
-					})
-					$('.link-div div:nth-child(1)').css({
-						'margin-top' : '15px'
-					});
-					$('.link-thumbnail').css('margin-top', '0');
-				}
-				
-				if(contents == null) contents = '';
-				str += '<div class="link-contents">' + contents + '</div>'; */
-				
-				
 			}
 			
 			if(category=='BOOK') {
@@ -252,8 +237,6 @@ function getDivision() {
 					str += '<div class="post-contents" style="margin-top: 15px;">' + contents + '</div>';
 				}
 			}
-			
-			console.log(list[i].count);
 			
 			if(list[i].count != null) {
 				str += '<div class="e-post-like">반응 ' + list[i].count + '개</div>';

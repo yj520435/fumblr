@@ -19,12 +19,11 @@
 <body>
 	<c:set var="user" value="${sessionScope.user}" />
 	<div class="body">
-		<!-- 프로필 아이콘 및 개인메뉴 -->
+		<!-- 프로필 아이콘 및 개인 메뉴 -->
 		<div class="container">
 			<div class="icon">
 				<c:if test="${user.idx != owner.idx}">
-					<div class="btn-app btn-0" onclick="myblog()"><div class="fa fa-home"></div></div>
-					<!-- <div class="fa fa-home" onclick="myblog()"></div> -->
+					<div class="btn-app btn-0" onclick="home()"><div class="fa fa-home"></div></div>
 				</c:if>
 				<c:if test="${user.idx == owner.idx}">
 					<div class="my-menu">
@@ -35,13 +34,8 @@
 					</div>
 				</c:if>
 			</div>
-			<%-- <c:if test="${user.idx != owner.idx}">
-				<div class="my-home">
-					<div class="btn-app" onclick="myblog()"><div class="fa fa-home"></div></div>
-				</div>
-			</c:if> --%>
 		</div>
-		<!-- 포스트 작성 -->
+		<!-- 포스트 작성 메뉴 -->
 		<c:if test="${user!=null && user.idx==owner.idx}">
 			<table class="menu center">
 				<tr>
@@ -56,7 +50,7 @@
 		</c:if>
 		<!-- 블로그 추천 사이드박스 -->
 		<div class="sidebox"></div>
-		<!-- 포스트 -->
+		<!-- 포스트 메인 -->
 		<div class="main center"></div>
 		<div class="loading" style="display:none;"></div>
 		<!-- 포스트 모달창 -->

@@ -1,53 +1,29 @@
 package com.yjproject.web.controller;
 
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
-import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import javax.servlet.http.Part;
 
-import org.jsoup.Connection;
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import com.yjproject.web.entity.Post;
-import com.yjproject.web.entity.Posts;
 import com.yjproject.web.entity.User;
 import com.yjproject.web.service.PostService;
 import com.yjproject.web.service.UserService;
+import com.yjproject.web.service.UserServiceImp;
 
-/*@MultipartConfig (
-	location="/tmp",
-	fileSizeThreshold = 1024*1024,
-	maxFileSize = 1024*1024*50,
-	maxRequestSize = 1024*1024*50*5
-)*/
 @Controller
 public class BlogController {
 
@@ -55,29 +31,30 @@ public class BlogController {
 	PostService service;
 	
 	@Autowired
-	UserService uService;
+	UserService sub;
 	
 	@GetMapping("/")
 	public String index(Model model, HttpSession session) {
 		String page = "";
 		User user = (User)session.getAttribute("user");
-		if(user==null) {
-			page = "home";
-		} else {
-			page = "redirect:blog/" + user.getBlog();
-		}
+		page = (user==null) ? "/blog/home" : "redirect:blog/"+user.getBlog();
+		/*
+		 * if(user==null) { page = "home"; } else { page = "redirect:blog/" +
+		 * user.getBlog(); }
+		 */
 		
 		return page;
 	}
 	
+	/* 블로그 화면 */
+	
 	@GetMapping("/blog/{blog}")
-	public String myBlog(
-			Model model,
-			HttpSession session,
-			@PathVariable("blog") String blog,
-			@RequestParam(required=false, defaultValue="") String keyword) {
+	public String myBlog(Model model, 
+						HttpSession session, 
+						@PathVariable("blog") String blog, 
+						@RequestParam(required=false, defaultValue="") String keyword) {
 		User user = (User) session.getAttribute("user"); //현재 로그인한 사용자
-		User owner = (User) uService.getUser("", blog);  //방문한 블로그 소유자
+		User owner = (User) sub.getUser("", blog);  	 //방문한 블로그 소유자
 		int postCount = service.postCount(owner.getIdx(), keyword);
 		
 		int likeCount = 0;
@@ -92,20 +69,21 @@ public class BlogController {
 		model.addAttribute("likeCount", likeCount);
 		model.addAttribute("owner", owner);
 		model.addAttribute("postCount", postCount);
-		return "blog";
+		return "/blog/blog";
 	}
 	
+	/* 포스트 리스트 가져오기 */
 	
 	@GetMapping("/getList")
 	@ResponseBody
-	public List<Post> getList(Model model, String owner,
-							  @RequestParam(required=false, defaultValue="1") int page, 
-							  @RequestParam(required=false, defaultValue="") String keyword) {
-		int oIdx = Integer.parseInt(owner);
-		int postCount = service.postCount(oIdx, keyword);
+	public List<Post> getList(Model model, int owner, 
+								@RequestParam(required=false, defaultValue="1") int page, 
+								@RequestParam(required=false, defaultValue="") String keyword) {
+		//int oIdx = Integer.parseInt(owner);
+		int postCount = service.postCount(owner, keyword);
 		List<Post> list = null;
 		if (postCount!=0) {
-			list = service.getList(oIdx, page, keyword);
+			list = service.getList(owner, page, keyword);
 		}
 		
 		//리스트 호출 시 로딩
@@ -120,6 +98,8 @@ public class BlogController {
 		return list;
 	}
 	
+	/* 포스트 가져오기, 삭제하기 */
+	
 	@GetMapping("/getPost")
 	@ResponseBody
 	public Post getPost(int postIdx) {
@@ -133,36 +113,36 @@ public class BlogController {
 		return result;
 	}
 	
-	/* 모달창에 템플릿 전달하기 */
+	/* 모달창에 템플릿 전달 */
 	
 	@GetMapping("/newText")
 	public String newText() {
-		return "/text";
+		return "/form/text";
 	}
 	
 	@GetMapping("/newPhoto")
 	public String newPhoto() {
-		return "photo";
+		return "/form/photo";
 	}
 	
 	@GetMapping("/newCode")
 	public String newCode() {
-		return "code";
+		return "/form/code";
 	}
 	
 	@GetMapping("/newLink")
 	public String newLink() throws Exception {
-		return "link";
+		return "/form/link";
 	}
 	
 	@GetMapping("/newBook")
 	public String newBook() throws Exception {
-		return "book";
+		return "/form/book";
 	}
 	
 	@GetMapping("/newVideo")
 	public String newVideo() throws Exception {
-		return "video";
+		return "/form/video";
 	}
 	
 	/* 포스팅 */
@@ -170,12 +150,12 @@ public class BlogController {
 	@PostMapping("/setPost")
 	@ResponseBody
 	public int setPost(@RequestParam(required=false, defaultValue="0") int idx,
-					   String owner,
-					   String category,
-					   @RequestParam(required=false, defaultValue=" ") String title,
-					   @RequestParam(required=false, defaultValue="") String contents,
-					   @RequestParam(required=false, defaultValue="") String thumbnail,
-					   @RequestParam(required=false, defaultValue="") String description) {
+						String owner,
+						String category,
+						@RequestParam(required=false, defaultValue=" ") String title,
+						@RequestParam(required=false, defaultValue="") String contents,
+						@RequestParam(required=false, defaultValue="") String thumbnail,
+						@RequestParam(required=false, defaultValue="") String description) {
 		int owner_ = Integer.parseInt(owner);
 		Post post = new Post(idx, owner_, category, title, contents, thumbnail, description, "", null);
 		int result = service.setPost(post);
@@ -191,8 +171,6 @@ public class BlogController {
 						@RequestParam(required=false, defaultValue=" ") String title,
 						@RequestParam(required=false, defaultValue="") String contents,
 						@RequestParam(required=false) MultipartFile file) throws IOException {
-		//int idx_ = Integer.parseInt(idx);
-		//int owner_ = Integer.parseInt(owner);
 		Post post = new Post(idx, owner, category, title, contents, "", "", "", null);
 		int result = service.setForm(request, post, file);
 		return result;
@@ -208,12 +186,15 @@ public class BlogController {
 		return map; 
 	}
 	
+	//사이드박스 컨텐츠 불러오기
 	@GetMapping("/sideboxContents")
 	@ResponseBody
 	public User[] sideboxContents(@RequestParam(required=false, defaultValue="0") int myIdx, int ownerIdx) {
 		User[] user = service.getOtherBlog(myIdx, ownerIdx);
 		return user;
 	}
+	
+	/* 좋아요 기능 */
 	
 	@GetMapping("/like")
 	@ResponseBody
@@ -233,24 +214,9 @@ public class BlogController {
 		return service.getLike(user, owner);
 	}
 	
-	@GetMapping("/explore")
-	public String explore(Model model, HttpSession session) {
-		User user = (User) session.getAttribute("user");
-		model.addAttribute("user", user);
-		return "explore";
-	}
-	
-	@GetMapping("/getRandomList")
-	@ResponseBody
-	public List<Posts> getRandomList() {
-		List<Posts> list = service.getRandomList();
-		return list;
-	}
-	
 	@GetMapping("/getLikeList")
 	@ResponseBody
-	public List<Post> getLikeList(Model model, int user,
-			@RequestParam(required=false, defaultValue="1") int page) {
+	public List<Post> getLikeList(Model model, int user, @RequestParam(required=false, defaultValue="1") int page) {
 		int likeCount = service.likeCount(user);
 		List<Post> list = null;
 		if (likeCount != 0) {
@@ -267,6 +233,21 @@ public class BlogController {
 		}
 		
 		return list;
-	}	
-
+	}
+	
+	/* 포스트 탐색 */
+	
+	@GetMapping("/explore")
+	public String explore(Model model, HttpSession session) {
+		User user = (User) session.getAttribute("user");
+		model.addAttribute("user", user);
+		return "/blog/explore";
+	}
+	
+	@GetMapping("/getRandomList")
+	@ResponseBody
+	public List<Post> getRandomList() {
+		List<Post> list = service.getRandomList();
+		return list;
+	}
 }

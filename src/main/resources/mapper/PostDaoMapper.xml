@@ -4,59 +4,37 @@
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.yjproject.web.dao.PostDao">
 	<select id="getList" resultType="com.yjproject.web.entity.Post">
-		<!-- SELECT * FROM POST WHERE WRITER=1 ORDER BY REGDATE DESC -->
-		SELECT * FROM ( 
-		SELECT ROWNUM NUM, P.* FROM 
-		(SELECT * FROM POSTVIEW WHERE OWNER=#{owner} ORDER BY REGDATE DESC) P 
+		SELECT * FROM (SELECT ROWNUM NUM, P.* FROM (
+		SELECT * FROM POSTVIEW WHERE OWNER=#{owner} ORDER BY REGDATE DESC) P 
 		WHERE TITLE LIKE '%${keyword}%' OR CONTENTS LIKE '%${keyword}%') 
 		WHERE NUM BETWEEN #{start} AND #{end}
-		<!-- SELECT * FROM (
-		SELECT ROWNUM NUM, B.* FROM 
-		(SELECT * FROM BOARDVIEW ORDER BY REGDATE DESC) B 
-		WHERE ${field} LIKE '%${query}%') 
-		WHERE NUM BETWEEN #{start} AND #{end} -->
 	</select>
 	<select id="postCount" resultType="Integer">
-		SELECT COUNT(IDX) COUNT FROM POST WHERE OWNER=#{owner} AND (TITLE LIKE '%${keyword}%' OR CONTENTS LIKE '%${keyword}%')
-	</select>
-	<select id="getUserIdx" resultType="Integer">
-		SELECT IDX FROM USERS WHERE BLOG=#{blog}
+		SELECT COUNT(IDX) COUNT FROM POST 
+		WHERE OWNER=#{owner} AND (TITLE LIKE '%${keyword}%' OR CONTENTS LIKE '%${keyword}%')
 	</select>
 	<select id="getPost" resultType="com.yjproject.web.entity.Post">
 		SELECT * FROM POST WHERE IDX=#{postIdx}
 	</select>
-	<delete id="delPost">
-		DELETE POST WHERE IDX=#{postIdx}
-	</delete>
 	<insert id="setPost">
 		INSERT INTO POST VALUES(POST_SEQ.NEXTVAL, #{owner}, #{category}, #{title}, #{contents}, #{thumbnail}, #{description}, #{files}, SYSDATE)
 	</insert>
-	<!-- <insert id="setText">
-		INSERT INTO POST VALUES(POST_SEQ.NEXTVAL, 'yujin', 'TEXT', #{title}, #{contents}, '', '', '', SYSDATE)
-	</insert>
-	<insert id="setPhoto" parameterType="com.yjproject.web.entity.Post">
-		INSERT INTO POST VALUES(POST_SEQ.NEXTVAL, 'yujin', 'PHOTO', #{title}, #{contents}, '', '', #{files}, SYSDATE)
-		<selectKey keyProperty="idx" resultType="int" order="AFTER">
-			SELECT MAX(IDX) FROM POST WHERE WRITER='yujin' AND CATEGORY='PHOTO'
-		</selectKey>
-	</insert>
-	<insert id="setCode" parameterType="com.yjproject.web.entity.Post">
-		INSERT INTO POST VALUES(POST_SEQ.NEXTVAL, 'yujin', 'CODE', #{title}, #{contents}, SYSDATE)
-	</insert>
-	<insert id="setLink" parameterType="com.yjproject.web.entity.Post">
-		INSERT INTO POST VALUES(POST_SEQ.NEXTVAL, 'yujin', #{category}, #{title}, #{contents}, #{thumbnail}, #{description}, #{files}, SYSDATE)
-	</insert>
-	<insert id="setBook" parameterType="com.yjproject.web.entity.Post">
-		INSERT INTO POST VALUES(POST_SEQ.NEXTVAL, 'yujin', #{category}, #{title}, #{contents}, #{thumbnail}, #{description}, #{files}, SYSDATE)
-	</insert> -->
 	<update id="updatePost" parameterType="com.yjproject.web.entity.Post">
 		UPDATE POST SET TITLE=#{title}, CONTENTS=#{contents}, THUMBNAIL=#{thumbnail}, DESCRIPTION=#{description}, FILES=#{files} WHERE IDX=#{idx}
 	</update>
 	<select id="getFile" resultType="String">
 		SELECT FILES FROM POST WHERE IDX=#{idx}
 	</select>
+	<delete id="delPost">
+		DELETE POST WHERE IDX=#{postIdx}
+	</delete>
+	<select id="getUserIdx" resultType="Integer">
+		SELECT IDX FROM USERS WHERE BLOG=#{blog}
+	</select>
 	<select id="getOtherBlog" resultType="com.yjproject.web.entity.User">
-		<![CDATA[SELECT* FROM (SELECT * FROM USERS WHERE IDX IN (SELECT OWNER FROM POST GROUP BY OWNER) AND IDX NOT IN (#{myIdx}, #{ownerIdx}) ORDER BY DBMS_RANDOM.VALUE) WHERE ROWNUM <= 7]]>
+		<![CDATA[SELECT* FROM (SELECT * FROM USERS
+		WHERE IDX IN (SELECT OWNER FROM POST GROUP BY OWNER) AND IDX NOT IN (#{myIdx}, #{ownerIdx})
+		ORDER BY DBMS_RANDOM.VALUE) WHERE ROWNUM <= 7]]>
 	</select>
 	<insert id="like">
 		INSERT INTO LIKES VALUES (LIKE_SEQ.NEXTVAL, #{postIdx}, #{userIdx})
@@ -64,95 +42,22 @@
 	<delete id="noLike">
 		DELETE LIKES WHERE PIDX=#{postIdx} AND UIDX=#{userIdx}
 	</delete>
-	<select id="getLike" resultType="Integer">
-		SELECT P.IDX FROM POST P, (SELECT PIDX, UIDX FROM LIKES WHERE UIDX=#{user}) L WHERE P.IDX=L.PIDX AND P.OWNER=#{owner}
-	</select>
-	<select id="getRandomList" resultType="com.yjproject.web.entity.Post">
-		<![CDATA[SELECT * FROM (SELECT P.*, U.BLOG, U.PROFILE FROM POSTVIEW P INNER JOIN USERS U ON P.OWNER = U.IDX ORDER BY DBMS_RANDOM.VALUE) WHERE ROWNUM<=30]]>
-	</select>
 	<select id="likeCount" resultType="Integer">
 		SELECT COUNT(*) COUNT FROM LIKES WHERE UIDX=#{user}
 	</select>
-	<select id="getLikeList" resultType="com.yjproject.web.entity.Post">
-		SELECT * FROM (
-			SELECT ROWNUM NUM, L.* FROM (
-				SELECT P.*, U.BLOG, U.PROFILE
-				FROM (SELECT * FROM LIKES WHERE UIDX=#{user}) L
-				INNER JOIN POSTVIEW P
-				ON L.PIDX = P.IDX
-				INNER JOIN USERS U
-				ON P.OWNER = U.IDX
-				ORDER BY P.REGDATE DESC
-			) L
-		) WHERE NUM BETWEEN #{start} AND #{end}
+	<select id="getLike" resultType="Integer">
+		SELECT P.IDX FROM POST P, (SELECT PIDX, UIDX FROM LIKES WHERE UIDX=#{user}) L 
+		WHERE P.IDX=L.PIDX AND P.OWNER=#{owner}
 	</select>
-	<!-- INSERT INTO UPLOAD VALUES (UPLOAD_SEQ.NEXTVAL, #{idx}, #{fileName}, #{filePath}, #{fileSize}) -->
-	
-	<!--<insert id="setPhoto" parameterType="HashMap">
-		INSERT INTO POST VALUES(POST_SEQ.NEXTVAL, 1, '테스트', '테스트', SYSDATE, #{fileName}, #{filePath}, #{fileSize})
-	</insert>
-	  -->
-	 
-	
-
-  <!-- <resultMap type="com.yjproject.web.entity.PostView" id="postMap">
-  	<result property="writerId" column="WRITER_ID"/>
-  	<result property="writerNickname" column="WRITER_NICKNAME"/>
-  </resultMap>
-  <resultMap type="com.yjproject.web.entity.Reply" id="replyMap">
-  	<result property="postIdx" column="POST_IDX"/>
-  	<result property="writerId" column="WRITER_ID"/>
-  	<result property="writerNickname" column="WRITER_NICKNAME"/>
-  </resultMap>
-  <select id="getList" resultMap="postMap">
-	SELECT * FROM (
-	SELECT ROWNUM NUM, B.* FROM 
-	(SELECT * FROM BOARDVIEW ORDER BY REGDATE DESC) B 
-	WHERE ${field} LIKE '%${query}%') 
-	WHERE NUM BETWEEN #{start} AND #{end}
-  </select>
-  <select id="getPost" resultMap="postMap">
-  	SELECT * FROM BOARD WHERE IDX=#{idx}
-  </select>
-  <insert id="write" parameterType="com.yjproject.web.entity.Post">
- 	INSERT INTO BOARD(IDX, TITLE, WRITER_ID, WRITER_NICKNAME, CONTENTS) VALUES(BOARD_SEQ.NEXTVAL, #{title}, #{writerId}, #{writerNickname}, #{contents}) 	
-  </insert>
-  <update id="addHit">
-  	UPDATE BOARD SET HIT=HIT+1 WHERE IDX=#{idx}
-  </update>
-  <select id="getCount" resultType="Integer">
-  	SELECT COUNT(IDX) FROM BOARD WHERE ${field} LIKE '%${query}%'
-  </select>
-  <delete id="delete">
-  	DELETE BOARD WHERE IDX=#{idx}
-  </delete>
-  <update id="update">
-  	UPDATE BOARD SET TITLE=#{title}, CONTENTS=#{contents} WHERE IDX=#{idx}
-  </update>
-  <select id="getReply" resultMap="replyMap">
-  	SELECT * FROM REPLY WHERE POST_IDX=#{postIdx} ORDER BY REGDATE DESC
-  </select>
-  <insert id="setReply">
-  	INSERT INTO REPLY VALUES(REPLY_SEQ.NEXTVAL, #{postIdx}, #{writerId}, #{writerNickname}, #{contents}, SYSDATE)
-  </insert>
-  <select id="getReplyCnt" resultType="Integer">
-  	SELECT COUNT(IDX) FROM REPLY WHERE POST_IDX=#{postIdx}
-  </select>
-  <delete id="delReply">
-  	DELETE REPLY WHERE IDX=#{replyIdx}
-  </delete>
-  
-  <select id="getMyList" resultMap="postMap">
-	SELECT * FROM (
-	SELECT ROWNUM NUM, N.* FROM 
-	(SELECT * FROM BOARDVIEW ORDER BY REGDATE DESC) N 
-	WHERE ${field} LIKE '%${query}%' AND WRITER_ID=#{writer}) 
-	WHERE NUM BETWEEN #{start} AND #{end}
-  </select>
-  <select id="getMyCount" resultType="Integer">
-  	SELECT COUNT(IDX) FROM BOARD WHERE ${field} LIKE '%${query}%' AND WRITER_ID=#{writer}
-  </select>
-  <delete id="deleteAll">
-  	DELETE BOARD WHERE IDX IN (${delList})
-  </delete> -->
+	<select id="getLikeList" resultType="com.yjproject.web.entity.Post">
+		SELECT * FROM (SELECT ROWNUM NUM, L.* FROM (
+		SELECT P.*, U.BLOG, U.PROFILE FROM (SELECT * FROM LIKES WHERE UIDX=#{user}) L
+		INNER JOIN POSTVIEW P ON L.PIDX = P.IDX
+		INNER JOIN USERS U ON P.OWNER = U.IDX
+		ORDER BY P.REGDATE DESC) L) WHERE NUM BETWEEN #{start} AND #{end}
+	</select>
+	<select id="getRandomList" resultType="com.yjproject.web.entity.Post">
+		<![CDATA[SELECT * FROM (SELECT P.*, U.BLOG, U.PROFILE FROM POSTVIEW P
+		INNER JOIN USERS U ON P.OWNER = U.IDX ORDER BY DBMS_RANDOM.VALUE) WHERE ROWNUM<=30]]>
+	</select>
 </mapper>

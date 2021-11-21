@@ -63,7 +63,7 @@
 						<span class="btn-ch-blog-cancle fa fa-times" style="display:none; padding-right: 2px;"></span>
 						<span class="btn-ch-blog-save fa fa-check" style="display:none;"></span>
 						<span class="btn-ch-blog fa fa-pencil"></span>
-						<div class="balloon">버튼을 눌러 채팅을 시작해 보세요!</div>
+						<div class="balloon"></div>
 					</td>
 				</tr>
 			</table>

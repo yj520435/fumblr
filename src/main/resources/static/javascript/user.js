@@ -1,10 +1,13 @@
-/* 포스트 탐색 페이지 이동 */
-$('.div-go-explore').click(function(){
-	$(location).attr('href', '/explore');
-});
+/* 팝업 메시지*/
 
+function showMsg(div, str) {
+	$(div).text(str);
+	$(div).css('margin', '10px 0');
+	$(div).slideDown('slow');
+}
 
-/* 로그인 버튼 클릭 */
+/* 로그인 */
+
 $('.btn-login').click(function(){
 	$('.div-login').slideDown('slow', function(){
 		$('#login-email').focus();
@@ -17,7 +20,6 @@ $('.btn-login').click(function(){
 	$('.btn-login').attr('onclick', 'login()');
 });
 
-/* 로그인 진행 */
 function login() {
 	var email = $('#login-email').val();
 	var password = $('#login-password').val();
@@ -31,16 +33,18 @@ function login() {
 		},
 		success: function(data) {
 			if(data=='') {
-				$('.msg').text('아이디 또는 비밀번호를 확인해주세요.');
-				$('.msg').fadeIn(1000).delay(2000).fadeOut(1000);
+				showMsg('.div-login-msg', '아이디 또는 비밀번호를 확인해주세요.');
 			} else {
+				$('.div-login-msg').text('');
+				$('.div-login-msg').slideUp('fast');
 				$(location).attr('href', '/blog/' + data.blog);
 			}
 		}
 	});
 }
 
-/* 가입 버튼 클릭 */
+/* 가입하기 */
+
 $('.btn-register').click(function(){
 	$('.div-register').slideDown('slow', function() {
 		$('#register-email').focus();
@@ -55,42 +59,55 @@ $('.btn-register').click(function(){
 	$('.div-find-acc').css('display', 'none');
 	$('.home').css('display', 'block');
 	
-	$('.btn-register').attr('onclick', 'register()');
-	
-	//이메일 중복여부 검사
-	$('#register-password').focus(function() {
-		var email = $('#register-email');
-		$.ajax({
-			url: 'getUser',
-			type: 'get', 
-			data: {
-				'email' : email.val()
-			},
-			success: function(data) {
-				if(data!=null && data!='') {
-					alarm('이미 존재하는 이메일입니다.');
-					email.css('background-color', '#ffdede');
-					email.focus();
-				} else {
-					email.css('background-color', '#ffffff');
-				}
-			}
-		});
-	});
+	$('.btn-register').attr('onclick', 'precheck()');
 	
 	//비밀번호 유효성 검사 (10자리 이상 설정)
 	$('#register-password').keyup(function(){
 		$('.input-div img').css('display', 'block');
 		var password = $('#register-password').val();
 		if(password.length>9) {
-			$('.input-div img').css('filter', 'invert(64%) sepia(52%) saturate(578%) hue-rotate(159deg) brightness(99%) contrast(88%)');
+			$('.input-div img').css('filter', 'invert(77%) sepia(21%) saturate(6673%) hue-rotate(209deg) brightness(97%) contrast(108%)');
 		} else {
 			$('.input-div img').css('filter', 'invert(85%) sepia(0%) saturate(0%) hue-rotate(192deg) brightness(95%) contrast(83%)');
 		}
 	});
 });
 
-/* 가입 진행 */
+function precheck() {
+	
+	var email = $('#register-email').val();
+	
+	if(email=='') {
+		showMsg('.div-register-msg', '이메일을 입력해주세요.');
+		$('#register-email').focus();
+		return false;
+	}
+	
+	var emailRule = /^([0-9a-zA-Z_\.-]+)@([0-9a-zA-Z_-]+)(\.[0-9a-zA-Z_-]+){1,2}$/;
+	if(!emailRule.test(email)) {
+		showMsg('.div-register-msg', '올바른 이메일 형식으로 입력해주세요.');
+		$('#register-email').focus();
+		return false;
+	}
+	
+	//이메일 중복여부 검사
+	$.ajax({
+		url: 'getUser',
+		type: 'get', 
+		data: {
+			'email' : email
+		},
+		success: function(data) {
+			if(data!=null && data!='') {
+				showMsg('.div-register-msg', '이미 존재하는 이메일입니다.');
+				email.focus();
+			} else {
+				register();
+			}
+		}
+	});
+}
+
 function register() {
 	var email = $('#register-email').val();
 	var password = $('#register-password').val();
@@ -99,51 +116,38 @@ function register() {
 	
 	//입력값 유효성 검사
 	
-	if(email=='') {
-		alarm('이메일을 입력해주세요.');
-		$('#register-email').focus();
-		return false;
-	}
-	
-	var emailRule = /^([0-9a-zA-Z_\.-]+)@([0-9a-zA-Z_-]+)(\.[0-9a-zA-Z_-]+){1,2}$/;
-	if(!emailRule.test(email)) {
-		alarm('올바른 이메일 형식으로 입력해주세요.');
-		$('#register-email').focus();
-		return false;
-	}
-	
 	if(password=='') {
-		alarm('비밀번호를 입력해주세요.');
+		showMsg('.div-register-msg', '비밀번호를 입력해주세요.');
 		$('#register-password').focus();
 		return false;
 	}
 	
 	if(password.length<10) {
-		alarm('비밀번호는 10자 이상으로 설정해주세요.');
+		showMsg('.div-register-msg', '비밀번호는 10자 이상으로 설정해주세요.');
 		$('#register-password').focus();
 		return false;
 	}
 	
 	if(passwordCheck != password) {
-		alarm('비밀번호 재확인이 필요해요.');
+		showMsg('.div-register-msg', '비밀번호 재확인이 필요해요.');
 		return false;
 	}
 	
 	if(blog=='') {
-		alarm('블로그 이름을 입력해주세요.');
+		showMsg('.div-register-msg', '블로그 이름을 입력해주세요.');
 		$('#register-blog').focus();
 		return false;
 	}
 	
 	var blogRule = /^[a-z]+$/;
 	if(!blogRule.test(blog)) {
-		alarm('블로그 이름은 소문자로만 설정할 수 있어요.');
+		showMsg('.div-register-msg', '블로그 이름은 소문자로만 설정할 수 있어요.');
 		$('#register-blog').focus();
 		return false;
 	}
 	
-	if(blog.lenght>20) {
-		alarm('블로그 이름은 20자 이하로 설정해주세요.');
+	if(blog.length>20) {
+		showMsg('.div-register-msg', '블로그 이름은 20자 이하로 설정해주세요.');
 		$('#register-blog').focus();
 		return false;
 	}
@@ -159,29 +163,22 @@ function register() {
 		},
 		success: function(data) {
 			if (data==0) {
-				alarm('이미 사용중인 이름입니다.');
-				$('#register-blog').css('background-color', '#ffdede');
+				showMsg('.div-register-msg', '이미 사용중인 이름입니다.');
 				$('#register-blog').focus();
 				return false;
 			} else if (data==1) {
-				alert('가입이 완료되었어요!');
-				$(location).attr('href', '/');
+				$('.div-register-msg').text('');
+				$('.div-register-msg').slideUp('fast', function() {
+					alert('가입이 완료되었어요!');
+					$(location).attr('href', '/');
+				});
 			}
 		}
 	});
-	
-	$('#register-blog').keydown(function(){
-		$('#register-blog').css('background-color', '#ffffff');
-	});
 }
 
-/* 팝업 메시지 */
-function alarm(message) {
-	$('.msg').text(message);
-	$('.msg').fadeIn(500).delay(1500).fadeOut(500);
-}
+/* 비밀번호 찾기 */
 
-/* 비밀번호 찾기 버튼 클릭 */
 $('.div-find-acc').click(function(){
 	modalOn();
 	$('.modal-body').html('<div>이메일 아이디를 알려주세요.<br>' +
@@ -192,14 +189,12 @@ $('.div-find-acc').click(function(){
 						  '<div class="btn-cancle-find" onclick="modalOff()">취소하기</div>');
 });
 
-/* 비밀번호 찾기 진행 */
 function findPassword(email) {
 	var email = $('.input-email');
 	
 	var emailRule = /^([0-9a-zA-Z_\.-]+)@([0-9a-zA-Z_-]+)(\.[0-9a-zA-Z_-]+){1,2}$/;
 	if(!emailRule.test(email.val())) {
 		email.css('animation', 'none');
-		email.val('');
 		email.focus();
 		email.css('animation', 'shake 0.5s 1');
 		return false;
@@ -213,10 +208,6 @@ function findPassword(email) {
 		},
 		beforeSend: function() {
 			$('.modal-body').html('<img class="sending-email-img" src="/image/sending-email.gif">');
-			/*$('.input-email').css('display', 'none');
-			$('.btn-find').css('display', 'none');
-			$('.btn-cancle-find').css('display', 'none');
-			$('.div-before-send').html('');*/
 		},
 		success: function(data) {
 			if(data==1) {
@@ -236,6 +227,7 @@ function findPassword(email) {
 		}
 	});
 }
+
 
 var idx = $('#idx').val();
 var blog = $('#blog').val();
@@ -406,29 +398,11 @@ $('.div-ch-password .btn-save').click(function(){
 	});
 });
 
-//흔들림 애니메이션 효과
-function shake(div) {
-	div.css('animation', 'none');
-	div.focus();
-	div.css('animation', 'shake 0.5s 1');
-}
-
-//입력칸 토글
-function changeAcc(account, flag) {
-	if(flag=='open') {
-		$('.user-'+account).css('display', 'none');
-		$('.div-ch-'+account).slideDown('slow');
-		$('.btn-ch-'+account).css('display', 'none');
-	} else if(flag=='close') {
-		$('.div-ch-'+account).css('display', 'none');
-		$('.user-'+account).css('display', 'block');
-		$('.btn-ch-'+account).css('display', 'inline-block');
-	}
-}
-
 /* 블로그 이름 변경 */
 
 $('.btn-ch-blog').click(function(){
+	$('.ch-blog').css('animation', 'none');
+	$('.ch-blog').val($('.user-blog').text());
 	$('.user-blog').css('display', 'none');
 	$('.ch-blog').css('display', 'block');
 	$('.btn-ch-blog').css('display', 'none');
@@ -450,6 +424,15 @@ $('.btn-ch-blog-save').click(function() {
 	
 	//변경 여부
 	if(curBlog == newBlog) {
+		return false;
+	}
+	
+	//소문자 이외 문자 포함 여부
+	var blogRule = /^[a-z]+$/;
+	if(!blogRule.test(newBlog)) {
+		$('.balloon').html('소문자로만 설정할 수 있어요.');
+		$('.balloon').show();
+		shake($('.ch-blog'));
 		return false;
 	}
 	
@@ -498,14 +481,45 @@ function changeBlog(idx, blog) {
 	});
 }
 
-
 $('.btn-ch-blog-cancle').click(function(){
 	$('.ch-blog').css('display', 'none');
 	$('.user-blog').css('display', 'block');
 	$('.btn-ch-blog').css('display', 'inline-block');
 	$('.btn-ch-blog-cancle').css('display', 'none');
 	$('.btn-ch-blog-save').css('display', 'none');
+	$('.balloon').hide();
 });
+
+//흔들림 애니메이션 효과
+function shake(div) {
+	div.css('animation', 'none');
+	div.focus();
+	div.css('animation', 'shake 0.5s 1');
+}
+
+//입력칸 토글
+function changeAcc(account, flag) {
+	if(flag=='open') {
+		$('.user-'+account).css('display', 'none');
+		$('.div-ch-'+account).slideDown('slow');
+		$('.btn-ch-'+account).css('display', 'none');
+	} else if(flag=='close') {
+		$('.div-ch-'+account).css('display', 'none');
+		$('.user-'+account).css('display', 'block');
+		$('.btn-ch-'+account).css('display', 'inline-block');
+	}
+}
+
+//블로그 이름 유효성 검사 말풍선
+function balloonPosition() {
+	var div = $('.ch-blog');
+	var divX = div.offset().left;
+	var divY = div.offset().top;
+	
+	$('.balloon').css('top', divY+40);
+	$('.balloon').css('left', divX);
+}
+
 
 /* 배경화면 변경 */
 
@@ -623,6 +637,8 @@ function changePic(pic, flag) {
 	}
 }
 
+/* 블로그 초기화 */
+
 function btnReset() {
 	modalOn();
 	$('.modal-body').html('<div>지금까지 작성한 모든 포스트가 삭제됩니다.<br>' +
@@ -660,6 +676,8 @@ function resetBlog(idx) {
 	});
 }
 
+/* 계정 삭제 */
+
 function btnDelete() {
 	modalOn();
 	$('.modal-body').html('<div>계정 전체를 삭제하시겠어요?<br>' +
@@ -695,10 +713,10 @@ function delAccount(idx) {
 	});
 }
 
+/* 모달창 */
 
 modalPosition();
 
-/* 모달창 */
 function modalOn() {
 	$('.modal').css('display','block');
 	$('body').css('overflow', 'hidden');
@@ -715,20 +733,6 @@ function modalPosition() {
 	$('.modal-body').css('-ms-transform', 'translate(-50%, -50%)');
 	$('.modal-body').css('-o-transform', 'translate(-50%, -50%)');
 	$('.modal-body').css('transform', 'translate(-50%, -50%)');
-}
-
-
-function balloonPosition() {
-	var div = $('.ch-blog');
-	var divX = div.offset().left;
-	var divY = div.offset().top;
-	
-	var width = $(window).width();
-	
-	console.log(divX + ' ' + divY);
-	
-	$('.balloon').css('top', divY+40);
-	$('.balloon').css('left', divX);
 }
 
 $(window).resize(function(){
