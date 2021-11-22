@@ -20,6 +20,12 @@ $('.btn-login').click(function(){
 	$('.btn-login').attr('onclick', 'login()');
 });
 
+$('#login-password').keyup(function(key) {
+	if(key.keyCode == 13) {
+		login();
+	}
+})
+
 function login() {
 	var email = $('#login-email').val();
 	var password = $('#login-password').val();
@@ -36,8 +42,9 @@ function login() {
 				showMsg('.div-login-msg', '아이디 또는 비밀번호를 확인해주세요.');
 			} else {
 				$('.div-login-msg').text('');
-				$('.div-login-msg').slideUp('fast');
-				$(location).attr('href', '/blog/' + data.blog);
+				$('.div-login-msg').slideUp('fast', function() {
+					$(location).attr('href', '/blog/' + data.blog);
+				});
 			}
 		}
 	});
