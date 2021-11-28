@@ -55,8 +55,7 @@
 		<div class="loading" style="display:none;"></div>
 		<!-- 포스트 모달창 -->
 		<div class="modal">
-			<div class="modal-body">
-			</div>
+			<div class="modal-body"></div>
 		</div>
 		<!-- 방문한 블로그 정보 -->
 		<input type="hidden" value="${postCount}" id="postCount"/>

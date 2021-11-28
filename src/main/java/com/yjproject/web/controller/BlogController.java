@@ -22,7 +22,6 @@ import com.yjproject.web.entity.Post;
 import com.yjproject.web.entity.User;
 import com.yjproject.web.service.PostService;
 import com.yjproject.web.service.UserService;
-import com.yjproject.web.service.UserServiceImp;
 
 @Controller
 public class BlogController {
@@ -38,10 +37,6 @@ public class BlogController {
 		String page = "";
 		User user = (User)session.getAttribute("user");
 		page = (user==null) ? "/blog/home" : "redirect:blog/"+user.getBlog();
-		/*
-		 * if(user==null) { page = "home"; } else { page = "redirect:blog/" +
-		 * user.getBlog(); }
-		 */
 		
 		return page;
 	}
@@ -79,7 +74,6 @@ public class BlogController {
 	public List<Post> getList(Model model, int owner, 
 								@RequestParam(required=false, defaultValue="1") int page, 
 								@RequestParam(required=false, defaultValue="") String keyword) {
-		//int oIdx = Integer.parseInt(owner);
 		int postCount = service.postCount(owner, keyword);
 		List<Post> list = null;
 		if (postCount!=0) {

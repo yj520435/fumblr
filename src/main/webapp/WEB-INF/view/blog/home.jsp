@@ -39,8 +39,7 @@
 		<div class="home" onclick="location.href='/'">처음으로 돌아가기</div>
 	</div>
 	<div class="modal">
-		<div class="modal-body">
-		</div>
+		<div class="modal-body"></div>
 	</div>
 <script type="text/javascript" src="/javascript/user.js"></script>
 </body>

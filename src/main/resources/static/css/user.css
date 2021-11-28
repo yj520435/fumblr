@@ -183,8 +183,7 @@ body {
 	cursor: pointer;
 }
 
-.div-login-msg {
-	margin-top: 5px;
+.div-login-msg, .div-register-msg {
 	color: red;
 	display: none;
 }
@@ -692,6 +691,7 @@ button {
 }
 
 .balloon {
+	width: 171px;
     position: absolute;
     background: #c8b7ee;
     color: #fff;
@@ -699,6 +699,7 @@ button {
     border-radius: 20rem;
     font-size: 13px;
     display: none;
+    text-align: center;
 }
 
 .balloon:after{

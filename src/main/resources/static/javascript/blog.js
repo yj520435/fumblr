@@ -35,8 +35,11 @@ $('body').css('background-image', 'url("' + bg + '")');
 getList(page);    	  //초기 1페이지 로드
 sideboxContents();    //사이드박스 랜덤 블로그 불러오기
 modalPosition();  	  //모달창 위치 조정
-getLike(user, owner); //좋아요 게시물 불러오기
-sidebox();  //사이드박스 위치 조정
+sidebox();  		  //사이드박스 위치 조정
+
+if(user!='') {
+	getLike(user, owner); //좋아요 게시물 불러오기
+}
 
 $(window).resize(function(){
 	sidebox();
@@ -118,6 +121,9 @@ function newText(idx) {
 					btn.css({'width' : '50px', 'background-color' : '#c096ff'});
 					btn.html('수정');
 					btn.attr('onclick', 'setText(' + idx + ')');
+				},
+				error: function(error) {
+					console.log(error.responseJSON);
 				}
 			});
 		}
@@ -142,6 +148,9 @@ function setText(idx) {
 		},
 		success: function() {
 			$(location).attr('href', '/blog/'+blog);
+		},
+		error: function(error) {
+			console.log(error.responseJSON);
 		}
 	});
 }
@@ -251,6 +260,9 @@ function newPhoto(idx) {
 					btn.html('수정');
 					btn.attr('onclick', 'setPhoto(' + idx + ')');
 					btn.removeAttr('disabled');
+				},
+				error: function(error) {
+					console.log(error.responseJSON);
 				}
 			});
 		}
@@ -285,6 +297,9 @@ function setPhoto(idx) {
 			if(data==1) {
 				$(location).attr('href', '/blog/' + blog);
 			}
+		},
+		error: function(error) {
+			console.log(error.responseJSON);
 		}
 	});
 }
@@ -358,6 +373,9 @@ function newCode(idx) {
 					btn.html('수정');
 					btn.attr('onclick', 'setCode(' + idx + ')');
 					btn.removeAttr('disabled');
+				},
+				error: function(error) {
+					console.log(error.responseJSON);
 				}
 			});
 		}
@@ -385,6 +403,9 @@ function setCode(idx) {
 			if(data==1) {
 				$(location).attr('href', '/blog/'+blog);
 			}
+		},
+		error: function(error) {
+			console.log(error.responseJSON);
 		}
 	});
 }
@@ -444,6 +465,9 @@ function newLink(idx) {
 						if($(window).width()<500) {
 							$('.reset').css({'top':'22px', 'display':'block'});
 						}
+					},
+					error: function(error) {
+						console.log(error.responseJSON);
 					}
 				});
 				key.preventDefault();
@@ -497,8 +521,6 @@ function newLink(idx) {
 					if(thumbnail == null) thumbnail = "";
 					if(description == null) description = "";
 					
-					console.log(title + ' ' + contents + ' ' + thumbnail + ' ' + description);
-					
 					if(thumbnail.includes('youtube.com/embed')) {
 						$('.m-link-thumbnail').html('<iframe width="490" height="275" src="'+ thumbnail +'" frameborder="0" allowfullscreen></iframe>');
 					} else {
@@ -527,6 +549,9 @@ function newLink(idx) {
 					btn.html('수정');
 					btn.attr('onclick', 'setLink(' + idx + ')');
 					btn.removeAttr('disabled');
+				},
+				error: function(error) {
+					console.log(error.responseJSON);
 				}
 			});
 		}
@@ -567,6 +592,9 @@ function setLink(idx) {
 			if(data==1) {
 				$(location).attr('href', '/blog/'+blog);
 			}
+		},
+		error: function(error) {
+			console.log(error.responseJSON);
 		}
 	});
 }
@@ -614,11 +642,6 @@ function newBook(idx) {
 						$('.m-book-author').html('<span style="color: gray;">저자 | </span>' + book.authors);
 						$('.m-book-publisher').html('<span style="color: gray;">출판 | </span>' + book.publisher);
 						
-						/*var strLength = 119=;
-						if($(window).width() < 499) {
-							strLength = 70;
-						}*/
-						
 						if(book.contents.length > 100) {
 							book.contents = book.contents.substr(0, 100) + '... <a href="' + book.url + '" target="_blank">더보기<a>';
 						}
@@ -641,6 +664,9 @@ function newBook(idx) {
 						}
 						
 						key.preventDefault();
+					},
+					error: function(error) {
+						console.log(error.responseJSON);
 					}
 				});
 			}
@@ -710,6 +736,9 @@ function newBook(idx) {
 					btn.html('수정');
 					btn.attr('onclick', 'setBook(' + idx + ')');
 					btn.removeAttr('disabled');
+				},
+				error: function(error) {
+					console.log(error.responseJSON);
 				}
 			});
 		}
@@ -748,6 +777,9 @@ function setBook(idx) {
 			if(data==1) {
 				$(location).attr('href', '/blog/'+blog);
 			}
+		},
+		error: function(error) {
+			console.log(error.responseJSON);
 		}
 	});
 }
@@ -774,7 +806,6 @@ function newVideo(idx) {
 			
 			var files = e.target.files;
 			var fileArr = Array.prototype.slice.call(files);
-			var index = 0;
 			
 			fileArr.forEach(function(f){
 				if(!f.type.match("video.*")) {
@@ -864,6 +895,9 @@ function newVideo(idx) {
 					btn.html('수정');
 					btn.attr('onclick', 'setVideo(' + idx + ')');
 					btn.removeAttr('disabled');
+				},
+				error: function(error) {
+					console.log(error.responseJSON);
 				}
 			});
 		}
@@ -901,6 +935,9 @@ function setVideo(idx) {
 			if(data==1) {
 				$(location).attr('href', '/blog/' + blog);
 			}
+		},
+		error: function(error) {
+			console.log(error.responseJSON);
 		}
 	});
 }
@@ -948,6 +985,9 @@ function delPost(idx) {
 			if(data==1) {
 				$(location).attr('href', '/blog/'+blog);
 			}
+		},
+		error: function(error) {
+			console.log(error.responseJSON);
 		}
 	});
 }
@@ -979,6 +1019,9 @@ function like(idx) {
 				} else {
 					$('#like-' + idx).html('반응 ' + (orgLike+1) + '개');
 				}
+			},
+			error: function(error) {
+				console.log(error.responseJSON);
 			}
 		});
 	} else {
@@ -1011,6 +1054,9 @@ function noLike(idx) {
 			} else {
 				$('#like-' + idx).html('반응 ' + (orgLike-1) + '개');
 			}
+		},
+		error: function(error) {
+			console.log(error.responseJSON);
 		}
 	});
 }
@@ -1028,6 +1074,9 @@ function getLike(user, owner) {
 		async: false,
 		success: function(data) {
 			liked = data.slice();
+		},
+		error: function(error) {
+			console.log(error.responseJSON);
 		}
 	});
 }
@@ -1059,10 +1108,6 @@ function sidebox() {
 				str += '<td><a href="' + sideboxItems[(3*i)+j].blog + '"><img src="' + pf + '" width="55px" height="55px" title="' + sideboxItems[(3*i)+j].blog + '"></a></td>';
 			}
 			str += '</tr>';
-			/*str += '<tr>' + 
-				   '<td><a href="' + sideboxItems[i].blog + '"><img src="' + pf + '" width="40px" height="40px"></a></td>' +
-				   '<td><a href="' + sideboxItems[i].blog + '">' + sideboxItems[i].blog + '</a></td>' +
-				   '</tr>';*/
 		}
 		str += '</table><span><a href="/explore" class="fa fa-plane"></a></span>'
 		$('.sidebox').html(str);
@@ -1091,6 +1136,9 @@ function sideboxContents() {
 		async: false,
 		success: function(data) {
 			sideboxItems = data;
+		},
+		error: function(error) {
+			console.log(error.responseJSON);
 		}
 	});
 }
@@ -1114,32 +1162,6 @@ function modalPosition() {
 	$('.modal-body').css('-o-transform', 'translate(-50%, -50%)');
 	$('.modal-body').css('transform', 'translate(-50%, -50%)');
 }
-
-
-/*function editPost(idx) {
-	console.log(1);
-	var title = $('#title').val();
-	var contents = $('#contents').val();
-	contents = contents.replace(/(?:\r\n|]r|\n)/g, '<br>');
-	
-	$.ajax({
-		url: '/editPost',
-		type: 'post',
-		data: {
-			'postIdx' : idx,
-			'title' : title,
-			'contents' : contents
-		},
-		success: function(data) {
-			if(data==1) {
-				$(location).attr('href', '/blog/');
-			}
-		}
-	});
-}*/
-
-
-
 
 /* 포스트 리스트 출력 */
 
@@ -1223,6 +1245,9 @@ function getList(page) {
 			if(page>=endPage) {
 				$('.loading').html('');
 			}
+		},
+		error: function(error) {
+			console.log(error.responseJSON);
 		}
 	});
 }
@@ -1244,7 +1269,6 @@ $(window).scroll(function(){
 
 $('.btn-app .fa-heart').click(function(){
 	$('.main').empty();
-	$('body').css('overflow', 'hidden');
 	$('.loading').css('display', 'none');
 	page = 1;
 	flag = 0;
@@ -1282,7 +1306,7 @@ function generateList(data) {
 	//포스트(텍스트)
 	if(data.category=='TEXT') {
 		str += '<p class="post-title">' + data.title + '</p>' +
-			   '<div class="post-contents">' + data.contents + '</div>';
+			   '<div class="post-contents" style="line-height: 20px;">' + data.contents + '</div>';
 	}
 	
 	//포스트(사진)
@@ -1447,16 +1471,14 @@ function getLikeList(page) {
 			if(page>=endPage) {
 				$('.loading').html('');
 			}
+		},
+		error: function(error) {
+			console.log(error.responseJSON);
 		}
 	});
 }
 
-/* 로그아웃 */
-
-function logout() {
-	$(location).attr('href', '/logout');
-}
-
+//포스트 작성일 형식 지정
 function dateFormat(param){
 	var date = new Date(param);
 	
@@ -1471,4 +1493,10 @@ function dateFormat(param){
 	var dateString = year + '-' + month + '-' + day + ' ' + hours + ':' + minutes + ':' + seconds;
 	
 	return dateString;
+}
+
+/* 로그아웃 */
+
+function logout() {
+	$(location).attr('href', '/logout');
 }

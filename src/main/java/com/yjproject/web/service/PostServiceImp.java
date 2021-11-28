@@ -63,8 +63,8 @@ public class PostServiceImp implements PostService {
 		int result;
 		
 		if(file!=null) {
-			String realPath = "C:\\Users\\kyj\\Desktop\\upload\\post\\" + post.getCategory() + "\\"; //window
-			//String realPath = "/home/ubuntu/project/upload/post/" + post.getCategory() + "/";		 //linux
+			String realPath = "C:\\Users\\kyj\\Desktop\\upload\\post\\" + post.getCategory() + "\\"; 		   //window
+			//String realPath = "/home/ubuntu/project/upload/post/" + post.getCategory().toLowerCase() + "/";  //linux
 			String fileName = generateFileName(file);
 			//long fileSize = file.getSize();
 			
@@ -104,20 +104,21 @@ public class PostServiceImp implements PostService {
 		Connection.Response response = Jsoup.connect(link).method(Connection.Method.GET).execute();
 		Document document = response.parse();
 		System.out.println(document.select("meta"));
+		System.out.println(document.select("link"));
 
 		// 유튜브
-		if (link.contains("youtube.com/watch") || link.contains("youtube.com/embed") || link.contains("youtube.be/")) {
+		if (link.contains("youtube.com/watch") || link.contains("youtube.com/embed") || link.contains("youtu.be/")) {
 			eTitle = document.select("meta[itemprop=name]").first();
 			eDescription = document.select("meta[itemprop=description]").first();
-			eVideo = document.select("link[itemprop=embedUrl]").first();
+			eVideo = document.select("meta[itemprop=videoId]").first();
 
 			title = eTitle.attr("content");
 			description = eDescription.attr("content");
-			video = eVideo.attr("href");
+			video = "https://www.youtube.com/embed/" + eVideo.attr("content");
 		} else {
 			eTitle = document.select("meta[property=og:title]").first();
 
-			// <meta> 태그가 없는 경우 <title> 태그 찾기
+			//<meta> 태그가 없는 경우 <title> 태그 찾기
 			if (eTitle != null) {
 				title = eTitle.attr("content");
 			} else {
@@ -133,7 +134,7 @@ public class PostServiceImp implements PostService {
 
 			eImage = document.select("meta[property=og:image]").first();
 
-			// property 속성이 없는 경우 itemprop 속성 찾기
+			//property 속성이 없는 경우 itemprop 속성 찾기
 			if (eImage != null) {
 				image = eImage.attr("content");
 			} else {

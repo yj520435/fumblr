@@ -6,7 +6,6 @@ import org.springframework.web.multipart.MultipartFile;
 import com.yjproject.web.entity.User;
 
 public interface UserService {
-
 	int register(User user);
 	User login(String email, String password);
 	User getUser(String email, String blog); //이메일 또는 블로그 이름으로 유저 찾기
@@ -16,5 +15,4 @@ public interface UserService {
 	int resetBlog(int idx, String password);
 	int delAccount(int idx, String password, HttpSession session);
 	int findPassword(User user);
-	
 }

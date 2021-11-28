@@ -46,6 +46,9 @@ function login() {
 					$(location).attr('href', '/blog/' + data.blog);
 				});
 			}
+		},
+		error: function(error) {
+			console.log(error.responseJSON);
 		}
 	});
 }
@@ -81,7 +84,6 @@ $('.btn-register').click(function(){
 });
 
 function precheck() {
-	
 	var email = $('#register-email').val();
 	
 	if(email=='') {
@@ -111,6 +113,9 @@ function precheck() {
 			} else {
 				register();
 			}
+		},
+		error: function(error) {
+			console.log(error.responseJSON);
 		}
 	});
 }
@@ -180,6 +185,9 @@ function register() {
 					$(location).attr('href', '/');
 				});
 			}
+		},
+		error: function(error) {
+			console.log(error.responseJSON);
 		}
 	});
 }
@@ -231,10 +239,12 @@ function findPassword(email) {
 				$('.modal-body').html('<div><b>[ ERROR ]</b><br><br>계정이 존재하지 않습니다.</div>' +
 									  '<button class="btn-modal-off" onclick="modalOff()">창닫기</button>"');
 			}
+		},
+		error: function(error) {
+			console.log(error.responseJSON);
 		}
 	});
 }
-
 
 var idx = $('#idx').val();
 var blog = $('#blog').val();
@@ -311,6 +321,9 @@ $('.div-ch-email .btn-save').click(function(){
 				$('.div-ch-email div').html('');
 				changeEmail(idx, email, password);
 			}
+		},
+		error: function(error) {
+			console.log(error.responseJSON);
 		}
 	});
 	
@@ -342,6 +355,9 @@ function changeEmail(idx, email, password) {
 				$('.div-ch-email div').html('비밀번호가 일치하지 않습니다.');
 				$('.div-ch-email div').show();
 			}
+		},
+		error: function(error) {
+			console.log(error.responseJSON);
 		}
 	});
 }
@@ -401,6 +417,9 @@ $('.div-ch-password .btn-save').click(function(){
 				$('.div-ch-password div').show();
 				shake($('.cur-password'));
 			}
+		},
+		error: function(error) {
+			console.log(error.responseJSON);
 		}
 	});
 });
@@ -468,6 +487,9 @@ $('.btn-ch-blog-save').click(function() {
 				$('.balloon').hide();
 				changeBlog(idx, newBlog);
 			}
+		},
+		error: function(error) {
+			console.log(error.responseJSON);
 		}
 	});
 });
@@ -484,6 +506,9 @@ function changeBlog(idx, blog) {
 			if(data==1) {
 				$(location).attr('href','/user/'+blog);
 			}
+		},
+		error: function(error) {
+			console.log(error.responseJSON);
 		}
 	});
 }
@@ -572,6 +597,9 @@ $('.btn-ch-background-save').click(function(){
 			if(data==1) {
 				location.reload();
 			}
+		},
+		error: function(error) {
+			console.log(error.responseJSON);
 		}
 	});
 });
@@ -596,7 +624,6 @@ $('#pfile').change(function(e){
 		reader.onload = function(e) {
 			$('.div-ch-profile span').html(`${f.name}`);
 			$('.icon').html(`<img src="${e.target.result}">`);
-			//'background-image', `url("${e.target.result}")`
 		}
 		reader.readAsDataURL(f);
 	});
@@ -621,6 +648,9 @@ $('.btn-ch-profile-save').click(function(){
 			if(data==1) {
 				location.reload();
 			}
+		},
+		error: function(error) {
+			console.log(error.responseJSON);
 		}
 	});
 });
@@ -649,9 +679,7 @@ function changePic(pic, flag) {
 function btnReset() {
 	modalOn();
 	$('.modal-body').html('<div>지금까지 작성한 모든 포스트가 삭제됩니다.<br>' +
-						  '(사용자 계정과 좋아요 기록은 삭제되지 않아요.)<br><br>' + 
-						  /*'계속하시려면 현재 비밀번호를 입력하고<br>' +
-						  '아래초기화 버튼을 눌러주세요.' + */
+						  '(사용자 계정과 좋아요 기록은 삭제되지 않아요.)<br><br>' +
 						  '</div>' +
 						  '<input type="password" class="check-to-action" placeholder="현재 비밀번호"><br>' +
 						  '<button class="btn-reset" onclick="resetBlog('+idx+')">초기화</button>' +
@@ -679,6 +707,9 @@ function resetBlog(idx) {
 				password.val('');
 				password.focus();
 			}
+		},
+		error: function(error) {
+			console.log(error.responseJSON);
 		}
 	});
 }
@@ -688,8 +719,7 @@ function resetBlog(idx) {
 function btnDelete() {
 	modalOn();
 	$('.modal-body').html('<div>계정 전체를 삭제하시겠어요?<br>' +
-						  '모든 포스트와 좋아요 기록이 함께 삭제돼요.<br><br>' + 
-						  /*'계속하시려면 현재 비밀번호를 입력하고 계정 삭제 버튼을 눌러주세요.' + */
+						  '모든 포스트와 좋아요 기록이 함께 삭제돼요.<br><br>' +
 						  '</div>' +
 						  '<input type="password" class="check-to-action" placeholder="현재 비밀번호"><br>' +
 						  '<button class="btn-delete" onclick="delAccount('+idx+')">계정 삭제</button>' +
@@ -716,6 +746,9 @@ function delAccount(idx) {
 				password.focus();
 				password.css('animation', 'shake 0.5s 1');
 			}
+		},
+		error: function(error) {
+			console.log(error.responseJSON);
 		}
 	});
 }

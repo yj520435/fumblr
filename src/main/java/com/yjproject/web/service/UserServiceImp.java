@@ -11,7 +11,6 @@ import javax.mail.Session;
 import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,8 +19,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.yjproject.web.dao.UserDao;
 import com.yjproject.web.entity.User;
-
-import ch.qos.logback.core.recovery.ResilientSyslogOutputStream;
 
 @Service
 public class UserServiceImp implements UserService {
@@ -112,10 +109,7 @@ public class UserServiceImp implements UserService {
 	public int delAccount(int idx, String password, HttpSession session) {
 		int result = 0;
 		if(getUser(idx, password) != null) {
-			//result += dao.deletePosts(idx);
-			//result += dao.deleteLikes(idx);
 			result = dao.deleteUser(idx);
-			
 			session.invalidate();
 		}
 		
@@ -139,7 +133,7 @@ public class UserServiceImp implements UserService {
 	
 	public boolean sendEmail(String email, String password) {
 		String senderId = "29.code.block";
-		String senderPassword = "asdf1236!";
+		String senderPassword = "";
 		
 		String msg = "펌블러 임시 비밀번호는 [<b>" + password + "</b>]입니다. <br>" +
 					 "로그인 후 비밀번호를 변경해주세요.";

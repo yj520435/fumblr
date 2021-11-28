@@ -33,12 +33,6 @@
 	<delete id="resetBlog">
 		DELETE POST WHERE OWNER=#{idx}
 	</delete>
-	<delete id="deletePosts">
-		DELETE POST WHERE OWNER=#{idx}
-	</delete>
-	<delete id="deleteLikes">
-		DELETE LIKES WHERE UIDX=#{idx}
-	</delete>
 	<delete id="deleteUser">
 		DELETE USERS WHERE IDX=#{idx}
 	</delete>
