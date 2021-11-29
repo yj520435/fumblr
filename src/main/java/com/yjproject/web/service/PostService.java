@@ -12,7 +12,7 @@ import com.yjproject.web.entity.Post;
 import com.yjproject.web.entity.User;
 
 public interface PostService {
-	List<Post> getList(int owner, int page, String keyword);
+	List<Post> getPostList(int owner, int page, String keyword);
 	int postCount(int owner, String keyword);
 	Post getPost(int postIdx);
 	int setPost(Post post);

@@ -30,10 +30,10 @@ public class PostServiceImp implements PostService {
 	PostDao dao;
 
 	@Override
-	public List<Post> getList(int owner, int page, String keyword) {
+	public List<Post> getPostList(int owner, int page, String keyword) {
 		int start = 1 + (page - 1) * 10;
 		int end = page * 10;
-		List<Post> list = dao.getList(owner, start, end, keyword);
+		List<Post> list = dao.getPostList(owner, start, end, keyword);
 		return list;
 	}
 	

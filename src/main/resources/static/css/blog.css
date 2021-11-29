@@ -413,8 +413,8 @@ body {
 
 .m-photo-contents {
 	outline: none;
+	height: auto;
 	border: none;
-	height: 20px;
 	padding: 7px 15px 0 15px;
 	resize: none;
 	display: none;

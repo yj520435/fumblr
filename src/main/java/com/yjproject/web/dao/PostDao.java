@@ -11,7 +11,7 @@ import com.yjproject.web.entity.User;
 @Mapper
 @Repository
 public interface PostDao {
-	List<Post> getList(int owner, int start, int end, String keyword);
+	List<Post> getPostList(int owner, int start, int end, String keyword);
 	int postCount(int owner, String keyword);
 	Post getPost(int postIdx);
 	int setPost(Post post);

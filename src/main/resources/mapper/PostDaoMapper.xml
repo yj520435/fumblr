@@ -3,7 +3,7 @@
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.yjproject.web.dao.PostDao">
-	<select id="getList" resultType="com.yjproject.web.entity.Post">
+	<select id="getPostList" resultType="com.yjproject.web.entity.Post">
 		SELECT * FROM (SELECT ROWNUM NUM, P.* FROM (
 		SELECT * FROM POSTVIEW WHERE OWNER=#{owner} ORDER BY REGDATE DESC) P 
 		WHERE TITLE LIKE '%${keyword}%' OR CONTENTS LIKE '%${keyword}%') 

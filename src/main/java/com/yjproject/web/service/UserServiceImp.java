@@ -154,7 +154,7 @@ public class UserServiceImp implements UserService {
 		try {
 			MimeMessage message = new MimeMessage(session);
 			message.setFrom(new InternetAddress(senderId));
-			message.addRecipient(Message.RecipientType.TO, new InternetAddress("yj520435@gmail.com"));
+			message.addRecipient(Message.RecipientType.TO, new InternetAddress(email));
 			message.setSubject("[Fumblur] 비밀번호 변경 알림");
 			message.setContent(msg, "text/html; charset=utf-8");
 			

@@ -20,6 +20,5 @@ public interface UserDao {
 	int resetBlog(int idx);
 	int deletePosts(int idx);
 	int deleteLikes(int idx);
-	int deleteUser(int idx);
-	
+	int deleteUser(int idx);	
 }

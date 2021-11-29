@@ -69,15 +69,15 @@ public class BlogController {
 	
 	/* 포스트 리스트 가져오기 */
 	
-	@GetMapping("/getList")
+	@GetMapping("/getPostList")
 	@ResponseBody
-	public List<Post> getList(Model model, int owner, 
+	public List<Post> getPostList(Model model, int owner, 
 								@RequestParam(required=false, defaultValue="1") int page, 
 								@RequestParam(required=false, defaultValue="") String keyword) {
 		int postCount = service.postCount(owner, keyword);
 		List<Post> list = null;
 		if (postCount!=0) {
-			list = service.getList(owner, page, keyword);
+			list = service.getPostList(owner, page, keyword);
 		}
 		
 		//리스트 호출 시 로딩

@@ -32,7 +32,7 @@ $('body').css('background-image', 'url("' + bg + '")');
 
 /* 최초 페이지 로드 */
 
-getList(page);    	  //초기 1페이지 로드
+getPostList(page);    	  //초기 1페이지 로드
 sideboxContents();    //사이드박스 랜덤 블로그 불러오기
 modalPosition();  	  //모달창 위치 조정
 sidebox();  		  //사이드박스 위치 조정
@@ -116,6 +116,9 @@ function newText(idx) {
 				success: function(data) {
 					$('.m-text-title').val(data.title);
 					$('.m-text-contents').val(data.contents.replace(/(<br>|<br\/>|<br \/>)/g, '\r\n'));
+					
+					var h = $('.m-text-contents').prop('scrollHeight');
+					$('.m-text-contents').css('height', h);
 					
 					var btn = $('#btn-posting');
 					btn.css({'width' : '50px', 'background-color' : '#c096ff'});
@@ -248,8 +251,11 @@ function newPhoto(idx) {
 					if(data.title == ' ') $('.m-photo-title').val('');
 					else $('.m-photo-title').html(data.title);
 					$('.m-photo-preview').html('<img src="' + file + '">');
-					$('.m-photo-contents').html(data.contents);
+					$('.m-photo-contents').html(data.contents.replace(/(<br>|<br\/>|<br \/>)/g, '\r\n'));
 					$('#input-file').attr('disabled', true);
+					
+					var h = $('.m-photo-contents').prop('scrollHeight');
+					$('.m-photo-contents').css('height', h);
 					
 					if($(window).width()<500) {
 						$('.reset').css({'top':'39px', 'display':'block'});
@@ -276,6 +282,7 @@ function setPhoto(idx) {
 	
 	var title = $('.m-photo-title').val();
 	var contents = $('.m-photo-contents').val();
+	contents = contents.replace(/(?:\r\n|]r|\n)/g, '<br>');
 	
 	var formData = new FormData();
 	var file = $('#input-file')[0].files[0];
@@ -533,12 +540,15 @@ function newLink(idx) {
 	
 					$('.m-link-title').text(title);
 					$('.m-link-description').text(description);
-					$('.m-link-contents').val(contents);
+					$('.m-link-contents').val(contents.replace(/(<br>|<br\/>|<br \/>)/g, '\r\n'));
 					
 					$('.m-link-area').css('display', 'block');
 					$('.m-link-url-div').css('display', 'none');
 					$('.m-link-contents').css('display', 'block');
 					$('.m-link-contents').focus();
+					
+					var h = $('.m-link-contents').prop('scrollHeight');
+					$('.m-link-contents').css('height', h);
 					
 					if($(window).width()<500) {
 						$('.reset').css({'top':'22px', 'display':'block'});
@@ -564,6 +574,7 @@ function setLink(idx) {
 	var title = $('.m-link-title a').text();
 	var description = $('.m-link-description').text();
 	var contents = $('.m-link-contents').val();
+	contents = contents.replace(/(?:\r\n|]r|\n)/g, '<br>');
 	
 	var image = $('.m-link-thumbnail').children('img:eq(0)').attr('src');
 	var video = $('.m-link-thumbnail').children('iframe:eq(0)').attr('src');
@@ -724,8 +735,11 @@ function newBook(idx) {
 					$('.m-book-query').css('display', 'none');
 					$('.m-book-contents').css('display', 'block');
 					
-					$('.m-book-contents').val(data.contents);
+					$('.m-book-contents').val(data.contents.replace(/(<br>|<br\/>|<br \/>)/g, '\r\n'));
 					$('.m-book-contents').focus();
+					
+					var h = $('.m-book-contents').prop('scrollHeight');
+					$('.m-book-contents').css('height', h);
 					
 					if($(window).width()<500) {
 						$('.reset').css({'top':'7px', 'display':'block'});
@@ -752,6 +766,7 @@ function setBook(idx) {
 	var publisher = $('.m-book-publisher').text();
 	var description = $('.m-book-description').text();
 	var contents = $('.m-book-contents').val();
+	contents = contents.replace(/(?:\r\n|]r|\n)/g, '<br>');
 	var url = $('.m-book-description').children('a:eq(0)').attr('href');
 
 	author = author.substr(author.indexOf('|')+2);
@@ -885,6 +900,9 @@ function newVideo(idx) {
 					$('.m-video-preview').html('<video controls="controls" src="' + file + '">');
 					$('.m-video-contents').html(data.contents);
 					$('#input-file').attr('disabled', true);
+					
+					var h = $('.m-video-contents').prop('scrollHeight');
+					$('.m-video-contents').css('height', h);
 					
 					if($(window).width()<500) {
 						$('.reset').css({'top':'35px', 'display':'block'});
@@ -1165,7 +1183,7 @@ function modalPosition() {
 
 /* 포스트 리스트 출력 */
 
-function getList(page) {
+function getPostList(page) {
 
 	var postCount = $('#postCount').val();
 	var owner = $('#owner').val();
@@ -1188,7 +1206,7 @@ function getList(page) {
 	
 	//포스트 리스트 불러오기
 	$.ajax({
-		url: '/getList',
+		url: '/getPostList',
 		type: 'get',
 		dataType: 'json',
 		data: {
@@ -1260,7 +1278,7 @@ $(window).scroll(function(){
 			flag = 1;
 			page++;
 			if(likeflag == 1) getLikeList(page);
-			else getList(page);
+			else getPostList(page);
 		}
 	}
 });
