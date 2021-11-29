@@ -14,6 +14,8 @@ var owner = $('#owner').val();  //현재 방문한 블로그 소유자의 번호
 var user = $('#user').val();    //현재 로그인한 유저의 번호
 var blog = $('#blog').val();    //현재 로그인한 유저의 블로그 네임
 
+console.log('블로그 : ' + blog);
+
 if(owner != user) {
 	$('.main').css('margin-top', '210px');
 }

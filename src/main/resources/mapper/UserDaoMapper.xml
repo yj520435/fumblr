@@ -22,12 +22,15 @@
 		UPDATE USERS SET BLOG=#{blog} WHERE IDX=#{idx}
 	</update>
 	<update id="updateProfile">
-		UPDATE USERS SET PROFILE=#{filePath} WHERE IDX=#{idx_}
+		UPDATE USERS SET PROFILE=#{filePath} WHERE IDX=#{idx}
 	</update>
 	<update id="updateBackground">
-		UPDATE USERS SET BACKGROUND=#{filePath} WHERE IDX=#{idx_}
+		UPDATE USERS SET BACKGROUND=#{filePath} WHERE IDX=#{idx}
 	</update>
 	<select id="getUserByIdx" resultType="com.yjproject.web.entity.User">
+		SELECT * FROM USERS WHERE IDX=#{idx}
+	</select>
+	<select id="getUserIdentity" resultType="com.yjproject.web.entity.User">
 		SELECT * FROM USERS WHERE IDX=#{idx} AND PASSWORD=#{password}
 	</select>
 	<delete id="resetBlog">

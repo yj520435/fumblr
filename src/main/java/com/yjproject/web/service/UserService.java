@@ -10,8 +10,8 @@ public interface UserService {
 	User login(String email, String password);
 	User getUser(String email, String blog); //이메일 또는 블로그 이름으로 유저 찾기
 	User getUser(int idx, String password);  //아이디와 비밀번호로 유저 계정 확인
-	int updateUser(User user, String newPassword);
-	int updatePic(int idx, String blog, String pic, MultipartFile file) throws IllegalStateException, IOException;
+	int updateUser(User user, String newPassword, HttpSession session);
+	int updatePic(int idx, String blog, String pic, MultipartFile file, HttpSession session) throws IllegalStateException, IOException;
 	int resetBlog(int idx, String password);
 	int delAccount(int idx, String password, HttpSession session);
 	int findPassword(User user);

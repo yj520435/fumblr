@@ -63,8 +63,8 @@ public class PostServiceImp implements PostService {
 		int result;
 		
 		if(file!=null) {
-			String realPath = "C:\\Users\\kyj\\Desktop\\upload\\post\\" + post.getCategory() + "\\"; 		   //window
-			//String realPath = "/home/ubuntu/project/upload/post/" + post.getCategory().toLowerCase() + "/";  //linux
+			String realPath = "C:\\Users\\kyj\\Desktop\\upload\\post\\" + post.getCategory() + "\\";
+			//String realPath = "/home/ubuntu/project/upload/post/" + post.getCategory().toLowerCase() + "/";
 			String fileName = generateFileName(file);
 			//long fileSize = file.getSize();
 			

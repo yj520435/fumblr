@@ -35,7 +35,7 @@ public class UserServiceImp implements UserService {
 	public User login(String email, String password) {
 		return dao.login(email, password);
 	}
-
+	
 	@Override
 	public User getUser(String email, String blog) {
 		return dao.getUserByEmail(email, blog);
@@ -43,16 +43,16 @@ public class UserServiceImp implements UserService {
 	
 	@Override
 	public User getUser(int idx, String password) {
-		return dao.getUserByIdx(idx, password);
+		return dao.getUserIdentity(idx, password);
 	}
 
 	@Override
-	public int updateUser(User user, String newPassword) {
+	public int updateUser(User user, String newPassword, HttpSession session) {
 		
 		int result = 0;
 		
 		//아이디 변경
-		if(!user.getEmail().equals("")) {
+		if (!user.getEmail().equals("")) {
 			result = dao.updateEmail(user);
 		}
 		//비밀번호 변경
@@ -66,17 +66,22 @@ public class UserServiceImp implements UserService {
 			result = dao.updateBlog(user);
 		}
 		
+		if (result == 1) {
+			User newUser = dao.getUserByIdx(user.getIdx());
+			session.setAttribute("user", newUser);
+		}
+		
 		return result;
 	}
 
 	@Override
-	public int updatePic(int idx, String blog, String pic, MultipartFile file) throws IllegalStateException, IOException {
+	public int updatePic(int idx, String blog, String pic, MultipartFile file, HttpSession session) throws IllegalStateException, IOException {
 		int result = 0;
 		String filePath = "";
 		
 		if(file!=null) {
-			String realPath = "C:\\Users\\kyj\\Desktop\\upload\\" + pic + "\\"; //window
-			//String realPath = "/home/ubuntu/project/upload/" + pic + "/";  	//linux
+			String realPath = "C:\\Users\\kyj\\Desktop\\upload\\" + pic + "\\";
+			//String realPath = "/home/ubuntu/project/upload/" + pic + "/";
 			String fileName = blog + "-" + file.getOriginalFilename();
 			filePath = realPath + fileName;
 			
@@ -90,13 +95,18 @@ public class UserServiceImp implements UserService {
 			result = dao.updateBackground(idx, filePath);
 		}
 		
+		if (result == 1) {
+			User newUser = dao.getUserByIdx(idx);
+			session.setAttribute("user", newUser);
+		}
+		
 		return result;
 	}
 
 	@Override
 	public int resetBlog(int idx, String password) {
 		int result = 0;
-		if(getUser(idx, password) != null) {
+		if(dao.getUserIdentity(idx, password) != null) {
 			result = dao.resetBlog(idx);
 		} else {
 			result = -1;
@@ -108,7 +118,7 @@ public class UserServiceImp implements UserService {
 	@Override
 	public int delAccount(int idx, String password, HttpSession session) {
 		int result = 0;
-		if(getUser(idx, password) != null) {
+		if(dao.getUserIdentity(idx, password) != null) {
 			result = dao.deleteUser(idx);
 			session.invalidate();
 		}

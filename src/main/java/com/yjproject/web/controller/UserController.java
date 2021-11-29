@@ -96,16 +96,18 @@ public class UserController {
 							@RequestParam(required=false, defaultValue="") String newPassword,
 							@RequestParam(required=false, defaultValue="") String blog,
 							@RequestParam(required=false, defaultValue="") String profile,
-							@RequestParam(required=false, defaultValue="") String background) {
+							@RequestParam(required=false, defaultValue="") String background,
+							HttpSession session) {
 		User user = new User(idx, email, curPassword, blog, profile, background, null);
-		return service.updateUser(user, newPassword);
+		return service.updateUser(user, newPassword, session);
 	}
 	
 	@PostMapping("/updatePic")
 	@ResponseBody
 	public int updatePicture(int idx, String blog, String pic, 
-								@RequestParam(required=false) MultipartFile file) throws IOException {
-		int result = service.updatePic(idx, blog, pic, file);
+								@RequestParam(required=false) MultipartFile file,
+								HttpSession session) throws IOException {
+		int result = service.updatePic(idx, blog, pic, file, session);
 		return result;
 	}
 	

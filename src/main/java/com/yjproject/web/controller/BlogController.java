@@ -35,10 +35,10 @@ public class BlogController {
 	@GetMapping("/")
 	public String index(Model model, HttpSession session) {
 		String page = "";
-		User user = (User)session.getAttribute("user");
+		User user = (User) session.getAttribute("user");
 		page = (user==null) ? "/blog/home" : "redirect:blog/"+user.getBlog();
 		
-		return page;
+		return "/blog/home";
 	}
 	
 	/* 블로그 화면 */
