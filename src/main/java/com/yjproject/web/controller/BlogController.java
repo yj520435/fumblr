@@ -38,7 +38,7 @@ public class BlogController {
 		User user = (User) session.getAttribute("user");
 		page = (user==null) ? "/blog/home" : "redirect:blog/"+user.getBlog();
 		
-		return "/blog/home";
+		return page;
 	}
 	
 	/* 블로그 화면 */

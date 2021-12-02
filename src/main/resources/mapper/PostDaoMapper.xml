@@ -50,11 +50,11 @@
 		WHERE P.IDX=L.PIDX AND P.OWNER=#{owner}
 	</select>
 	<select id="getLikeList" resultType="com.yjproject.web.entity.Post">
-		SELECT * FROM (SELECT ROWNUM NUM, L.* FROM (
+		SELECT * FROM (SELECT ROWNUM NUM, T.* FROM (
 		SELECT P.*, U.BLOG, U.PROFILE FROM (SELECT * FROM LIKES WHERE UIDX=#{user}) L
 		INNER JOIN POSTVIEW P ON L.PIDX = P.IDX
 		INNER JOIN USERS U ON P.OWNER = U.IDX
-		ORDER BY P.REGDATE DESC) L) WHERE NUM BETWEEN #{start} AND #{end}
+		ORDER BY P.REGDATE DESC) T) WHERE NUM BETWEEN #{start} AND #{end}
 	</select>
 	<select id="getRandomList" resultType="com.yjproject.web.entity.Post">
 		<![CDATA[SELECT * FROM (SELECT P.*, U.BLOG, U.PROFILE FROM POSTVIEW P

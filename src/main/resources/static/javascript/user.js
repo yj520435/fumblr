@@ -233,7 +233,7 @@ function findPassword(email) {
 			} else if(data==0) {
 				$('.modal-body').html('<div><b>[ ERROR ]</b><br><br>' +
 									  '일시적 오류로 메일을 발송하지 못했습니다.<br>' +
-									  '잠시 후 다시 시도해주세요.' +
+									  '잠시 후 다시 시도해주세요.</div>' +
 									  '<button class="btn-modal-off" onclick="modalOff()">창닫기</button>"');
 			} else if(data==-1) {
 				$('.modal-body').html('<div><b>[ ERROR ]</b><br><br>계정이 존재하지 않습니다.</div>' +
@@ -557,11 +557,13 @@ function balloonPosition() {
 
 $('.btn-ch-background').click(function(){
 	changePic('background', 'open');
+	$('#bfile').val('');
 });
 
 $('.btn-ch-background-cancle').click(function(){
 	changePic('background', 'close');
 	$('body').css('background-image', 'url("' + bg + '")');
+	$('.div-ch-background span').text($('.user-background').text());
 });
 
 $('#bfile').change(function(e){
@@ -608,11 +610,13 @@ $('.btn-ch-background-save').click(function(){
 
 $('.btn-ch-profile').click(function(){
 	changePic('profile', 'open');
+	$('#pfile').val('');
 });
 
 $('.btn-ch-profile-cancle').click(function(){
 	changePic('profile', 'close');
 	$('.icon').html('<img src="' + pf + '">');
+	$('.div-ch-profile span').text($('.user-profile').text());
 });
 
 $('#pfile').change(function(e){

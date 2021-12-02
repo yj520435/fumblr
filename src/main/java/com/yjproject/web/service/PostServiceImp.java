@@ -79,6 +79,8 @@ public class PostServiceImp implements PostService {
 			post.setFiles(origFile);
 		}
 		
+		System.out.println(post.getIdx());
+		
 		if (post.getIdx() == 0)
 			result = dao.setPost(post); //새 글
 		else {
@@ -103,8 +105,6 @@ public class PostServiceImp implements PostService {
 		String video = "";
 		Connection.Response response = Jsoup.connect(link).method(Connection.Method.GET).execute();
 		Document document = response.parse();
-		System.out.println(document.select("meta"));
-		System.out.println(document.select("link"));
 
 		// 유튜브
 		if (link.contains("youtube.com/watch") || link.contains("youtube.com/embed") || link.contains("youtu.be/")) {

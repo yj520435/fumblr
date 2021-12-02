@@ -239,6 +239,7 @@ body {
 .post-contents {
 	padding: 0 15px;
 	box-sizing: border-box;
+	line-height: 18px;
 }
 
 .post-menu {
@@ -903,7 +904,6 @@ hr {
 	font-weight: bold;
 }
 
-
 .e-post-title {
 	font-size: 17px;
 	font-weight: bold;
@@ -912,6 +912,7 @@ hr {
 
 .e-post-contents {
 	padding: 15px 0;
+	line-height: 18px;
 }
 
 .e-post-like {
@@ -949,6 +950,7 @@ hr {
 
 .e-book-contents {
 	padding: 15px 15px 0 15px;
+	line-height: 18px;
 }
 
 .tmp {

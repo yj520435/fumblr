@@ -143,7 +143,7 @@ public class UserServiceImp implements UserService {
 	
 	public boolean sendEmail(String email, String password) {
 		String senderId = "29.code.block";
-		String senderPassword = "";
+		String senderPassword = "asdf1236!";
 		
 		String msg = "펌블러 임시 비밀번호는 [<b>" + password + "</b>]입니다. <br>" +
 					 "로그인 후 비밀번호를 변경해주세요.";

@@ -253,11 +253,13 @@ function newPhoto(idx) {
 					if(data.title == ' ') $('.m-photo-title').val('');
 					else $('.m-photo-title').html(data.title);
 					$('.m-photo-preview').html('<img src="' + file + '">');
-					$('.m-photo-contents').html(data.contents.replace(/(<br>|<br\/>|<br \/>)/g, '\r\n'));
+					if(data.contents != null) {
+						$('.m-photo-contents').html(data.contents.replace(/(<br>|<br\/>|<br \/>)/g, '\r\n'));	
+					}
 					$('#input-file').attr('disabled', true);
-					
+				
 					var h = $('.m-photo-contents').prop('scrollHeight');
-					$('.m-photo-contents').css('height', h);
+					$('.m-photo-contents').css('height', h-7);
 					
 					if($(window).width()<500) {
 						$('.reset').css({'top':'39px', 'display':'block'});
@@ -284,7 +286,9 @@ function setPhoto(idx) {
 	
 	var title = $('.m-photo-title').val();
 	var contents = $('.m-photo-contents').val();
-	contents = contents.replace(/(?:\r\n|]r|\n)/g, '<br>');
+	if(contents!=null) {
+		contents = contents.replace(/(?:\r\n|]r|\n)/g, '<br>');
+	}
 	
 	var formData = new FormData();
 	var file = $('#input-file')[0].files[0];
@@ -461,7 +465,6 @@ function newLink(idx) {
 						title.html('<a href="'+ link + '" target="blank_">' + data.title + '</a>');
 						description.text(data.description);
 						
-						$('.m-link-url').val('');
 						$('.m-link-url').css('display', 'none');
 						$('.m-link-contents').css('display', 'block');
 						$('.m-link-contents').focus();
@@ -500,6 +503,7 @@ function newLink(idx) {
 		$('.reset').click(function(){
 			$('.m-link-area').css('display', 'none');
 			$('.m-link-url-div').css('display', 'block');
+			$('.m-link-url').val('');
 			$('.m-link-url').css('display', 'block');
 			
 			//포스팅 버튼 비활성화
@@ -575,8 +579,10 @@ function setLink(idx) {
 	var thumbnail = "";
 	var title = $('.m-link-title a').text();
 	var description = $('.m-link-description').text();
+	var url = $('.m-link-url').val();
 	var contents = $('.m-link-contents').val();
 	contents = contents.replace(/(?:\r\n|]r|\n)/g, '<br>');
+	description = description + '&sp;' + url;
 	
 	var image = $('.m-link-thumbnail').children('img:eq(0)').attr('src');
 	var video = $('.m-link-thumbnail').children('iframe:eq(0)').attr('src');
@@ -1326,7 +1332,7 @@ function generateList(data) {
 	//포스트(텍스트)
 	if(data.category=='TEXT') {
 		str += '<p class="post-title">' + data.title + '</p>' +
-			   '<div class="post-contents" style="line-height: 20px;">' + data.contents + '</div>';
+			   '<div class="post-contents">' + data.contents + '</div>';
 	}
 	
 	//포스트(사진)
@@ -1363,6 +1369,10 @@ function generateList(data) {
 			str += '<div style="height:15px"></div>';
 		}
 		
+		var arr = data.description.split('&sp;');
+		var description = arr[0];
+		var url = arr[1];
+		
 		str += '<div class="link-information">';
 		if(data.thumbnail != null) {
 			if(data.thumbnail.includes('youtube.com')) {
@@ -1372,10 +1382,10 @@ function generateList(data) {
 			}
 		}
 
-		str += '<div class="link-title">' + data.title + '</div>';
+		str += '<div class="link-title"><a href="' + url + '" target="_blank">' + data.title + '</a></div>';
 		
 		if(data.description != null) {
-			str += '<div class="link-description">' + data.description + '</div>';
+			str += '<div class="link-description">' + description + '</div>';
 		}
 		
 		str += '</div>';

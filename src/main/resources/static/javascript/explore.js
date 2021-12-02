@@ -71,7 +71,7 @@ function getDivision() {
 		
 		if(category=='TEXT') {
 			str += '<div class="post-title">' + title + '</div>' +
-				   '<div class="post-contents"  style="line-height: 20px;">' + contents + '</div>';
+				   '<div class="post-contents">' + contents + '</div>';
 		}
 		
 		if(category=='PHOTO') {
@@ -104,6 +104,10 @@ function getDivision() {
 		
 		if(category == 'LINK') {
 			
+			var arr = description.split('&sp;');
+			var dsc = arr[0];
+			var url = arr[1];
+			
 			//썸네일 사이즈 조정
 			var thumbnailWidth = '';
 			var thumbnailHeight = '';
@@ -123,12 +127,12 @@ function getDivision() {
 			}
 			
 			if(title != null) {
-				str += '<div class="link-title">' + title + '</div>';
+				str += '<div class="link-title"><a href="' + url + '" target="_blank">' + title + '</a></div>';
 			}
 			
 			if(description != null) {
 				if (width < 630) {
-					str += '<div class="link-description">' + description + '</div>';
+					str += '<div class="link-description">' + dsc + '</div>';
 				} else {
 					
 				}
@@ -145,7 +149,7 @@ function getDivision() {
 			var arr = description.split('&sp;');
 			var author = arr[0];
 			var publisher = arr[1];
-			var description = arr[2];
+			var dsc = arr[2];
 			var url = arr[3];
 			
 			if(width>630) {
@@ -162,7 +166,7 @@ function getDivision() {
 					   '<p class="book-title">' + title + '</p>' +
 				   	   '<p class="book-author"><span style="color: gray;">저자 | </span>' + author + '</p>' +
 					   '<p class="book-publisher"><span style="color: gray;">출판 | </span>' + publisher + '</p>' +
-					   '<p class="book-description">' + description + '<a href="' + url + '" target="_blank"> 더보기</a></p>' +
+					   '<p class="book-description">' + dsc + '<a href="' + url + '" target="_blank"> 더보기</a></p>' +
 					   '</td>' + 
 					   '</tr>' +
 					   '</table>';
