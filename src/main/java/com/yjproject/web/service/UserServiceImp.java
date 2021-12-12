@@ -190,7 +190,6 @@ public class UserServiceImp implements UserService {
 			}
 			return new String(password);
 		}
-		
 		return "ERROR : generating is failed.";
 	}
 }
