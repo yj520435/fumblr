@@ -29,7 +29,7 @@ public class UserController {
 	@ResponseBody
 	public int register(String email, String password, String blog) {
 		int result = 0;
-		if(service.getUser("", blog)==null) {
+		if(service.getUser("", blog) == null) {
 			User user = new User(0, email, password, blog, "", "", null);
 			result = service.register(user);
 		}
@@ -61,7 +61,7 @@ public class UserController {
 	@GetMapping("/getUser")
 	@ResponseBody
 	public User getUser(@RequestParam(required = false, defaultValue = "") String email,
-						@RequestParam(required = false, defaultValue = "") String blog) {
+				@RequestParam(required = false, defaultValue = "") String blog) {
 		return service.getUser(email, blog);
 	}
 	
@@ -91,13 +91,13 @@ public class UserController {
 	@PostMapping("/updateUser")
 	@ResponseBody
 	public int updateUser(int idx,
-							@RequestParam(required=false, defaultValue="") String email,
-							@RequestParam(required=false, defaultValue="") String curPassword,
-							@RequestParam(required=false, defaultValue="") String newPassword,
-							@RequestParam(required=false, defaultValue="") String blog,
-							@RequestParam(required=false, defaultValue="") String profile,
-							@RequestParam(required=false, defaultValue="") String background,
-							HttpSession session) {
+				@RequestParam(required=false, defaultValue="") String email,
+				@RequestParam(required=false, defaultValue="") String curPassword,
+				@RequestParam(required=false, defaultValue="") String newPassword,
+				@RequestParam(required=false, defaultValue="") String blog,
+				@RequestParam(required=false, defaultValue="") String profile,
+				@RequestParam(required=false, defaultValue="") String background,
+				HttpSession session) {
 		User user = new User(idx, email, curPassword, blog, profile, background, null);
 		return service.updateUser(user, newPassword, session);
 	}
@@ -105,8 +105,8 @@ public class UserController {
 	@PostMapping("/updatePic")
 	@ResponseBody
 	public int updatePicture(int idx, String blog, String pic, 
-								@RequestParam(required=false) MultipartFile file,
-								HttpSession session) throws IOException {
+					@RequestParam(required=false) MultipartFile file,
+					HttpSession session) throws IOException {
 		int result = service.updatePic(idx, blog, pic, file, session);
 		return result;
 	}
