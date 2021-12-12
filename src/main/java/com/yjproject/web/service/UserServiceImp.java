@@ -146,7 +146,7 @@ public class UserServiceImp implements UserService {
 		String senderPassword = "";
 		
 		String msg = "펌블러 임시 비밀번호는 [<b>" + password + "</b>]입니다. <br>" +
-					 "로그인 후 비밀번호를 변경해주세요.";
+				"로그인 후 비밀번호를 변경해주세요.";
 		
 		Properties prop = new Properties();
 		prop.put("mail.smtp.host", "smtp.gmail.com");
