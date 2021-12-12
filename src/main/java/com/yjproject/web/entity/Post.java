@@ -130,6 +130,4 @@ public class Post {
 	public void setProfile(String profile) {
 		this.profile = profile;
 	}
-	
-	
 }
