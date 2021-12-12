@@ -45,9 +45,9 @@ public class BlogController {
 	
 	@GetMapping("/blog/{blog}")
 	public String myBlog(Model model, 
-						HttpSession session, 
-						@PathVariable("blog") String blog, 
-						@RequestParam(required=false, defaultValue="") String keyword) {
+				HttpSession session, 
+				@PathVariable("blog") String blog, 
+				@RequestParam(required=false, defaultValue="") String keyword) {
 		User user = (User) session.getAttribute("user"); //현재 로그인한 사용자
 		User owner = (User) sub.getUser("", blog);  	 //방문한 블로그 소유자
 		int postCount = service.postCount(owner.getIdx(), keyword);
@@ -72,8 +72,8 @@ public class BlogController {
 	@GetMapping("/getPostList")
 	@ResponseBody
 	public List<Post> getPostList(Model model, int owner, 
-								@RequestParam(required=false, defaultValue="1") int page, 
-								@RequestParam(required=false, defaultValue="") String keyword) {
+					@RequestParam(required=false, defaultValue="1") int page, 
+					@RequestParam(required=false, defaultValue="") String keyword) {
 		int postCount = service.postCount(owner, keyword);
 		List<Post> list = null;
 		if (postCount!=0) {
@@ -144,12 +144,12 @@ public class BlogController {
 	@PostMapping("/setPost")
 	@ResponseBody
 	public int setPost(@RequestParam(required=false, defaultValue="0") int idx,
-						String owner,
-						String category,
-						@RequestParam(required=false, defaultValue=" ") String title,
-						@RequestParam(required=false, defaultValue="") String contents,
-						@RequestParam(required=false, defaultValue="") String thumbnail,
-						@RequestParam(required=false, defaultValue="") String description) {
+				String owner,
+				String category,
+				@RequestParam(required=false, defaultValue=" ") String title,
+				@RequestParam(required=false, defaultValue="") String contents,
+				@RequestParam(required=false, defaultValue="") String thumbnail,
+				@RequestParam(required=false, defaultValue="") String description) {
 		int owner_ = Integer.parseInt(owner);
 		Post post = new Post(idx, owner_, category, title, contents, thumbnail, description, "", null);
 		int result = service.setPost(post);
@@ -159,12 +159,12 @@ public class BlogController {
 	@PostMapping("/setForm")
 	@ResponseBody
 	public int setForm(HttpServletRequest request,
-						@RequestParam(required=false, defaultValue="0") int idx,
-						int owner,
-						String category, 
-						@RequestParam(required=false, defaultValue=" ") String title,
-						@RequestParam(required=false, defaultValue="") String contents,
-						@RequestParam(required=false) MultipartFile file) throws IOException {
+				@RequestParam(required=false, defaultValue="0") int idx,
+				int owner,
+				String category, 
+				@RequestParam(required=false, defaultValue=" ") String title,
+				@RequestParam(required=false, defaultValue="") String contents,
+				@RequestParam(required=false) MultipartFile file) throws IOException {
 		Post post = new Post(idx, owner, category, title, contents, "", "", "", null);
 		int result = service.setForm(request, post, file);
 		return result;
