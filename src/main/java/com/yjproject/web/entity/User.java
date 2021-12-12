@@ -12,7 +12,6 @@ public class User {
 	Date joining;
 	
 	public User() {
-		
 	}
 
 	public User(int idx, String email, String password, String blog, String profile, String background, Date joining) {
@@ -80,5 +79,4 @@ public class User {
 	public void setJoining(Date joining) {
 		this.joining = joining;
 	}
-
 }
