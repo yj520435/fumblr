@@ -62,7 +62,7 @@ public class PostServiceImp implements PostService {
 		
 		int result;
 		
-		if(file!=null) {
+		if(file != null) {
 			String realPath = "C:\\Users\\kyj\\Desktop\\upload\\post\\" + post.getCategory() + "\\";
 			//String realPath = "/home/ubuntu/project/upload/post/" + post.getCategory().toLowerCase() + "/";
 			String fileName = generateFileName(file);
@@ -78,8 +78,6 @@ public class PostServiceImp implements PostService {
 			String origFile = dao.getFile(post.getIdx());
 			post.setFiles(origFile);
 		}
-		
-		System.out.println(post.getIdx());
 		
 		if (post.getIdx() == 0)
 			result = dao.setPost(post); //새 글
