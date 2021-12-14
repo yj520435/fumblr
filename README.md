@@ -32,6 +32,6 @@ Spring Framework, Maven, Mybatis, Oracle DBMS를 이용해 틀을 구성했습�
 **🙂 직접 경험해보세요**   
    
 [**펌블러(https://fumblr.ml/)**][FumblrLink]의 실제 모습을 확인해보세요.   
-테스트 유저 : pikachu@email.com / asdf123456789
+테스트 로그인 : pikachu@email.com / asdf123456789
 
 [FumblrLink]: https://fumblr.ml/
