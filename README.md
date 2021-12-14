@@ -5,6 +5,9 @@
 
 [TumblrLink]: https://tumblr.com/   
 <br>
+![fumblr](https://user-images.githubusercontent.com/44338744/145932951-177e5083-5b0e-496e-8123-d16e203718a9.gif)
+<br><br>
+
 **✔ 텀블러와 이렇게 달라요**   
    
 포스트 메뉴에 차이점이 있어요.   
