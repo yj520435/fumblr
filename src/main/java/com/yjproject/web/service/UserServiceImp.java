@@ -131,11 +131,9 @@ public class UserServiceImp implements UserService {
 		int result = 0;
 		String password = randomPassword(10);
 		
-		int updatePassword = dao.updatePassword(user.getIdx(), user.getPassword(), password);
 		boolean sendEmail = sendEmail(user.getEmail(), password);
-		
-		if(updatePassword == 1 && sendEmail) {
-			result = 1;
+		if(sendEmail == true) {
+			result = dao.updatePassword(user.getIdx(), user.getPassword(), password);
 		}
 		
 		return result;
