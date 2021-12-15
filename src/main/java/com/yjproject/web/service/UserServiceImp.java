@@ -129,7 +129,7 @@ public class UserServiceImp implements UserService {
 	@Override
 	public int findPassword(User user) {
 		int result = 0;
-		String password = randomPassword(10);
+		String password = randomPassword(7);
 		
 		boolean sendEmail = sendEmail(user.getEmail(), password);
 		if(sendEmail == true) {
