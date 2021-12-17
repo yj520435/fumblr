@@ -8,7 +8,7 @@ var paramObject = new URLSearchParams(param);
 var keyword = paramObject.get('keyword');
 
 var liked = [];			//좋아요 게시물 배열
-var sideboxItems = [];	//사이드박스 랜덤 블로그 배열
+var sideboxItems = [];		//사이드박스 랜덤 블로그 배열
 
 var owner = $('#owner').val();  //현재 방문한 블로그 소유자의 번호
 var user = $('#user').val();    //현재 로그인한 유저의 번호
@@ -35,7 +35,7 @@ $('body').css('background-image', 'url("' + bg + '")');
 /* 최초 페이지 로드 */
 
 getPostList(page);    	  //초기 1페이지 로드
-sideboxContents();    //사이드박스 랜덤 블로그 불러오기
+sideboxContents();	  //사이드박스 랜덤 블로그 불러오기
 modalPosition();  	  //모달창 위치 조정
 sidebox();  		  //사이드박스 위치 조정
 
@@ -571,7 +571,6 @@ function newLink(idx) {
 				}
 			});
 		}
-		
 	});
 }
 
@@ -704,7 +703,6 @@ function newBook(idx) {
 				$('.reset').css('display', 'none');
 			});
 		}
-		
 		
 		$('.reset').click(function(){
 			$('.m-book-area').css('display', 'none');
@@ -873,7 +871,6 @@ function newVideo(idx) {
 			});
 		}
 		
-		
 		$('.reset').click(function(){
 			$('.m-video-preview').html('');
 			$('.m-video-preview').css('display', 'none');
@@ -931,7 +928,6 @@ function newVideo(idx) {
 }
 
 function setVideo(idx) {
-	
 	if(idx==undefined) {
 		idx = 0;
 	}
@@ -1110,7 +1106,6 @@ function getLike(user, owner) {
 /* 사이드 박스 레이아웃 및 위치 조정 */
 
 function sidebox() {
-	
 	if(sideboxItems.length>5) {
 		var div = $('.container');
 		var divX = div.offset().left;
@@ -1192,7 +1187,6 @@ function modalPosition() {
 /* 포스트 리스트 출력 */
 
 function getPostList(page) {
-
 	var postCount = $('#postCount').val();
 	var owner = $('#owner').val();
 	var endPage = 1;
@@ -1305,7 +1299,6 @@ $('.btn-app .fa-heart').click(function(){
 		$('.btn-1').html('<div class="fa fa-undo" onclick="home()"></div>');
 	}, 1500);
 });
-
 
 /* 포스트 리스트를 화면에 뿌려주는 로직 */
 
@@ -1449,7 +1442,6 @@ function generateList(data) {
 /* 좋아요 누른 포스트 리스트 출력 */
 
 function getLikeList(page) {
-	
 	var likeCount = $('#likeCount').val();
 	var endPage = 1;
 	
