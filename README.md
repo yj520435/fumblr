@@ -26,8 +26,8 @@ There is difference on posting menus.
 I made it with Spring framework, Maven, Mybatis, Oracle DBMS.<br>
 Also I used Java Jsoup library to get infromation of other web page,<br>
 and javax.mail library to send email when a user try to find password.<br>
-There's lot of jQuery and ajax function about logic of managing posts.<br><br>
-<br>
+There's lot of jQuery and ajax function about logic of managing posts.
+<br><br>
 
 **🙂 Try Now!**   
    
