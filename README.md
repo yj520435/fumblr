@@ -23,10 +23,10 @@ There is difference on posting menus.
 
 **✔ How to make**   
 
-made with Spring framework, Maven, Mybatis, Oracle DBMS.<br>
-also I used Java Jsoup library to get infromation of other web page<br>
+I made it with Spring framework, Maven, Mybatis, Oracle DBMS.<br>
+Also I used Java Jsoup library to get infromation of other web page,<br>
 and javax.mail library to send email when a user try to find password.<br>
-there's lot of jQuery and ajax function about logic of managing posts.<br><br>
+There's lot of jQuery and ajax function about logic of managing posts.<br><br>
 <br>
 
 **🙂 Try Now!**   
