@@ -1,7 +1,7 @@
 # fumblr
 <br>
    
-> Fumblr is **Fake Micro Blog imitating Tumblr([https://tumblr.com/][TumblrLink])**.   
+> Fumblr is **Fake Micro Blog** imitating Tumblr([https://tumblr.com/][TumblrLink]).   
 
 [TumblrLink]: https://tumblr.com/   
 <br>
