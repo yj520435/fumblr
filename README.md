@@ -1,37 +1,37 @@
 # fumblr
 <br>
    
-> 펌블러는 **텀블러([https://tumblr.com/][TumblrLink])를 모방하여 만든 가짜(Fake) 마이크로 블로그**입니다.   
+> Fumblr is **Fake Micro Blog imitating Tumblr([https://tumblr.com/][TumblrLink])**.   
 
 [TumblrLink]: https://tumblr.com/   
 <br>
 ![fumblr](https://user-images.githubusercontent.com/44338744/145932951-177e5083-5b0e-496e-8123-d16e203718a9.gif)
 <br><br>
 
-**✔ 텀블러와 이렇게 달라요**   
-   
-포스트 메뉴에 차이점이 있어요.   
-인용, 채팅 포스트 대신 **코드, 도서** 포스트를 추가할 수 있도록 했습니다.<br><br>
+**✔ What is different with Tumblr?**   
 
-**✔ 기본적인 기능은 다음과 같아요**   
-   
-1. 회원가입, 로그인, 비밀번호 찾기 (이메일 발송)
-2. 포스트 작성, 수정, 삭제 (텍스트, 사진, 코드, 링크, 도서, 영상)
-3. 다른 블로그 구경하기, 포스트 좋아요
-4. 계정 변경, 프로필/배경화면 변경, 블로그 초기화, 계정 삭제
+There is difference on posting menus.
+**code block, book review** post is added intead of quotation, chat post.<br><br>
+
+**✔ Basic feature**   
+
+1. Member register, Login, Finding password (with sending email)
+2. Writing, Modifying, Deleting Post : Text, Photo, Code, Link, Book, Video
+3. Visiting other blog, Adding heart (thumb)
+4. Account setting, changing profile/background, Blog Initializing etc.
 <br><br>
 
-**✔ 이렇게 만들었어요**   
+**✔ How to make**   
 
-Spring Framework, Maven, Mybatis, Oracle DBMS를 이용해 틀을 구성했습니다.   
-또 타 사이트의 정보를 불러오기 위한 Jsoup 라이브러리와   
-비밀번호 찾기 진행 시 이메일을 발송하기 위한 javax.mail 라이브러리를 사용했어요.   
-포스트 관련 로직에는 jQuery와 Ajax가 많이 이용되었습니다.   
+made with Spring framework, Maven, Mybatis, Oracle DBMS.
+also I used Java Jsoup library to get infromation of other web page
+and javax.mail library to send email when a user try to find password.
+there's lot of jQuery and ajax function about logic of managing posts.
 <br>
 
-**🙂 직접 경험해보세요**   
+**🙂 Try Now!**   
    
-[**펌블러(https://fumblr.ml/)**][FumblrLink]의 실제 모습을 확인해보세요.   
-테스트 로그인 : pikachu@email.com / asdf123456789
+Check the real view of [**Fumblr(https://fumblr.ml/)**][FumblrLink] now.  
+Test Login Account : pikachu@email.com / asdf123456789
 
 [FumblrLink]: https://fumblr.ml/
